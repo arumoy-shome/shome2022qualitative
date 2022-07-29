@@ -1,35 +1,3 @@
-"""Experiments with both protected attribute sex & race in adult dataset.
-
-This file contains experiments for both sex & race protected
-attribute. We consider all permutations & combinations for the
-privileged_groups & unprivileged_groups.
-
-The BinaryLabelDatasetMetric expects the {un,}privileged_groups
-parameters to be list of dicts. Where the dicts contain as keys the
-name of the protected attribute
-(AdultDataset.protected_attribute_names) & as value the values of the
-protected attribute (AdultDataset.protected_attributes).
-
-"""
-
-from aif360.datasets import AdultDataset
-from aif360.explainers import MetricTextExplainer
-from aif360.metrics import BinaryLabelDatasetMetric
-from aif360.metrics import ClassificationMetric
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-import csv
-import itertools
-import logging
-import numpy as np
-import os
-
-logging.basicConfig(level=logging.INFO)
-
-ROOTDIR = (os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-DATADIR = os.path.join(ROOTDIR, 'data')
-
 """Compute & store metrics for adult dataset.
 
 The data is stored in a csv where the columns consist of the metrics
@@ -43,27 +11,31 @@ classes in aif360).
 
 """
 
-# TODO generate confusion matrix for the following 
-# row['num_true_positives'] = metrics.num_true_positives(privileged=condition)
-# row['num_false_positives'] = metrics.num_false_positives(privileged=condition)
-# row['num_false_negatives'] = metrics.num_false_negatives(privileged=condition)
-# row['num_true_negatives'] = metrics.num_true_negatives(privileged=condition)
+from aif360.datasets import AdultDataset
+from aif360.explainers import MetricTextExplainer
+from aif360.metrics import BinaryLabelDatasetMetric
+from aif360.metrics import ClassificationMetric
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+import csv
+import itertools
+import logging
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import os
 
-# TODO generate confusion matrix for the following
-# row['num_generalized_true_positives'] = metrics.num_generalized_true_positives(privileged=condition)
-# row['num_generalized_false_positives'] = metrics.num_generalized_false_positives(privileged=condition)
-# row['num_generalized_false_negatives'] = metrics.num_generalized_false_negatives(privileged=condition)
-# row['num_generalized_true_negatives'] = metrics.num_generalized_true_negatives(privileged=condition)
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src import utils
+
+ROOTDIR = (os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+DATADIR = os.path.join(ROOTDIR, 'data')
 
 # TODO these are summarised metrics of the above; think what to do with them
-# row['true_positive_rate'] = metrics.true_positive_rate(privileged=condition)
-# row['false_positive_rate'] = metrics.false_positive_rate(privileged=condition)
-# row['false_negative_rate'] = metrics.false_negative_rate(privileged=condition)
-# row['true_negative_rate'] = metrics.true_negative_rate(privileged=condition)
-# row['generalized_true_positive_rate'] = metrics.generalized_true_positive_rate(privileged=condition)
-# row['generalized_false_positive_rate'] = metrics.generalized_false_positive_rate(privileged=condition)
-# row['generalized_false_negative_rate'] = metrics.generalized_false_negative_rate(privileged=condition)
-# row['generalized_true_negative_rate'] = metrics.generalized_true_negative_rate(privileged=condition)
 # row['positive_predictive_value'] = metrics.positive_predictive_value(privileged=condition)
 # row['false_discovery_rate'] = metrics.false_discovery_rate(privileged=condition)
 # row['false_omission_rate'] = metrics.false_omission_rate(privileged=condition)
@@ -133,9 +105,97 @@ def populate_model_metrics(row, metrics, condition):
         row['theil_index'] = metrics.theil_index()
 
     return row
-        
+
+def create_confusion_matrix_plot(metrics, conditions):
+    DOCDIR = os.path.join(ROOTDIR, 'docs')
+    name = os.path.join(DOCDIR, 'adult_heatmap_prot-sex_cm')
+    fig, axs = plt.subplots(1, 3, figsize=(15,5))
+
+    for idx, condition in enumerate(conditions):
+        cm = metrics.binary_confusion_matrix(privileged=condition)
+        cm = np.array([[cm['TN'], cm['FP']],
+                       [cm['FN'], cm['TP']]])
+
+        sns.heatmap(data=cm,
+                    annot=cm,   # show absolute count, not scientific
+                    fmt='',
+                    cbar=False,
+                    ax=axs[idx])
+        axs[idx].set_xlabel('y_pred')
+        axs[idx].set_ylabel('y_true')
+        axs[idx].set_title(str(condition))
+
+    fig.tight_layout()
+    utils.savefig(fig, name)
+
+def create_confusion_matrix_rate_plot(metrics, conditions):
+    DOCDIR = os.path.join(ROOTDIR, 'docs')
+    name = os.path.join(DOCDIR, 'adult_heatmap_prot-sex_cm-rate')
+    fig, axs = plt.subplots(1, 3, figsize=(15,5))
+
+    for idx, condition in enumerate(conditions):
+        cm = metrics.performance_measures(privileged=condition)
+        cm = np.array([[cm['TNR'], cm['FPR']],
+                       [cm['FNR'], cm['TPR']]])
+
+        sns.heatmap(data=cm,
+                    annot=cm,   # show absolute count, not scientific
+                    fmt='.3f',
+                    cbar=False,
+                    ax=axs[idx])
+        axs[idx].set_xlabel('y_pred')
+        axs[idx].set_ylabel('y_true')
+        axs[idx].set_title(str(condition))
+
+    fig.tight_layout()
+    utils.savefig(fig, name)
+
+def create_generalized_confusion_matrix_plot(metrics, conditions):
+    DOCDIR = os.path.join(ROOTDIR, 'docs')
+    name = os.path.join(DOCDIR, 'adult_heatmap_prot-sex_cm-gen')
+    fig, axs = plt.subplots(1, 3, figsize=(15,5))
+
+    for idx, condition in enumerate(conditions):
+        cm = metrics.generalized_binary_confusion_matrix(privileged=condition)
+        cm = np.array([[cm['GTN'], cm['GFP']],
+                       [cm['GFN'], cm['GTP']]])
+
+        sns.heatmap(data=cm,
+                    annot=cm,
+                    fmt='',
+                    cbar=False,
+                    ax=axs[idx])
+        axs[idx].set_xlabel('y_pred')
+        axs[idx].set_ylabel('y_true')
+        axs[idx].set_title(str(condition))
+
+    fig.tight_layout()
+    utils.savefig(fig, name)
+
+def create_generalized_confusion_matrix_rate_plot(metrics, conditions):
+    DOCDIR = os.path.join(ROOTDIR, 'docs')
+    name = os.path.join(DOCDIR, 'adult_heatmap_prot-sex_cm-gen-rate')
+    fig, axs = plt.subplots(1, 3, figsize=(15,5))
+
+    for idx, condition in enumerate(conditions):
+        cm = metrics.performance_measures(privileged=condition)
+        cm = np.array([[cm['GTNR'], cm['GFPR']],
+                       [cm['GFNR'], cm['GTPR']]])
+
+        sns.heatmap(data=cm,
+                    annot=cm,
+                    fmt='.3f',
+                    cbar=False,
+                    ax=axs[idx])
+        axs[idx].set_xlabel('y_pred')
+        axs[idx].set_ylabel('y_true')
+        axs[idx].set_title(str(condition))
+
+    fig.tight_layout()
+    utils.savefig(fig, name)
+
 if __name__ == "__main__":
-    
+
     # TODO see docs for StandardDataset; it does a number of preprocessing
     # steps. We may want to revisit these stratergies.
 
@@ -162,6 +222,12 @@ if __name__ == "__main__":
     # TODO create product of datasets & conditions to avoid nested loop
     datasets = [('full', adult), ('train', train), ('test', test)]
     conditions = [None, True, False]
+
+    # generate confusion matrices
+    create_confusion_matrix_plot(model_metrics, conditions)
+    create_confusion_matrix_rate_plot(model_metrics, conditions)
+    create_generalized_confusion_matrix_plot(model_metrics, conditions)
+    create_generalized_confusion_matrix_rate_plot(model_metrics, conditions)
 
     rows = []
 
