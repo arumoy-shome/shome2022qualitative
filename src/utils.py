@@ -5,6 +5,7 @@ used across other modules and analysis documents.
 
 """
 
+
 def savefig(fig, name):
     """Save a matplotlib figure in pdf & png format. This function
     also calls the tight_layout function prior to saving.
@@ -20,7 +21,7 @@ def savefig(fig, name):
 
     """
     fig.tight_layout()
-    fig.savefig(name+'.png', format='png')
-    fig.savefig(name+'.pdf', format='pdf')
+    fig.savefig(name + ".png", format="png")
+    fig.savefig(name + ".pdf", format="pdf")
 
-    return name+'.png'
+    return name + ".png"
