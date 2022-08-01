@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-07-27 Wed 10:35 -->
+<!-- 2022-08-01 Mon 16:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adult</title>
@@ -201,17 +201,11 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4410e21">1. Init</a></li>
-<li><a href="#org8a2b490">2. Priliminary analysis</a></li>
-<li><a href="#org17f9dd5">3. Cleanup</a></li>
-<li><a href="#org118c877">4. Analysis of data metrics</a>
+<li><a href="#orge83877d">1. Init</a></li>
+<li><a href="#org74187f3">2. Priliminary analysis</a></li>
+<li><a href="#org563dbca">3. Analysis of metrics</a>
 <ul>
-<li><a href="#orgd43f55f">4.1. Analysis of single protected attribute <code>sex</code></a></li>
-</ul>
-</li>
-<li><a href="#org43efea5">5. Analysis of model metrics</a>
-<ul>
-<li><a href="#org085e959">5.1. Analysis of single protected attribute <code>sex</code></a></li>
+<li><a href="#org28bd28a">3.1. Analysis of count metrics</a></li>
 </ul>
 </li>
 </ul>
@@ -220,12 +214,14 @@
 <p>
 In this file we analyse the results obtained from computing all
 <code>BinaryLabelDatasetMetric</code> &amp; <code>ClassificationMetric</code> for the adult
-dataset with a <code>LinearRegression</code> model. The results are stored in
-<code>adult.csv</code> which is what we will analyse here.
+dataset with a <code>LinearRegression</code> model, for a single protected
+attribute <code>sex</code>. The results are stored in <code>adult.csv</code> which is what
+we will analyse here. The dataset can be generated using the
+<code>bin/adult.py</code> script.
 </p>
 
-<div id="outline-container-org4410e21" class="outline-2">
-<h2 id="org4410e21"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-orge83877d" class="outline-2">
+<h2 id="orge83877d"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we perform some sanity checks, load the necessary
@@ -262,389 +258,60 @@ from src.utils import data_metrics_columns, model_metrics_columns
 </div>
 </div>
 
-<div id="outline-container-org8a2b490" class="outline-2">
-<h2 id="org8a2b490"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-org74187f3" class="outline-2">
+<h2 id="org74187f3"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">adult.head()
+<pre class="src src-python">adult
 </pre>
 </div>
 
-<pre class="example" id="org9dba943">
-  dataset subset model privileged privileged_groups unprivileged_groups  \
-0   adult   full   NaN       True      [{'sex': 1}]        [{'sex': 0}]   
-1   adult   full   NaN      False      [{'sex': 1}]        [{'sex': 0}]   
-2   adult   full   NaN        NaN      [{'sex': 1}]        [{'sex': 0}]   
-3   adult  train   NaN       True      [{'sex': 1}]        [{'sex': 0}]   
-4   adult  train   NaN      False      [{'sex': 1}]        [{'sex': 0}]   
+<pre class="example" id="org401d30b">
+    num_negatives  num_positives subset  statistical_parity_difference  \
+0         34014.0        11208.0   full                      -0.198901   
+1         20988.0         9539.0   full                            NaN   
+2         13026.0         1669.0   full                            NaN   
+3         25514.0         8402.0  train                      -0.201944   
+4         15720.0         7174.0  train                            NaN   
+5          9794.0         1228.0  train                            NaN   
+6             NaN            NaN   test                      -0.184484   
+7          8500.0         2806.0   test                      -0.189774   
+8             NaN            NaN   test                            NaN   
+9          5268.0         2365.0   test                            NaN   
+10            NaN            NaN   test                            NaN   
+11         3232.0          441.0   test                            NaN   
 
-   num_positives  num_negatives  base_rate  disparate_impact  \
-0         9539.0        20988.0   0.312477               NaN   
-1         1669.0        13026.0   0.113576               NaN   
-2        11208.0        34014.0   0.247844           0.36347   
-3         7174.0        15720.0   0.313357               NaN   
-4         1228.0         9794.0   0.111414               NaN   
+    theil_index privileged protected  base_rate dataset               model  \
+0           NaN       None       sex   0.247844   adult                None   
+1           NaN       True       sex   0.312477   adult                None   
+2           NaN      False       sex   0.113576   adult                None   
+3           NaN       None       sex   0.247730   adult                None   
+4           NaN       True       sex   0.313357   adult                None   
+5           NaN      False       sex   0.111414   adult                None   
+6      0.122473       None       sex        NaN   adult  logisticregression   
+7           NaN       None       sex   0.248187   adult                None   
+8           NaN       True       sex        NaN   adult  logisticregression   
+9           NaN       True       sex   0.309839   adult                None   
+10          NaN      False       sex        NaN   adult  logisticregression   
+11          NaN      False       sex   0.120065   adult                None   
 
-   statistical_parity_difference   consistency  \
-0                            NaN           NaN   
-1                            NaN           NaN   
-2                      -0.198901  [0.84866658]   
-3                            NaN           NaN   
-4                            NaN           NaN   
-
-   smoothed_empirical_differential_fairness  num_true_positives  \
-0                                       NaN                 NaN   
-1                                       NaN                 NaN   
-2                                  1.446422                 NaN   
-3                                       NaN                 NaN   
-4                                       NaN                 NaN   
-
-   num_false_positives  num_false_negatives  num_true_negatives  \
-0                  NaN                  NaN                 NaN   
-1                  NaN                  NaN                 NaN   
-2                  NaN                  NaN                 NaN   
-3                  NaN                  NaN                 NaN   
-4                  NaN                  NaN                 NaN   
-
-   num_generalized_true_positives  num_generalized_false_positives  \
-0                             NaN                              NaN   
-1                             NaN                              NaN   
-2                             NaN                              NaN   
-3                             NaN                              NaN   
-4                             NaN                              NaN   
-
-   num_generalized_false_negatives  num_generalized_true_negatives  \
-0                              NaN                             NaN   
-1                              NaN                             NaN   
-2                              NaN                             NaN   
-3                              NaN                             NaN   
-4                              NaN                             NaN   
-
-   true_positive_rate  false_positive_rate  false_negative_rate  \
-0                 NaN                  NaN                  NaN   
-1                 NaN                  NaN                  NaN   
-2                 NaN                  NaN                  NaN   
-3                 NaN                  NaN                  NaN   
-4                 NaN                  NaN                  NaN   
-
-   true_negative_rate  generalized_true_positive_rate  \
-0                 NaN                             NaN   
-1                 NaN                             NaN   
-2                 NaN                             NaN   
-3                 NaN                             NaN   
-4                 NaN                             NaN   
-
-   generalized_false_positive_rate  generalized_false_negative_rate  \
-0                              NaN                              NaN   
-1                              NaN                              NaN   
-2                              NaN                              NaN   
-3                              NaN                              NaN   
-4                              NaN                              NaN   
-
-   generalized_true_negative_rate  positive_predictive_value  \
-0                             NaN                        NaN   
-1                             NaN                        NaN   
-2                             NaN                        NaN   
-3                             NaN                        NaN   
-4                             NaN                        NaN   
-
-   false_discovery_rate  false_omission_rate  negative_predictive_value  \
-0                   NaN                  NaN                        NaN   
-1                   NaN                  NaN                        NaN   
-2                   NaN                  NaN                        NaN   
-3                   NaN                  NaN                        NaN   
-4                   NaN                  NaN                        NaN   
-
-   accuracy  error_rate  true_positive_rate_difference  \
-0       NaN         NaN                            NaN   
-1       NaN         NaN                            NaN   
-2       NaN         NaN                            NaN   
-3       NaN         NaN                            NaN   
-4       NaN         NaN                            NaN   
-
-   false_positive_rate_difference  false_negative_rate_difference  \
-0                             NaN                             NaN   
-1                             NaN                             NaN   
-2                             NaN                             NaN   
-3                             NaN                             NaN   
-4                             NaN                             NaN   
-
-   false_omission_rate_difference  false_discovery_rate_difference  \
-0                             NaN                              NaN   
-1                             NaN                              NaN   
-2                             NaN                              NaN   
-3                             NaN                              NaN   
-4                             NaN                              NaN   
-
-   false_positive_rate_ratio  false_negative_rate_ratio  \
-0                        NaN                        NaN   
-1                        NaN                        NaN   
-2                        NaN                        NaN   
-3                        NaN                        NaN   
-4                        NaN                        NaN   
-
-   false_omission_rate_ratio  false_discovery_rate_ratio  \
-0                        NaN                         NaN   
-1                        NaN                         NaN   
-2                        NaN                         NaN   
-3                        NaN                         NaN   
-4                        NaN                         NaN   
-
-   average_odds_difference  average_abs_odds_difference  \
-0                      NaN                          NaN   
-1                      NaN                          NaN   
-2                      NaN                          NaN   
-3                      NaN                          NaN   
-4                      NaN                          NaN   
-
-   error_rate_difference  error_rate_ratio  num_pred_positives  \
-0                    NaN               NaN                 NaN   
-1                    NaN               NaN                 NaN   
-2                    NaN               NaN                 NaN   
-3                    NaN               NaN                 NaN   
-4                    NaN               NaN                 NaN   
-
-   num_pred_negatives  selection_rate  generalized_entropy_index  \
-0                 NaN             NaN                        NaN   
-1                 NaN             NaN                        NaN   
-2                 NaN             NaN                        NaN   
-3                 NaN             NaN                        NaN   
-4                 NaN             NaN                        NaN   
-
-   between_all_groups_generalized_entropy_index  \
-0                                           NaN   
-1                                           NaN   
-2                                           NaN   
-3                                           NaN   
-4                                           NaN   
-
-   between_group_generalized_entropy_index  theil_index  \
-0                                      NaN          NaN   
-1                                      NaN          NaN   
-2                                      NaN          NaN   
-3                                      NaN          NaN   
-4                                      NaN          NaN   
-
-   coefficient_of_variation  between_group_theil_index  \
-0                       NaN                        NaN   
-1                       NaN                        NaN   
-2                       NaN                        NaN   
-3                       NaN                        NaN   
-4                       NaN                        NaN   
-
-   between_group_coefficient_of_variation  between_all_groups_theil_index  \
-0                                     NaN                             NaN   
-1                                     NaN                             NaN   
-2                                     NaN                             NaN   
-3                                     NaN                             NaN   
-4                                     NaN                             NaN   
-
-   between_all_groups_coefficient_of_variation  \
-0                                          NaN   
-1                                          NaN   
-2                                          NaN   
-3                                          NaN   
-4                                          NaN   
-
-   differential_fairness_bias_amplification  
-0                                       NaN  
-1                                       NaN  
-2                                       NaN  
-3                                       NaN  
-4                                       NaN  
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">adult.tail()
-</pre>
-</div>
-
-<pre class="example" id="orgd254818">
-    dataset subset model privileged          privileged_groups  \
-103   adult   test   NaN      False  [{'sex': 1}, {'race': 1}]   
-104   adult   test   NaN        NaN  [{'sex': 1}, {'race': 1}]   
-105   adult  train    lr       True  [{'sex': 1}, {'race': 1}]   
-106   adult  train    lr      False  [{'sex': 1}, {'race': 1}]   
-107   adult  train    lr        NaN  [{'sex': 1}, {'race': 1}]   
-
-         unprivileged_groups  num_positives  num_negatives  base_rate  \
-103  [{'sex': 0, 'race': 0}]           62.0          625.0   0.090247   
-104  [{'sex': 0, 'race': 0}]         2806.0         8500.0   0.248187   
-105  [{'sex': 0, 'race': 0}]            NaN            NaN        NaN   
-106  [{'sex': 0, 'race': 0}]            NaN            NaN        NaN   
-107  [{'sex': 0, 'race': 0}]            NaN            NaN        NaN   
-
-     disparate_impact  statistical_parity_difference   consistency  \
-103               NaN                            NaN           NaN   
-104          0.349248                      -0.168157  [0.84091633]   
-105               NaN                            NaN           NaN   
-106               NaN                            NaN           NaN   
-107          0.213661                      -0.171426           NaN   
-
-     smoothed_empirical_differential_fairness  num_true_positives  \
-103                                       NaN                 NaN   
-104                                  1.264974                 NaN   
-105                                       NaN              1688.0   
-106                                       NaN                25.0   
-107                                       NaN              1713.0   
-
-     num_false_positives  num_false_negatives  num_true_negatives  \
-103                  NaN                  NaN                 NaN   
-104                  NaN                  NaN                 NaN   
-105                627.0               1056.0              7248.0   
-106                  7.0                 37.0               618.0   
-107                634.0               1093.0              7866.0   
-
-     num_generalized_true_positives  num_generalized_false_positives  \
-103                             NaN                              NaN   
-104                             NaN                              NaN   
-105                          2744.0                              0.0   
-106                            62.0                              0.0   
-107                          2806.0                              0.0   
-
-     num_generalized_false_negatives  num_generalized_true_negatives  \
-103                              NaN                             NaN   
-104                              NaN                             NaN   
-105                              0.0                          7875.0   
-106                              0.0                           625.0   
-107                              0.0                          8500.0   
-
-     true_positive_rate  false_positive_rate  false_negative_rate  \
-103                 NaN                  NaN                  NaN   
-104                 NaN                  NaN                  NaN   
-105            0.615160             0.079619             0.384840   
-106            0.403226             0.011200             0.596774   
-107            0.610478             0.074588             0.389522   
-
-     true_negative_rate  generalized_true_positive_rate  \
-103                 NaN                             NaN   
-104                 NaN                             NaN   
-105            0.920381                             1.0   
-106            0.988800                             1.0   
-107            0.925412                             1.0   
-
-     generalized_false_positive_rate  generalized_false_negative_rate  \
-103                              NaN                              NaN   
-104                              NaN                              NaN   
-105                              0.0                              0.0   
-106                              0.0                              0.0   
-107                              0.0                              0.0   
-
-     generalized_true_negative_rate  positive_predictive_value  \
-103                             NaN                        NaN   
-104                             NaN                        NaN   
-105                             1.0                   0.729158   
-106                             1.0                   0.781250   
-107                             1.0                   0.729868   
-
-     false_discovery_rate  false_omission_rate  negative_predictive_value  \
-103                   NaN                  NaN                        NaN   
-104                   NaN                  NaN                        NaN   
-105              0.270842             0.127168                   0.872832   
-106              0.218750             0.056489                   0.943511   
-107              0.270132             0.122000                   0.878000   
-
-     accuracy  error_rate  true_positive_rate_difference  \
-103       NaN         NaN                            NaN   
-104       NaN         NaN                            NaN   
-105  0.841511    0.158489                            NaN   
-106  0.935953    0.064047                            NaN   
-107  0.847249    0.152751                      -0.211935   
-
-     false_positive_rate_difference  false_negative_rate_difference  \
-103                             NaN                             NaN   
-104                             NaN                             NaN   
-105                             NaN                             NaN   
-106                             NaN                             NaN   
-107                       -0.068419                        0.211935   
-
-     false_omission_rate_difference  false_discovery_rate_difference  \
-103                             NaN                              NaN   
-104                             NaN                              NaN   
-105                             NaN                              NaN   
-106                             NaN                              NaN   
-107                       -0.070679                        -0.052092   
-
-     false_positive_rate_ratio  false_negative_rate_ratio  \
-103                        NaN                        NaN   
-104                        NaN                        NaN   
-105                        NaN                        NaN   
-106                        NaN                        NaN   
-107                        NaN                        NaN   
-
-     false_omission_rate_ratio  false_discovery_rate_ratio  \
-103                        NaN                         NaN   
-104                        NaN                         NaN   
-105                        NaN                         NaN   
-106                        NaN                         NaN   
-107                        NaN                         NaN   
-
-     average_odds_difference  average_abs_odds_difference  \
-103                      NaN                          NaN   
-104                      NaN                          NaN   
-105                      NaN                          NaN   
-106                      NaN                          NaN   
-107                -0.140177                     0.140177   
-
-     error_rate_difference  error_rate_ratio  num_pred_positives  \
-103                    NaN               NaN                 NaN   
-104                    NaN               NaN                 NaN   
-105                    NaN               NaN              2315.0   
-106                    NaN               NaN                32.0   
-107              -0.094443          0.404106              2347.0   
-
-     num_pred_negatives  selection_rate  generalized_entropy_index  \
-103                 NaN             NaN                        NaN   
-104                 NaN             NaN                        NaN   
-105              8304.0        0.218005                        NaN   
-106               655.0        0.046579                        NaN   
-107              8959.0        0.207589                   0.082081   
-
-     between_all_groups_generalized_entropy_index  \
-103                                           NaN   
-104                                           NaN   
-105                                           NaN   
-106                                           NaN   
-107                                       0.00001   
-
-     between_group_generalized_entropy_index  theil_index  \
-103                                      NaN          NaN   
-104                                      NaN          NaN   
-105                                      NaN          NaN   
-106                                      NaN          NaN   
-107                             3.312668e-07     0.122473   
-
-     coefficient_of_variation  between_group_theil_index  \
-103                       NaN                        NaN   
-104                       NaN                        NaN   
-105                       NaN                        NaN   
-106                       NaN                        NaN   
-107                  0.572994               3.315978e-07   
-
-     between_group_coefficient_of_variation  between_all_groups_theil_index  \
-103                                     NaN                             NaN   
-104                                     NaN                             NaN   
-105                                     NaN                             NaN   
-106                                     NaN                             NaN   
-107                                0.001151                         0.00001   
-
-     between_all_groups_coefficient_of_variation  \
-103                                          NaN   
-104                                          NaN   
-105                                          NaN   
-106                                          NaN   
-107                                      0.00646   
-
-     differential_fairness_bias_amplification  
-103                                       NaN  
-104                                       NaN  
-105                                       NaN  
-106                                       NaN  
-107                                  0.508061  
+    accuracy  disparate_impact  
+0        NaN          0.363470  
+1        NaN               NaN  
+2        NaN               NaN  
+3        NaN          0.355548  
+4        NaN               NaN  
+5        NaN               NaN  
+6   0.847249          0.310398  
+7        NaN          0.387509  
+8   0.812263               NaN  
+9        NaN               NaN  
+10  0.919956               NaN  
+11       NaN               NaN  
 </pre>
 
 <div class="org-src-container">
@@ -662,8 +329,8 @@ In this section we conduct some priliminary analysis of the dataset.
 </colgroup>
 <tbody>
 <tr>
-<td class="org-right">108</td>
-<td class="org-right">61</td>
+<td class="org-right">12</td>
+<td class="org-right">12</td>
 </tr>
 </tbody>
 </table>
@@ -673,68 +340,19 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org20e515a">
-dataset                                          object
-subset                                           object
-model                                            object
-privileged                                       object
-privileged_groups                                object
-unprivileged_groups                              object
-num_positives                                   float64
-num_negatives                                   float64
-base_rate                                       float64
-disparate_impact                                float64
-statistical_parity_difference                   float64
-consistency                                      object
-smoothed_empirical_differential_fairness        float64
-num_true_positives                              float64
-num_false_positives                             float64
-num_false_negatives                             float64
-num_true_negatives                              float64
-num_generalized_true_positives                  float64
-num_generalized_false_positives                 float64
-num_generalized_false_negatives                 float64
-num_generalized_true_negatives                  float64
-true_positive_rate                              float64
-false_positive_rate                             float64
-false_negative_rate                             float64
-true_negative_rate                              float64
-generalized_true_positive_rate                  float64
-generalized_false_positive_rate                 float64
-generalized_false_negative_rate                 float64
-generalized_true_negative_rate                  float64
-positive_predictive_value                       float64
-false_discovery_rate                            float64
-false_omission_rate                             float64
-negative_predictive_value                       float64
-accuracy                                        float64
-error_rate                                      float64
-true_positive_rate_difference                   float64
-false_positive_rate_difference                  float64
-false_negative_rate_difference                  float64
-false_omission_rate_difference                  float64
-false_discovery_rate_difference                 float64
-false_positive_rate_ratio                       float64
-false_negative_rate_ratio                       float64
-false_omission_rate_ratio                       float64
-false_discovery_rate_ratio                      float64
-average_odds_difference                         float64
-average_abs_odds_difference                     float64
-error_rate_difference                           float64
-error_rate_ratio                                float64
-num_pred_positives                              float64
-num_pred_negatives                              float64
-selection_rate                                  float64
-generalized_entropy_index                       float64
-between_all_groups_generalized_entropy_index    float64
-between_group_generalized_entropy_index         float64
-theil_index                                     float64
-coefficient_of_variation                        float64
-between_group_theil_index                       float64
-between_group_coefficient_of_variation          float64
-between_all_groups_theil_index                  float64
-between_all_groups_coefficient_of_variation     float64
-differential_fairness_bias_amplification        float64
+<pre class="example" id="orgef7e592">
+num_negatives                    float64
+num_positives                    float64
+subset                            object
+statistical_parity_difference    float64
+theil_index                      float64
+privileged                        object
+protected                         object
+base_rate                        float64
+dataset                           object
+model                             object
+accuracy                         float64
+disparate_impact                 float64
 dtype: object
 </pre>
 
@@ -743,1280 +361,230 @@ dtype: object
 </pre>
 </div>
 
-<pre class="example" id="org0906cdb">
-       dataset subset model privileged        privileged_groups  \
-count      108    108    27         72                      108   
-unique       1      3     1          2                        4   
-top      adult  train    lr       True  [{'sex': 1, 'race': 1}]   
-freq       108     54    27         36                       48   
-mean       NaN    NaN   NaN        NaN                      NaN   
-std        NaN    NaN   NaN        NaN                      NaN   
-min        NaN    NaN   NaN        NaN                      NaN   
-25%        NaN    NaN   NaN        NaN                      NaN   
-50%        NaN    NaN   NaN        NaN                      NaN   
-75%        NaN    NaN   NaN        NaN                      NaN   
-max        NaN    NaN   NaN        NaN                      NaN   
+<pre class="example" id="org4581d74">
+        num_negatives  num_positives subset  statistical_parity_difference  \
+count        9.000000       9.000000     12                       4.000000   
+unique            NaN            NaN      3                            NaN   
+top               NaN            NaN   test                            NaN   
+freq              NaN            NaN      6                            NaN   
+mean     15117.333333    4981.333333    NaN                      -0.193776   
+std      10091.913793    4082.024865    NaN                       0.008069   
+min       3232.000000     441.000000    NaN                      -0.201944   
+25%       8500.000000    1669.000000    NaN                      -0.199662   
+50%      13026.000000    2806.000000    NaN                      -0.194337   
+75%      20988.000000    8402.000000    NaN                      -0.188451   
+max      34014.000000   11208.000000    NaN                      -0.184484   
 
-            unprivileged_groups  num_positives  num_negatives  base_rate  \
-count                       108      81.000000      81.000000  81.000000   
-unique                        4            NaN            NaN        NaN   
-top     [{'sex': 0, 'race': 0}]            NaN            NaN        NaN   
-freq                         48            NaN            NaN        NaN   
-mean                        NaN    4815.259259   14143.407407   0.219777   
-std                         NaN    4047.360371   11004.419414   0.083926   
-min                         NaN      62.000000     625.000000   0.071529   
-25%                         NaN    1001.000000    4579.000000   0.138999   
-50%                         NaN    2806.000000    9794.000000   0.247844   
-75%                         NaN    8402.000000   25514.000000   0.262371   
-max                         NaN   11208.000000   34014.000000   0.324600   
+        theil_index privileged protected  base_rate dataset model  accuracy  \
+count      1.000000         12        12   9.000000      12    12  3.000000   
+unique          NaN          3         1        NaN       1     2       NaN   
+top             NaN       None       sex        NaN   adult  None       NaN   
+freq            NaN          4        12        NaN      12     9       NaN   
+mean       0.122473        NaN       NaN   0.224943     NaN   NaN  0.859823   
+std             NaN        NaN       NaN   0.087007     NaN   NaN  0.054937   
+min        0.122473        NaN       NaN   0.111414     NaN   NaN  0.812263   
+25%        0.122473        NaN       NaN   0.120065     NaN   NaN  0.829756   
+50%        0.122473        NaN       NaN   0.247844     NaN   NaN  0.847249   
+75%        0.122473        NaN       NaN   0.309839     NaN   NaN  0.883603   
+max        0.122473        NaN       NaN   0.313357     NaN   NaN  0.919956   
 
-        disparate_impact  statistical_parity_difference   consistency  \
-count          36.000000                      36.000000            27   
-unique               NaN                            NaN             3   
-top                  NaN                            NaN  [0.84866658]   
-freq                 NaN                            NaN             9   
-mean            0.356000                      -0.186147           NaN   
-std             0.122029                       0.039616           NaN   
-min             0.167467                      -0.253071           NaN   
-25%             0.274857                      -0.211046           NaN   
-50%             0.346809                      -0.188478           NaN   
-75%             0.420402                      -0.170609           NaN   
-max             0.618126                      -0.095887           NaN   
-
-        smoothed_empirical_differential_fairness  num_true_positives  \
-count                                  27.000000           27.000000   
-unique                                       NaN                 NaN   
-top                                          NaN                 NaN   
-freq                                         NaN                 NaN   
-mean                                    1.407032         1107.555556   
-std                                     0.105694          717.781536   
-min                                     1.264974           25.000000   
-25%                                     1.264974          226.000000   
-50%                                     1.446422         1487.000000   
-75%                                     1.509699         1713.000000   
-max                                     1.509699         1713.000000   
-
-        num_false_positives  num_false_negatives  num_true_negatives  \
-count             27.000000            27.000000           27.000000   
-unique                  NaN                  NaN                 NaN   
-top                     NaN                  NaN                 NaN   
-freq                    NaN                  NaN                 NaN   
-mean             408.555556           699.666667         4891.888889   
-std              264.043751           430.939492         2777.852772   
-min                7.000000            37.000000          618.000000   
-25%               79.000000           215.000000         3153.000000   
-50%              555.000000           878.000000         4713.000000   
-75%              634.000000          1093.000000         7866.000000   
-max              634.000000          1093.000000         7866.000000   
-
-        num_generalized_true_positives  num_generalized_false_positives  \
-count                        27.000000                             27.0   
-unique                             NaN                              NaN   
-top                                NaN                              NaN   
-freq                               NaN                              NaN   
-mean                       1807.222222                              0.0   
-std                        1147.614326                              0.0   
-min                          62.000000                              0.0   
-25%                         441.000000                              0.0   
-50%                        2365.000000                              0.0   
-75%                        2806.000000                              0.0   
-max                        2806.000000                              0.0   
-
-        num_generalized_false_negatives  num_generalized_true_negatives  \
-count                              27.0                       27.000000   
-unique                              NaN                             NaN   
-top                                 NaN                             NaN   
-freq                                NaN                             NaN   
-mean                                0.0                     5300.444444   
-std                                 0.0                     3023.242049   
-min                                 0.0                      625.000000   
-25%                                 0.0                     3232.000000   
-50%                                 0.0                     5268.000000   
-75%                                 0.0                     8500.000000   
-max                                 0.0                     8500.000000   
-
-        true_positive_rate  false_positive_rate  false_negative_rate  \
-count            27.000000            27.000000            27.000000   
-unique                 NaN                  NaN                  NaN   
-top                    NaN                  NaN                  NaN   
-freq                   NaN                  NaN                  NaN   
-mean              0.569007             0.065919             0.430993   
-std               0.080386             0.033378             0.080386   
-min               0.403226             0.011200             0.365854   
-25%               0.527559             0.040680             0.381270   
-50%               0.610478             0.074588             0.389522   
-75%               0.618730             0.079609             0.472441   
-max               0.634146             0.109194             0.596774   
-
-        true_negative_rate  generalized_true_positive_rate  \
-count            27.000000                            27.0   
-unique                 NaN                             NaN   
-top                    NaN                             NaN   
-freq                   NaN                             NaN   
-mean              0.934081                             1.0   
-std               0.033378                             0.0   
-min               0.890806                             1.0   
-25%               0.920391                             1.0   
-50%               0.925412                             1.0   
-75%               0.959320                             1.0   
-max               0.988800                             1.0   
-
-        generalized_false_positive_rate  generalized_false_negative_rate  \
-count                              27.0                             27.0   
-unique                              NaN                              NaN   
-top                                 NaN                              NaN   
-freq                                NaN                              NaN   
-mean                                0.0                              0.0   
-std                                 0.0                              0.0   
-min                                 0.0                              0.0   
-25%                                 0.0                              0.0   
-50%                                 0.0                              0.0   
-75%                                 0.0                              0.0   
-max                                 0.0                              0.0   
-
-        generalized_true_negative_rate  positive_predictive_value  \
-count                             27.0                  27.000000   
-unique                             NaN                        NaN   
-top                                NaN                        NaN   
-freq                               NaN                        NaN   
-mean                               1.0                   0.735044   
-std                                0.0                   0.023775   
-min                                1.0                   0.683673   
-25%                                1.0                   0.729868   
-50%                                1.0                   0.729868   
-75%                                1.0                   0.734077   
-max                                1.0                   0.781250   
-
-        false_discovery_rate  false_omission_rate  negative_predictive_value  \
-count              27.000000            27.000000                  27.000000   
-unique                   NaN                  NaN                        NaN   
-top                      NaN                  NaN                        NaN   
-freq                     NaN                  NaN                        NaN   
-mean                0.264956             0.112951                   0.887049   
-std                 0.023775             0.037125                   0.037125   
-min                 0.218750             0.056489                   0.836890   
-25%                 0.265923             0.080207                   0.871754   
-50%                 0.270132             0.122000                   0.878000   
-75%                 0.270132             0.128246                   0.919793   
-max                 0.316327             0.163110                   0.943511   
-
-         accuracy  error_rate  true_positive_rate_difference  \
-count   27.000000   27.000000                       9.000000   
-unique        NaN         NaN                            NaN   
-top           NaN         NaN                            NaN   
-freq          NaN         NaN                            NaN   
-mean     0.861611    0.138389                      -0.158280   
-std      0.044362    0.044362                       0.060290   
-min      0.808205    0.064047                      -0.230921   
-25%      0.841343    0.105467                      -0.215505   
-50%      0.847249    0.152751                      -0.121675   
-75%      0.894533    0.158657                      -0.106587   
-max      0.935953    0.191795                      -0.091171   
-
-        false_positive_rate_difference  false_negative_rate_difference  \
-count                         9.000000                        9.000000   
-unique                             NaN                             NaN   
-top                                NaN                             NaN   
-freq                               NaN                             NaN   
-mean                         -0.073786                        0.158280   
-std                           0.019626                        0.060290   
-min                          -0.097994                        0.091171   
-25%                          -0.084751                        0.106587   
-50%                          -0.075019                        0.121675   
-75%                          -0.068399                        0.215505   
-max                          -0.032415                        0.230921   
-
-        false_omission_rate_difference  false_discovery_rate_difference  \
-count                         9.000000                         9.000000   
-unique                             NaN                              NaN   
-top                                NaN                              NaN   
-freq                               NaN                              NaN   
-mean                         -0.083186                        -0.011093   
-std                           0.020617                         0.042638   
-min                          -0.106622                        -0.053042   
-25%                          -0.099274                        -0.047491   
-50%                          -0.090161                        -0.012776   
-75%                          -0.071757                         0.019474   
-max                          -0.040782                         0.050404   
-
-        false_positive_rate_ratio  false_negative_rate_ratio  \
-count                         0.0                        0.0   
-unique                        NaN                        NaN   
-top                           NaN                        NaN   
-freq                          NaN                        NaN   
-mean                          NaN                        NaN   
-std                           NaN                        NaN   
-min                           NaN                        NaN   
-25%                           NaN                        NaN   
-50%                           NaN                        NaN   
-75%                           NaN                        NaN   
-max                           NaN                        NaN   
-
-        false_omission_rate_ratio  false_discovery_rate_ratio  \
-count                         0.0                         0.0   
-unique                        NaN                         NaN   
-top                           NaN                         NaN   
-freq                          NaN                         NaN   
-mean                          NaN                         NaN   
-std                           NaN                         NaN   
-min                           NaN                         NaN   
-25%                           NaN                         NaN   
-50%                           NaN                         NaN   
-75%                           NaN                         NaN   
-max                           NaN                         NaN   
-
-        average_odds_difference  average_abs_odds_difference  \
-count                  9.000000                     9.000000   
-unique                      NaN                          NaN   
-top                         NaN                          NaN   
-freq                        NaN                          NaN   
-mean                  -0.116033                     0.116033   
-std                    0.036427                     0.036427   
-min                   -0.164457                     0.061793   
-25%                   -0.141952                     0.089970   
-50%                   -0.103213                     0.103213   
-75%                   -0.089970                     0.141952   
-max                   -0.061793                     0.164457   
-
-        error_rate_difference  error_rate_ratio  num_pred_positives  \
-count                9.000000          9.000000           27.000000   
-unique                    NaN               NaN                 NaN   
-top                       NaN               NaN                 NaN   
-freq                      NaN               NaN                 NaN   
-mean                -0.097242          0.461993         1516.111111   
-std                  0.026017          0.130032          981.766514   
-min                 -0.127748          0.333932           32.000000   
-25%                 -0.111751          0.403680          305.000000   
-50%                 -0.096933          0.417339         2042.000000   
-75%                 -0.094443          0.494599         2347.000000   
-max                 -0.042585          0.731588         2347.000000   
-
-        num_pred_negatives  selection_rate  generalized_entropy_index  \
-count            27.000000       27.000000                   9.000000   
-unique                 NaN             NaN                        NaN   
-top                    NaN             NaN                        NaN   
-freq                   NaN             NaN                        NaN   
-mean           5591.555556        0.180780                   0.082081   
-std            3190.631506        0.080254                   0.000000   
-min             655.000000        0.046579                   0.082081   
-25%            3368.000000        0.113993                   0.082081   
-50%            5591.000000        0.207589                   0.082081   
-75%            8959.000000        0.220887                   0.082081   
-max            8959.000000        0.278140                   0.082081   
-
-        between_all_groups_generalized_entropy_index  \
-count                                        9.00000   
-unique                                           NaN   
-top                                              NaN   
-freq                                             NaN   
-mean                                         0.00001   
-std                                          0.00000   
-min                                          0.00001   
-25%                                          0.00001   
-50%                                          0.00001   
-75%                                          0.00001   
-max                                          0.00001   
-
-        between_group_generalized_entropy_index   theil_index  \
-count                              9.000000e+00  9.000000e+00   
-unique                                      NaN           NaN   
-top                                         NaN           NaN   
-freq                                        NaN           NaN   
-mean                               7.814894e-02  1.224730e-01   
-std                                1.003529e-01  1.471962e-17   
-min                                3.312668e-07  1.224730e-01   
-25%                                3.333221e-06  1.224730e-01   
-50%                                4.225442e-02  1.224730e-01   
-75%                                1.794472e-01  1.224730e-01   
-max                                2.599140e-01  1.224730e-01   
-
-        coefficient_of_variation  between_group_theil_index  \
-count                   9.000000               9.000000e+00   
-unique                       NaN                        NaN   
-top                          NaN                        NaN   
-freq                         NaN                        NaN   
-mean                    0.572994               1.326906e-01   
-std                     0.000000               1.650846e-01   
-min                     0.572994               3.315978e-07   
-25%                     0.572994               3.331081e-06   
-50%                     0.572994               8.112700e-02   
-75%                     0.572994               3.066714e-01   
-max                     0.572994               4.185971e-01   
-
-        between_group_coefficient_of_variation  \
-count                                 9.000000   
-unique                                     NaN   
-top                                        NaN   
-freq                                       NaN   
-mean                                  0.394316   
-std                                   0.420416   
-min                                   0.001151   
-25%                                   0.003651   
-50%                                   0.411118   
-75%                                   0.847224   
-max                                   1.019635   
-
-        between_all_groups_theil_index  \
-count                          9.00000   
-unique                             NaN   
-top                                NaN   
-freq                               NaN   
-mean                           0.00001   
-std                            0.00000   
-min                            0.00001   
-25%                            0.00001   
-50%                            0.00001   
-75%                            0.00001   
-max                            0.00001   
-
-        between_all_groups_coefficient_of_variation  \
-count                                       9.00000   
-unique                                          NaN   
-top                                             NaN   
-freq                                            NaN   
-mean                                        0.00646   
-std                                         0.00000   
-min                                         0.00646   
-25%                                         0.00646   
-50%                                         0.00646   
-75%                                         0.00646   
-max                                         0.00646   
-
-        differential_fairness_bias_amplification  
-count                                   9.000000  
-unique                                       NaN  
-top                                          NaN  
-freq                                         NaN  
-mean                                    0.508061  
-std                                     0.000000  
-min                                     0.508061  
-25%                                     0.508061  
-50%                                     0.508061  
-75%                                     0.508061  
-max                                     0.508061  
+        disparate_impact  
+count           4.000000  
+unique               NaN  
+top                  NaN  
+freq                 NaN  
+mean            0.354231  
+std             0.032228  
+min             0.310398  
+25%             0.344260  
+50%             0.359509  
+75%             0.369479  
+max             0.387509  
 </pre>
+
+<p>
+Each metric is calculated for 3 different subsets of the dataset
+(<code>train</code>, <code>test</code> &amp; <code>full</code>). Each metric may further be conditioned in
+3 different manner as indicated by value in the <code>privileged</code> column.
+<code>None</code> means the metric is calculated on the full dataset, <code>True</code>
+means it is conditioned on the privileged group (ie. <code>sex</code> is 1 or
+'Male' in our case) and <code>False</code> means it is conditioned on the
+unprivileged group (<code>sex</code> is 0 or 'Female').
+</p>
 </div>
 </div>
 
-<div id="outline-container-org17f9dd5" class="outline-2">
-<h2 id="org17f9dd5"><span class="section-number-2">3.</span> Cleanup</h2>
+<div id="outline-container-org563dbca" class="outline-2">
+<h2 id="org563dbca"><span class="section-number-2">3.</span> Analysis of metrics</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-In this section we perform some cleaning which is necessary for the
-analysis to follow.
+In this section we analyse the fairness metrics. The section is
+further divided into logical subsections.
+</p>
+</div>
+
+<div id="outline-container-org28bd28a" class="outline-3">
+<h3 id="org28bd28a"><span class="section-number-3">3.1.</span> Analysis of count metrics</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+In this section we analyse the metrics which provide an absolute count
+of something.
 </p>
 
 <p>
-Lets fill the missing values in <code>privileged</code> with 'None' to denote
-that the data was not conditioned on any privileged or unprivileged
-group.
+We start with the <code>num_positives</code>, <code>num_negatives</code> &amp; <code>base_rate</code> which
+are data metrics.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">adult['privileged'] = adult['privileged'].fillna('None')
+<pre class="src src-python">name = 'adult_barplot_prot-sex_subset-all_num-pos-neg'
 
-adult['privileged'].isna().any()
-</pre>
-</div>
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
 
-<pre class="example">
-False
-</pre>
-
-
-<p>
-Lets convert the <code>consistency</code> column to a float dtype.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">adult['consistency'] = adult['consistency'].str.strip(to_strip='[]')
-adult['consistency'] = adult['consistency'].astype('float')
-adult['consistency'].dtypes
-</pre>
-</div>
-
-<pre class="example">
-float64
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org118c877" class="outline-2">
-<h2 id="org118c877"><span class="section-number-2">4.</span> Analysis of data metrics</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-In this section we analyse the dataset metrics. Following are a set of
-questions we want to answer:
-</p>
-<ul class="org-ul">
-<li>What is the distribution of the fairness metrics amongst the
-different subsets?</li>
-<li>What is the distribution of the fairness metrics when conditions on
-<code>{un,}privileged_groups</code>?</li>
-<li>What is the distribution of the fairness metrics when we combine the
-above two?</li>
-</ul>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics = adult[adult['model'].isna()] # data metrics are computed without a model
-cols = list(set(adult.columns) - set(model_metrics_columns))
-metrics = metrics[cols]
-metrics.shape
-</pre>
-</div>
-
-<p>
-(81, 12)
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics.dtypes
-</pre>
-</div>
-
-<pre class="example" id="org5178fd9">
-privileged_groups                            object
-dataset                                      object
-num_negatives                               float64
-subset                                       object
-unprivileged_groups                          object
-num_positives                               float64
-statistical_parity_difference               float64
-privileged                                   object
-consistency                                 float64
-smoothed_empirical_differential_fairness    float64
-base_rate                                   float64
-disparate_impact                            float64
-dtype: object
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics.head()
-</pre>
-</div>
-
-<pre class="example" id="org498797e">
-  privileged_groups dataset  num_negatives subset unprivileged_groups  \
-0      [{'sex': 1}]   adult        20988.0   full        [{'sex': 0}]   
-1      [{'sex': 1}]   adult        13026.0   full        [{'sex': 0}]   
-2      [{'sex': 1}]   adult        34014.0   full        [{'sex': 0}]   
-3      [{'sex': 1}]   adult        15720.0  train        [{'sex': 0}]   
-4      [{'sex': 1}]   adult         9794.0  train        [{'sex': 0}]   
-
-   num_positives  statistical_parity_difference privileged  consistency  \
-0         9539.0                            NaN       True          NaN   
-1         1669.0                            NaN      False          NaN   
-2        11208.0                      -0.198901       None     0.848667   
-3         7174.0                            NaN       True          NaN   
-4         1228.0                            NaN      False          NaN   
-
-   smoothed_empirical_differential_fairness  base_rate  disparate_impact  
-0                                       NaN   0.312477               NaN  
-1                                       NaN   0.113576               NaN  
-2                                  1.446422   0.247844           0.36347  
-3                                       NaN   0.313357               NaN  
-4                                       NaN   0.111414               NaN  
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics.isna().any()
-</pre>
-</div>
-
-<pre class="example" id="org8a76b0d">
-privileged_groups                           False
-dataset                                     False
-num_negatives                               False
-subset                                      False
-unprivileged_groups                         False
-num_positives                               False
-statistical_parity_difference                True
-privileged                                  False
-consistency                                  True
-smoothed_empirical_differential_fairness     True
-base_rate                                   False
-disparate_impact                             True
-dtype: bool
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics['privileged'].value_counts()
-</pre>
-</div>
-
-<pre class="example">
-True     27
-False    27
-None     27
-Name: privileged, dtype: int64
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-python">metrics['subset'].value_counts()
-</pre>
-</div>
-
-<pre class="example">
-full     27
-train    27
-test     27
-Name: subset, dtype: int64
-</pre>
-
-
-<p>
-So we have data across 3 datasets (full, test &amp; train), 3 different
-privileged conditions (True, False &amp; None). And for each of these 9
-combinations, we have 9 combinations of <code>{un,}privileged_groups</code>. Lets
-look at these combinations in a bit more detail.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics['privileged_groups'].value_counts()
-</pre>
-</div>
-
-<p>
-[{'sex': 1, 'race': 1}]      36
-[{'sex': 1}]                 18
-[{'race': 1}]                18
-[{'sex': 1}, {'race': 1}]     9
-Name: privileged<sub>groups</sub>, dtype: int64
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics['unprivileged_groups'].value_counts()
-</pre>
-</div>
-
-<p>
-[{'sex': 0, 'race': 0}]      36
-[{'sex': 0}]                 18
-[{'race': 0}]                18
-[{'sex': 0}, {'race': 0}]     9
-Name: unprivileged<sub>groups</sub>, dtype: int64
-</p>
-<p>
-[{'sex': 0, 'race': 0}]      36
-[{'sex': 0}]                 18
-[{'race': 0}]                18
-[{'sex': 0}, {'race': 0}]     9
-Name: unprivileged<sub>groups</sub>, dtype: int64
-[{'sex': 0, 'race': 0}]      36
-[{'sex': 0}]                 18
-[{'race': 0}]                18
-[{'sex': 0}, {'race': 0}]     9
-Name: unprivileged<sub>groups</sub>, dtype: int64
-[{'sex': 0, 'race': 0}]      36
-[{'sex': 0}]                 18
-[{'race': 0}]                18
-[{'sex': 0}, {'race': 0}]     9
-Name: unprivileged<sub>groups</sub>, dtype: int64
-</p>
-</div>
-
-<div id="outline-container-orgd43f55f" class="outline-3">
-<h3 id="orgd43f55f"><span class="section-number-3">4.1.</span> Analysis of single protected attribute <code>sex</code></h3>
-<div class="outline-text-3" id="text-4-1">
-<p>
-Lets consider a single protected attribute <code>sex</code> first. We will create
-a plot for all the metrics across the various subsets &amp; conditions.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">sex_metrics = metrics[metrics['privileged_groups'] == "[{'sex': 1}]"]
-sex_metrics = sex_metrics[sex_metrics['unprivileged_groups'] == "[{'sex': 0}]"]
-sex_metrics = sex_metrics.drop(columns=['unprivileged_groups', 'privileged_groups', 'dataset'])
-sex_metrics
-</pre>
-</div>
-
-<pre class="example" id="org81c54a9">
-   num_negatives subset  num_positives  statistical_parity_difference  \
-0        20988.0   full         9539.0                            NaN   
-1        13026.0   full         1669.0                            NaN   
-2        34014.0   full        11208.0                      -0.198901   
-3        15720.0  train         7174.0                            NaN   
-4         9794.0  train         1228.0                            NaN   
-5        25514.0  train         8402.0                      -0.201944   
-6         5268.0   test         2365.0                            NaN   
-7         3232.0   test          441.0                            NaN   
-8         8500.0   test         2806.0                      -0.189774   
-
-  privileged  consistency  smoothed_empirical_differential_fairness  \
-0       True          NaN                                       NaN   
-1      False          NaN                                       NaN   
-2       None     0.848667                                  1.446422   
-3       True          NaN                                       NaN   
-4      False          NaN                                       NaN   
-5       None     0.849381                                  1.509699   
-6       True          NaN                                       NaN   
-7      False          NaN                                       NaN   
-8       None     0.840916                                  1.264974   
-
-   base_rate  disparate_impact  
-0   0.312477               NaN  
-1   0.113576               NaN  
-2   0.247844          0.363470  
-3   0.313357               NaN  
-4   0.111414               NaN  
-5   0.247730          0.355548  
-6   0.309839               NaN  
-7   0.120065               NaN  
-8   0.248187          0.387509  
-</pre>
-
-<p>
-The following is a plot of all metrics which can be conditioned (ie.
-<code>privileged</code> column is not empty). This includes <code>num_positives</code>,
-<code>num_negatives</code> &amp; <code>base_rate</code>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_conditioned-metrics'
-
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-sns.barplot(data=sex_metrics,
+sns.barplot(data=metrics,
 	    y='num_positives',
 	    x='subset',
 	    hue='privileged',
-	    hue_order=['None', True, False],
+	    hue_order=['None', 'True', 'False'],
 	    ax=axs[0])
 
-sns.barplot(data=sex_metrics,
+sns.barplot(data=metrics,
 	    y='num_negatives',
 	    x='subset',
 	    hue='privileged',
-	    hue_order=['None', True, False],
+	    hue_order=['None', 'True', 'False'],
 	    ax=axs[1])
 
-sns.barplot(data=sex_metrics,
+# label the bars with the value, taken from
+# &lt;https://stackoverflow.com/a/68323374&gt;
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgd7fda0c" class="figure">
+<p><img src="adult_barplot_prot-sex_subset-all_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-all_num-pos-neg.png" />
+</p>
+</div>
+
+<p>
+We note that the number of examples for the negative class is far more
+than the positive class. This imbalance exists across the various
+subsets, this makes sense since we take a random sample from the full
+dataset to construct the train &amp; test subsets.
+</p>
+
+<p>
+In both metrics, we have more examples from the privileged group. That
+is, we have more examples where the sex is 'Male'.
+</p>
+
+<p>
+Thus we have two separate biases that we are dealing with: first is
+the imbalance in the <code>class</code> column and second is the imbalance in the
+<code>sex</code> column.
+</p>
+
+<p>
+Lets zoom into only the train subset. This is purely for convenience
+of comparing the data &amp; model metrics together (since all model
+metrics are calculated using only the test set).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-sex_subset-test_num-pos-neg'
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+sns.barplot(data=metrics[metrics['subset'] == 'test'],
+	    y='num_positives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[0])
+
+sns.barplot(data=metrics[metrics['subset'] == 'test'],
+	    y='num_negatives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[1])
+
+# label the bars with the value, taken from
+# &lt;https://stackoverflow.com/a/68323374&gt;
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgfbb76e8" class="figure">
+<p><img src="adult_barplot_prot-sex_subset-test_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-test_num-pos-neg.png" />
+</p>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-sex_base-rate'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=metrics,
 	    y='base_rate',
 	    x='subset',
 	    hue='privileged',
-	    hue_order=['None', True, False],
-	    ax=axs[2])
+	    hue_order=['None', 'True', 'False'],
+	    ax=ax)
 
-# label the bars with the value, taken from
-# &lt;https://stackoverflow.com/a/68323374&gt;
-for container in axs[0].containers:
-    axs[0].bar_label(container)
-
-for container in axs[1].containers:
-    axs[1].bar_label(container)
-
-for container in axs[2].containers:
-    axs[2].bar_label(container)
+for container in ax.containers:
+    ax.bar_label(container)
 
 utils.savefig(fig, name)
+
 </pre>
 </div>
 
 
-<div id="org0e85598" class="figure">
-<p><img src="adult_barplot_prot-sex_conditioned-metrics.png" alt="adult_barplot_prot-sex_conditioned-metrics.png" />
+<div id="org54583b4" class="figure">
+<p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
 
 <p>
-The following is a plot of all metrics which can not be conditioned
-(ie. <code>privileged</code> column is missing). This includes
-<code>statistical_parity_difference</code>, <code>consistency</code>, <code>disparate_impact</code> &amp;
-<code>smoothed_empirical_differential_fairness</code>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_unconditioned-metrics'
-
-fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
-
-sns.barplot(data=sex_metrics,
-	    y='statistical_parity_difference',
-	    x='subset',
-	    ax=axs[0])
-
-sns.barplot(data=sex_metrics,
-	    y='consistency',
-	    x='subset',
-	    ax=axs[1])
-
-sns.barplot(data=sex_metrics,
-	    y='disparate_impact',
-	    x='subset',
-	    ax=axs[2])
-
-sns.barplot(data=sex_metrics,
-	    y='smoothed_empirical_differential_fairness',
-	    x='subset',
-	    ax=axs[3])
-
-# label the bars with the value, taken from
-# &lt;https://stackoverflow.com/a/68323374&gt;
-for container in axs[0].containers:
-    axs[0].bar_label(container)
-
-for container in axs[1].containers:
-    axs[1].bar_label(container)
-
-for container in axs[2].containers:
-    axs[2].bar_label(container)
-
-for container in axs[3].containers:
-    axs[3].bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="orgd5fed2d" class="figure">
-<p><img src="adult_barplot_prot-sex_unconditioned-metrics.png" alt="adult_barplot_prot-sex_unconditioned-metrics.png" />
-</p>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org43efea5" class="outline-2">
-<h2 id="org43efea5"><span class="section-number-2">5.</span> Analysis of model metrics</h2>
-<div class="outline-text-2" id="text-5">
-<p>
-In this section we analyse the model metrics.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics = adult[adult['model'].notna()]
-cols = list(set(adult.columns) - set(data_metrics_columns))
-metrics = metrics[cols]
-metrics.shape
-</pre>
-</div>
-
-<p>
-(27, 56)
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics.dtypes
-</pre>
-</div>
-
-<pre class="example" id="orgd33e65f">
-generalized_false_positive_rate                 float64
-model                                            object
-num_true_positives                              float64
-false_positive_rate_ratio                       float64
-error_rate_difference                           float64
-average_abs_odds_difference                     float64
-num_pred_negatives                              float64
-theil_index                                     float64
-differential_fairness_bias_amplification        float64
-num_true_negatives                              float64
-accuracy                                        float64
-generalized_false_negative_rate                 float64
-false_negative_rate_ratio                       float64
-positive_predictive_value                       float64
-num_generalized_false_positives                 float64
-true_negative_rate                              float64
-num_pred_positives                              float64
-between_group_coefficient_of_variation          float64
-privileged_groups                                object
-false_omission_rate_ratio                       float64
-true_positive_rate                              float64
-negative_predictive_value                       float64
-false_discovery_rate_difference                 float64
-num_false_positives                             float64
-subset                                           object
-error_rate_ratio                                float64
-false_positive_rate                             float64
-generalized_true_positive_rate                  float64
-statistical_parity_difference                   float64
-true_positive_rate_difference                   float64
-false_positive_rate_difference                  float64
-coefficient_of_variation                        float64
-generalized_true_negative_rate                  float64
-num_false_negatives                             float64
-between_all_groups_coefficient_of_variation     float64
-average_odds_difference                         float64
-between_all_groups_generalized_entropy_index    float64
-between_group_theil_index                       float64
-false_negative_rate_difference                  float64
-false_omission_rate                             float64
-selection_rate                                  float64
-between_all_groups_theil_index                  float64
-between_group_generalized_entropy_index         float64
-dataset                                          object
-num_generalized_false_negatives                 float64
-false_discovery_rate_ratio                      float64
-false_discovery_rate                            float64
-num_generalized_true_negatives                  float64
-generalized_entropy_index                       float64
-unprivileged_groups                              object
-privileged                                       object
-false_negative_rate                             float64
-num_generalized_true_positives                  float64
-error_rate                                      float64
-disparate_impact                                float64
-false_omission_rate_difference                  float64
-dtype: object
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics.isna().any()
-</pre>
-</div>
-
-<pre class="example" id="org783790f">
-generalized_false_positive_rate                 False
-model                                           False
-num_true_positives                              False
-false_positive_rate_ratio                        True
-error_rate_difference                            True
-average_abs_odds_difference                      True
-num_pred_negatives                              False
-theil_index                                      True
-differential_fairness_bias_amplification         True
-num_true_negatives                              False
-accuracy                                        False
-generalized_false_negative_rate                 False
-false_negative_rate_ratio                        True
-positive_predictive_value                       False
-num_generalized_false_positives                 False
-true_negative_rate                              False
-num_pred_positives                              False
-between_group_coefficient_of_variation           True
-privileged_groups                               False
-false_omission_rate_ratio                        True
-true_positive_rate                              False
-negative_predictive_value                       False
-false_discovery_rate_difference                  True
-num_false_positives                             False
-subset                                          False
-error_rate_ratio                                 True
-false_positive_rate                             False
-generalized_true_positive_rate                  False
-statistical_parity_difference                    True
-true_positive_rate_difference                    True
-false_positive_rate_difference                   True
-coefficient_of_variation                         True
-generalized_true_negative_rate                  False
-num_false_negatives                             False
-between_all_groups_coefficient_of_variation      True
-average_odds_difference                          True
-between_all_groups_generalized_entropy_index     True
-between_group_theil_index                        True
-false_negative_rate_difference                   True
-false_omission_rate                             False
-selection_rate                                  False
-between_all_groups_theil_index                   True
-between_group_generalized_entropy_index          True
-dataset                                         False
-num_generalized_false_negatives                 False
-false_discovery_rate_ratio                       True
-false_discovery_rate                            False
-num_generalized_true_negatives                  False
-generalized_entropy_index                        True
-unprivileged_groups                             False
-privileged                                      False
-false_negative_rate                             False
-num_generalized_true_positives                  False
-error_rate                                      False
-disparate_impact                                 True
-false_omission_rate_difference                   True
-dtype: bool
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">metrics['privileged'].value_counts()
-</pre>
-</div>
-
-<pre class="example">
-True     9
-False    9
-None     9
-Name: privileged, dtype: int64
-</pre>
-
-
-<div class="org-src-container">
-<pre class="src src-python">metrics['subset'].value_counts()
-</pre>
-</div>
-
-<pre class="example">
-train    27
-Name: subset, dtype: int64
-</pre>
-
-
-<p>
-The <code>subset</code> column is useless &amp; can be dropped. We only have
-variation in the <code>privileged</code> &amp; <code>{un,}privileged_groups</code> columns.
-</p>
-</div>
-
-<div id="outline-container-org085e959" class="outline-3">
-<h3 id="org085e959"><span class="section-number-3">5.1.</span> Analysis of single protected attribute <code>sex</code></h3>
-<div class="outline-text-3" id="text-5-1">
-<p>
-As with the data metrics analysis, we consider a single protected
-attribute first.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">sex_metrics = metrics[metrics['privileged_groups'] == "[{'sex': 1}]"]
-sex_metrics = sex_metrics[sex_metrics['unprivileged_groups'] == "[{'sex': 0}]"]
-sex_metrics = sex_metrics.drop(columns=['unprivileged_groups',
-				       'privileged_groups', 'dataset',
-				       'subset'])
-sex_metrics
-</pre>
-</div>
-
-<pre class="example" id="org89a89b6">
-    generalized_false_positive_rate model  num_true_positives  \
-9                               0.0    lr              1487.0   
-10                              0.0    lr               226.0   
-11                              0.0    lr              1713.0   
-
-    false_positive_rate_ratio  error_rate_difference  \
-9                         NaN                    NaN   
-10                        NaN                    NaN   
-11                        NaN              -0.107694   
-
-    average_abs_odds_difference  num_pred_negatives  theil_index  \
-9                           NaN              5591.0          NaN   
-10                          NaN              3368.0          NaN   
-11                     0.098595              8959.0     0.122473   
-
-    differential_fairness_bias_amplification  num_true_negatives  accuracy  \
-9                                        NaN              4713.0  0.812263   
-10                                       NaN              3153.0  0.919956   
-11                                  0.508061              7866.0  0.847249   
-
-    generalized_false_negative_rate  false_negative_rate_ratio  \
-9                               0.0                        NaN   
-10                              0.0                        NaN   
-11                              0.0                        NaN   
-
-    positive_predictive_value  num_generalized_false_positives  \
-9                    0.728208                              0.0   
-10                   0.740984                              0.0   
-11                   0.729868                              0.0   
-
-    true_negative_rate  num_pred_positives  \
-9             0.894647              2042.0   
-10            0.975557               305.0   
-11            0.925412              2347.0   
-
-    between_group_coefficient_of_variation  false_omission_rate_ratio  \
-9                                      NaN                        NaN   
-10                                     NaN                        NaN   
-11                                0.003651                        NaN   
-
-    true_positive_rate  negative_predictive_value  \
-9             0.628753                   0.842962   
-10            0.512472                   0.936164   
-11            0.610478                   0.878000   
-
-    false_discovery_rate_difference  num_false_positives  error_rate_ratio  \
-9                               NaN                555.0               NaN   
-10                              NaN                 79.0               NaN   
-11                        -0.012776                634.0          0.426359   
-
-    false_positive_rate  generalized_true_positive_rate  \
-9              0.105353                             1.0   
-10             0.024443                             1.0   
-11             0.074588                             1.0   
-
-    statistical_parity_difference  true_positive_rate_difference  \
-9                             NaN                            NaN   
-10                            NaN                            NaN   
-11                      -0.184484                      -0.116281   
-
-    false_positive_rate_difference  coefficient_of_variation  \
-9                              NaN                       NaN   
-10                             NaN                       NaN   
-11                        -0.08091                  0.572994   
-
-    generalized_true_negative_rate  num_false_negatives  \
-9                              1.0                878.0   
-10                             1.0                215.0   
-11                             1.0               1093.0   
-
-    between_all_groups_coefficient_of_variation  average_odds_difference  \
-9                                           NaN                      NaN   
-10                                          NaN                      NaN   
-11                                      0.00646                -0.098595   
-
-    between_all_groups_generalized_entropy_index  between_group_theil_index  \
-9                                            NaN                        NaN   
-10                                           NaN                        NaN   
-11                                       0.00001                   0.000003   
-
-    false_negative_rate_difference  false_omission_rate  selection_rate  \
-9                              NaN             0.157038        0.267523   
-10                             NaN             0.063836        0.083038   
-11                        0.116281             0.122000        0.207589   
-
-    between_all_groups_theil_index  between_group_generalized_entropy_index  \
-9                              NaN                                      NaN   
-10                             NaN                                      NaN   
-11                         0.00001                                 0.000003   
-
-    num_generalized_false_negatives  false_discovery_rate_ratio  \
-9                               0.0                         NaN   
-10                              0.0                         NaN   
-11                              0.0                         NaN   
-
-    false_discovery_rate  num_generalized_true_negatives  \
-9               0.271792                          5268.0   
-10              0.259016                          3232.0   
-11              0.270132                          8500.0   
-
-    generalized_entropy_index privileged  false_negative_rate  \
-9                         NaN       True             0.371247   
-10                        NaN      False             0.487528   
-11                   0.082081       None             0.389522   
-
-    num_generalized_true_positives  error_rate  disparate_impact  \
-9                           2365.0    0.187737               NaN   
-10                           441.0    0.080044               NaN   
-11                          2806.0    0.152751          0.310398   
-
-    false_omission_rate_difference  
-9                              NaN  
-10                             NaN  
-11                       -0.093202  
-</pre>
-
-<p>
-Following are plots of all metrics which can be conditioned. We
-further break them down into multiple plots based on their name.
+The <code>base_rate</code> is the probability that the label of a given example
+is positive. Here, we note that the <code>base_rate</code> is similar across the
+subsets and the conditions. This makes sense since we used random
+sampling to generate the train &amp; test subsets.
 </p>
 
 <p>
-First, all <code>num*</code> metrics.
+The unconditioned <code>base_rate</code> is ~25% and this makes sense since we
+have more examples of the negative class. The conditioned <code>base_rate</code>
+for the privileged group is higher than the unprivileged group (~30%
+vs. ~11%). This makes sense as well since we have more examples of the
+privileged group.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_model-lr_conditioned-num'
-
-fig, axs = plt.subplots(3, 2, sharey=True)
-
-sns.barplot(data=sex_metrics,
-	    x='num_true_positives',
-	    y='privileged',
-	    ax=axs[0, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='num_false_positives',
-	    y='privileged',
-	    ax=axs[0, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='num_false_negatives',
-	    y='privileged',
-	    ax=axs[1, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='num_true_negatives',
-	    y='privileged',
-	    ax=axs[1, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='num_pred_positives',
-	    y='privileged',
-	    ax=axs[2, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='num_pred_negatives',
-	    y='privileged',
-	    ax=axs[2, 1])
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org3cae79e" class="figure">
-<p><img src="adult_barplot_prot-sex_model-lr_conditioned-num.png" alt="adult_barplot_prot-sex_model-lr_conditioned-num.png" />
-</p>
-</div>
 
 <p>
-Second, all <code>num_generalized*</code> metrics.
+Lets look at the confusion matrices for the linear regression model
+next to understand the biases in the model. The confusion matrices
+come in two flavours: the absolute &amp; normalised versions.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_model-lr_conditioned-num-gen'
-
-fig, axs = plt.subplots(2, 2, sharey=True)
-
-sns.barplot(data=sex_metrics,
-	    x='num_generalized_true_positives',
-	    y='privileged',
-	    ax=axs[0, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='num_generalized_false_positives',
-	    y='privileged',
-	    ax=axs[0, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='num_generalized_false_negatives',
-	    y='privileged',
-	    ax=axs[1, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='num_generalized_true_negatives',
-	    y='privileged',
-	    ax=axs[1, 1])
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org79b715e" class="figure">
-<p><img src="adult_barplot_prot-sex_model-lr_conditioned-num-gen.png" alt="adult_barplot_prot-sex_model-lr_conditioned-num-gen.png" />
-</p>
-</div>
 
 <p>
-Third, all <code>*rate</code> metrics.
+<a href="adult_heatmap_prot-sex_cm.pdf">adult_heatmap_prot-sex_cm.pdf</a>
 </p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot_sex_model-lr_conditioned-rate'
-
-fig, axs = plt.subplots(4, 2, sharey=True)
-
-sns.barplot(data=sex_metrics,
-	    x='true_positive_rate',
-	    y='privileged',
-	    ax=axs[0, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='false_positive_rate',
-	    y='privileged',
-	    ax=axs[0, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='false_negative_rate',
-	    y='privileged',
-	    ax=axs[1, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='true_negative_rate',
-	    y='privileged',
-	    ax=axs[1, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='false_discovery_rate',
-	    y='privileged',
-	    ax=axs[2, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='false_omission_rate',
-	    y='privileged',
-	    ax=axs[2, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='error_rate',
-	    y='privileged',
-	    ax=axs[3, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='selection_rate',
-	    y='privileged',
-	    ax=axs[3, 1])
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org78013e2" class="figure">
-<p><img src="adult_barplot_prot_sex_model-lr_conditioned-rate.png" alt="adult_barplot_prot_sex_model-lr_conditioned-rate.png" />
-</p>
-</div>
-
-<p>
-Fourth, all <code>generalized_*_rate</code> metrics.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_model-lr_conditioned-gen-rate'
-
-fig, axs = plt.subplots(2, 2, sharey=True)
-
-sns.barplot(data=sex_metrics,
-	    x='generalized_true_positive_rate',
-	    y='privileged',
-	    ax=axs[0, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='generalized_false_positive_rate',
-	    y='privileged',
-	    ax=axs[0, 1])
-
-sns.barplot(data=sex_metrics,
-	    x='generalized_false_negative_rate',
-	    y='privileged',
-	    ax=axs[1, 0])
-
-sns.barplot(data=sex_metrics,
-	    x='generalized_true_negative_rate',
-	    y='privileged',
-	    ax=axs[1, 1])
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="orgb1b0a83" class="figure">
-<p><img src="adult_barplot_prot-sex_model-lr_conditioned-gen-rate.png" alt="adult_barplot_prot-sex_model-lr_conditioned-gen-rate.png" />
-</p>
-</div>
-
-<p>
-And finally everything else.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_model-lr_conditioned-misc'
-
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-sns.barplot(data=sex_metrics,
-	    x='positive_predictive_value',
-	    y='privileged',
-	    ax=axs[0])
-
-sns.barplot(data=sex_metrics,
-	    x='negative_predictive_value',
-	    y='privileged',
-	    ax=axs[1])
-
-sns.barplot(data=sex_metrics,
-	    x='accuracy',
-	    y='privileged',
-	    ax=axs[2])
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="orgfa9c5f4" class="figure">
-<p><img src="adult_barplot_prot-sex_model-lr_conditioned-misc.png" alt="adult_barplot_prot-sex_model-lr_conditioned-misc.png" />
-</p>
-</div>
 </div>
 </div>
 </div>
@@ -2024,7 +592,7 @@ utils.savefig(fig, name)
 <div id="postamble" class="status">
 <p class="date">Date: 2022-07-25 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-07-27 Wed 10:35</p>
+<p class="date">Created: 2022-08-01 Mon 16:06</p>
 </div>
 </body>
 </html>
