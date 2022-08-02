@@ -49,47 +49,75 @@ In this section we conduct some priliminary analysis of the dataset.
 
 #+RESULTS:
 #+begin_example
-    num_negatives  num_positives subset  statistical_parity_difference  \
-0         34014.0        11208.0   full                      -0.198901   
-1         20988.0         9539.0   full                            NaN   
-2         13026.0         1669.0   full                            NaN   
-3         25514.0         8402.0  train                      -0.201944   
-4         15720.0         7174.0  train                            NaN   
-5          9794.0         1228.0  train                            NaN   
-6             NaN            NaN   test                      -0.184484   
-7          8500.0         2806.0   test                      -0.189774   
-8             NaN            NaN   test                            NaN   
-9          5268.0         2365.0   test                            NaN   
-10            NaN            NaN   test                            NaN   
-11         3232.0          441.0   test                            NaN   
+         NPV       TNR dataset  num_negatives  statistical_parity_difference  \
+0        NaN       NaN   adult        34014.0                      -0.198901   
+1        NaN       NaN   adult        20988.0                            NaN   
+2        NaN       NaN   adult        13026.0                            NaN   
+3        NaN       NaN   adult        25514.0                      -0.201944   
+4        NaN       NaN   adult        15720.0                            NaN   
+5        NaN       NaN   adult         9794.0                            NaN   
+6   0.878000  0.925412   adult            NaN                      -0.184484   
+7        NaN       NaN   adult         8500.0                      -0.189774   
+8   0.842962  0.894647   adult            NaN                            NaN   
+9        NaN       NaN   adult         5268.0                            NaN   
+10  0.936164  0.975557   adult            NaN                            NaN   
+11       NaN       NaN   adult         3232.0                            NaN   
 
-    theil_index privileged protected  base_rate dataset               model  \
-0           NaN       None       sex   0.247844   adult                None   
-1           NaN       True       sex   0.312477   adult                None   
-2           NaN      False       sex   0.113576   adult                None   
-3           NaN       None       sex   0.247730   adult                None   
-4           NaN       True       sex   0.313357   adult                None   
-5           NaN      False       sex   0.111414   adult                None   
-6      0.122473       None       sex        NaN   adult  logisticregression   
-7           NaN       None       sex   0.248187   adult                None   
-8           NaN       True       sex        NaN   adult  logisticregression   
-9           NaN       True       sex   0.309839   adult                None   
-10          NaN      False       sex        NaN   adult  logisticregression   
-11          NaN      False       sex   0.120065   adult                None   
+    disparate_impact       FDR       FPR  base_rate protected  num_positives  \
+0           0.363470       NaN       NaN   0.247844       sex        11208.0   
+1                NaN       NaN       NaN   0.312477       sex         9539.0   
+2                NaN       NaN       NaN   0.113576       sex         1669.0   
+3           0.355548       NaN       NaN   0.247730       sex         8402.0   
+4                NaN       NaN       NaN   0.313357       sex         7174.0   
+5                NaN       NaN       NaN   0.111414       sex         1228.0   
+6           0.310398  0.270132  0.074588        NaN       sex            NaN   
+7           0.387509       NaN       NaN   0.248187       sex         2806.0   
+8                NaN  0.271792  0.105353        NaN       sex            NaN   
+9                NaN       NaN       NaN   0.309839       sex         2365.0   
+10               NaN  0.259016  0.024443        NaN       sex            NaN   
+11               NaN       NaN       NaN   0.120065       sex          441.0   
 
-    accuracy  disparate_impact  
-0        NaN          0.363470  
-1        NaN               NaN  
-2        NaN               NaN  
-3        NaN          0.355548  
-4        NaN               NaN  
-5        NaN               NaN  
-6   0.847249          0.310398  
-7        NaN          0.387509  
-8   0.812263               NaN  
-9        NaN               NaN  
-10  0.919956               NaN  
-11       NaN               NaN  
+    GFPR     GTP      TP  GTPR  GFNR       FNR  GFP privileged  theil_index  \
+0    NaN     NaN     NaN   NaN   NaN       NaN  NaN       None          NaN   
+1    NaN     NaN     NaN   NaN   NaN       NaN  NaN       True          NaN   
+2    NaN     NaN     NaN   NaN   NaN       NaN  NaN      False          NaN   
+3    NaN     NaN     NaN   NaN   NaN       NaN  NaN       None          NaN   
+4    NaN     NaN     NaN   NaN   NaN       NaN  NaN       True          NaN   
+5    NaN     NaN     NaN   NaN   NaN       NaN  NaN      False          NaN   
+6    0.0  2806.0  1713.0   1.0   0.0  0.389522  0.0       None     0.122473   
+7    NaN     NaN     NaN   NaN   NaN       NaN  NaN       None          NaN   
+8    0.0  2365.0  1487.0   1.0   0.0  0.371247  0.0       True          NaN   
+9    NaN     NaN     NaN   NaN   NaN       NaN  NaN       True          NaN   
+10   0.0   441.0   226.0   1.0   0.0  0.487528  0.0      False          NaN   
+11   NaN     NaN     NaN   NaN   NaN       NaN  NaN      False          NaN   
+
+       FP     GTN      FN       TPR  GFN       PPV               model  \
+0     NaN     NaN     NaN       NaN  NaN       NaN                None   
+1     NaN     NaN     NaN       NaN  NaN       NaN                None   
+2     NaN     NaN     NaN       NaN  NaN       NaN                None   
+3     NaN     NaN     NaN       NaN  NaN       NaN                None   
+4     NaN     NaN     NaN       NaN  NaN       NaN                None   
+5     NaN     NaN     NaN       NaN  NaN       NaN                None   
+6   634.0  8500.0  1093.0  0.610478  0.0  0.729868  logisticregression   
+7     NaN     NaN     NaN       NaN  NaN       NaN                None   
+8   555.0  5268.0   878.0  0.628753  0.0  0.728208  logisticregression   
+9     NaN     NaN     NaN       NaN  NaN       NaN                None   
+10   79.0  3232.0   215.0  0.512472  0.0  0.740984  logisticregression   
+11    NaN     NaN     NaN       NaN  NaN       NaN                None   
+
+         FOR  accuracy      TN subset  GTNR  
+0        NaN       NaN     NaN   full   NaN  
+1        NaN       NaN     NaN   full   NaN  
+2        NaN       NaN     NaN   full   NaN  
+3        NaN       NaN     NaN  train   NaN  
+4        NaN       NaN     NaN  train   NaN  
+5        NaN       NaN     NaN  train   NaN  
+6   0.122000  0.847249  7866.0   test   1.0  
+7        NaN       NaN     NaN   test   NaN  
+8   0.157038  0.812263  4713.0   test   1.0  
+9        NaN       NaN     NaN   test   NaN  
+10  0.063836  0.919956  3153.0   test   1.0  
+11       NaN       NaN     NaN   test   NaN  
 #+end_example
 
 #+begin_src python
@@ -97,7 +125,7 @@ In this section we conduct some priliminary analysis of the dataset.
 #+end_src
 
 #+RESULTS:
-| 12 | 12 |
+| 12 | 32 |
 
 #+begin_src python
   adult.dtypes
@@ -105,18 +133,38 @@ In this section we conduct some priliminary analysis of the dataset.
 
 #+RESULTS:
 #+begin_example
-num_negatives                    float64
-num_positives                    float64
-subset                            object
-statistical_parity_difference    float64
-theil_index                      float64
-privileged                        object
-protected                         object
-base_rate                        float64
+NPV                              float64
+TNR                              float64
 dataset                           object
-model                             object
-accuracy                         float64
+num_negatives                    float64
+statistical_parity_difference    float64
 disparate_impact                 float64
+FDR                              float64
+FPR                              float64
+base_rate                        float64
+protected                         object
+num_positives                    float64
+GFPR                             float64
+GTP                              float64
+TP                               float64
+GTPR                             float64
+GFNR                             float64
+FNR                              float64
+GFP                              float64
+privileged                        object
+theil_index                      float64
+FP                               float64
+GTN                              float64
+FN                               float64
+TPR                              float64
+GFN                              float64
+PPV                              float64
+model                             object
+FOR                              float64
+accuracy                         float64
+TN                               float64
+subset                            object
+GTNR                             float64
 dtype: object
 #+end_example
 
@@ -126,44 +174,83 @@ dtype: object
 
 #+RESULTS:
 #+begin_example
-        num_negatives  num_positives subset  statistical_parity_difference  \
-count        9.000000       9.000000     12                       4.000000   
-unique            NaN            NaN      3                            NaN   
-top               NaN            NaN   test                            NaN   
-freq              NaN            NaN      6                            NaN   
-mean     15117.333333    4981.333333    NaN                      -0.193776   
-std      10091.913793    4082.024865    NaN                       0.008069   
-min       3232.000000     441.000000    NaN                      -0.201944   
-25%       8500.000000    1669.000000    NaN                      -0.199662   
-50%      13026.000000    2806.000000    NaN                      -0.194337   
-75%      20988.000000    8402.000000    NaN                      -0.188451   
-max      34014.000000   11208.000000    NaN                      -0.184484   
+             NPV       TNR dataset  num_negatives  \
+count   3.000000  3.000000      12       9.000000   
+unique       NaN       NaN       1            NaN   
+top          NaN       NaN   adult            NaN   
+freq         NaN       NaN      12            NaN   
+mean    0.885709  0.931872     NaN   15117.333333   
+std     0.047077  0.040840     NaN   10091.913793   
+min     0.842962  0.894647     NaN    3232.000000   
+25%     0.860481  0.910029     NaN    8500.000000   
+50%     0.878000  0.925412     NaN   13026.000000   
+75%     0.907082  0.950484     NaN   20988.000000   
+max     0.936164  0.975557     NaN   34014.000000   
 
-        theil_index privileged protected  base_rate dataset model  accuracy  \
-count      1.000000         12        12   9.000000      12    12  3.000000   
-unique          NaN          3         1        NaN       1     2       NaN   
-top             NaN       None       sex        NaN   adult  None       NaN   
-freq            NaN          4        12        NaN      12     9       NaN   
-mean       0.122473        NaN       NaN   0.224943     NaN   NaN  0.859823   
-std             NaN        NaN       NaN   0.087007     NaN   NaN  0.054937   
-min        0.122473        NaN       NaN   0.111414     NaN   NaN  0.812263   
-25%        0.122473        NaN       NaN   0.120065     NaN   NaN  0.829756   
-50%        0.122473        NaN       NaN   0.247844     NaN   NaN  0.847249   
-75%        0.122473        NaN       NaN   0.309839     NaN   NaN  0.883603   
-max        0.122473        NaN       NaN   0.313357     NaN   NaN  0.919956   
+        statistical_parity_difference  disparate_impact       FDR       FPR  \
+count                        4.000000          4.000000  3.000000  3.000000   
+unique                            NaN               NaN       NaN       NaN   
+top                               NaN               NaN       NaN       NaN   
+freq                              NaN               NaN       NaN       NaN   
+mean                        -0.193776          0.354231  0.266980  0.068128   
+std                          0.008069          0.032228  0.006947  0.040840   
+min                         -0.201944          0.310398  0.259016  0.024443   
+25%                         -0.199662          0.344260  0.264574  0.049516   
+50%                         -0.194337          0.359509  0.270132  0.074588   
+75%                         -0.188451          0.369479  0.270962  0.089971   
+max                         -0.184484          0.387509  0.271792  0.105353   
 
-        disparate_impact  
-count           4.000000  
-unique               NaN  
-top                  NaN  
-freq                 NaN  
-mean            0.354231  
-std             0.032228  
-min             0.310398  
-25%             0.344260  
-50%             0.359509  
-75%             0.369479  
-max             0.387509  
+        base_rate protected  num_positives  GFPR          GTP          TP  \
+count    9.000000        12       9.000000   3.0     3.000000     3.00000   
+unique        NaN         1            NaN   NaN          NaN         NaN   
+top           NaN       sex            NaN   NaN          NaN         NaN   
+freq          NaN        12            NaN   NaN          NaN         NaN   
+mean     0.224943       NaN    4981.333333   0.0  1870.666667  1142.00000   
+std      0.087007       NaN    4082.024865   0.0  1257.608975   801.28709   
+min      0.111414       NaN     441.000000   0.0   441.000000   226.00000   
+25%      0.120065       NaN    1669.000000   0.0  1403.000000   856.50000   
+50%      0.247844       NaN    2806.000000   0.0  2365.000000  1487.00000   
+75%      0.309839       NaN    8402.000000   0.0  2585.500000  1600.00000   
+max      0.313357       NaN   11208.000000   0.0  2806.000000  1713.00000   
+
+        GTPR  GFNR       FNR  GFP privileged  theil_index          FP  \
+count    3.0   3.0  3.000000  3.0         12     1.000000    3.000000   
+unique   NaN   NaN       NaN  NaN          3          NaN         NaN   
+top      NaN   NaN       NaN  NaN       None          NaN         NaN   
+freq     NaN   NaN       NaN  NaN          4          NaN         NaN   
+mean     1.0   0.0  0.416099  0.0        NaN     0.122473  422.666667   
+std      0.0   0.0  0.062531  0.0        NaN          NaN  300.233798   
+min      1.0   0.0  0.371247  0.0        NaN     0.122473   79.000000   
+25%      1.0   0.0  0.380385  0.0        NaN     0.122473  317.000000   
+50%      1.0   0.0  0.389522  0.0        NaN     0.122473  555.000000   
+75%      1.0   0.0  0.438525  0.0        NaN     0.122473  594.500000   
+max      1.0   0.0  0.487528  0.0        NaN     0.122473  634.000000   
+
+                GTN           FN       TPR  GFN       PPV model       FOR  \
+count      3.000000     3.000000  3.000000  3.0  3.000000    12  3.000000   
+unique          NaN          NaN       NaN  NaN       NaN     2       NaN   
+top             NaN          NaN       NaN  NaN       NaN  None       NaN   
+freq            NaN          NaN       NaN  NaN       NaN     9       NaN   
+mean    5666.666667   728.666667  0.583901  0.0  0.733020   NaN  0.114291   
+std     2656.531071   457.653071  0.062531  0.0  0.006947   NaN  0.047077   
+min     3232.000000   215.000000  0.512472  0.0  0.728208   NaN  0.063836   
+25%     4250.000000   546.500000  0.561475  0.0  0.729038   NaN  0.092918   
+50%     5268.000000   878.000000  0.610478  0.0  0.729868   NaN  0.122000   
+75%     6884.000000   985.500000  0.619615  0.0  0.735426   NaN  0.139519   
+max     8500.000000  1093.000000  0.628753  0.0  0.740984   NaN  0.157038   
+
+        accuracy           TN subset  GTNR  
+count   3.000000     3.000000     12   3.0  
+unique       NaN          NaN      3   NaN  
+top          NaN          NaN   test   NaN  
+freq         NaN          NaN      6   NaN  
+mean    0.859823  5244.000000    NaN   1.0  
+std     0.054937  2400.950437    NaN   0.0  
+min     0.812263  3153.000000    NaN   1.0  
+25%     0.829756  3933.000000    NaN   1.0  
+50%     0.847249  4713.000000    NaN   1.0  
+75%     0.883603  6289.500000    NaN   1.0  
+max     0.919956  7866.000000    NaN   1.0  
 #+end_example
 
 Each metric is calculated for 3 different subsets of the dataset
@@ -193,26 +280,23 @@ Lets convert the =consistency= column to a float dtype.
 In this section we analyse the fairness metrics. The section is
 further divided into logical subsections.
 
-** Analysis of count metrics
-In this section we analyse the metrics which provide an absolute count
-of something.
-
-We start with the =num_positives=, =num_negatives= & =base_rate= which
-are data metrics.
+** Analysis of =num_{positive,negative}=, =num_{true,false}_{positive,negative}= & =num_{true,false}_{positive_negative}_rate=
+We start with the =num_positives=, =num_negatives= which are computed
+only using the dataset.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_subset-all_num-pos-neg'
 
   fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
 
-  sns.barplot(data=metrics,
+  sns.barplot(data=adult,
 	      y='num_positives',
 	      x='subset',
 	      hue='privileged',
 	      hue_order=['None', 'True', 'False'],
 	      ax=axs[0])
 
-  sns.barplot(data=metrics,
+  sns.barplot(data=adult,
 	      y='num_negatives',
 	      x='subset',
 	      hue='privileged',
@@ -254,14 +338,14 @@ metrics are calculated using only the test set).
 
   fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
 
-  sns.barplot(data=metrics[metrics['subset'] == 'test'],
+  sns.barplot(data=adult[adult['subset'] == 'test'],
 	      y='num_positives',
 	      x='subset',
 	      hue='privileged',
 	      hue_order=['None', 'True', 'False'],
 	      ax=axs[0])
 
-  sns.barplot(data=metrics[metrics['subset'] == 'test'],
+  sns.barplot(data=adult[adult['subset'] == 'test'],
 	      y='num_negatives',
 	      x='subset',
 	      hue='privileged',
@@ -282,13 +366,143 @@ metrics are calculated using only the test set).
 #+RESULTS:
 [[file:adult_barplot_prot-sex_subset-test_num-pos-neg.png]]
 
+Lets look at the confusion matrices for the linear regression model
+next to understand the biases in the model. The confusion matrices
+come in two flavours: the absolute & normalised versions.
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_cm'
+  metrics = adult[adult['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_cm.png]]
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_cm-rate'
+  metrics = adult[adult['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_cm-rate.png]]
+
+The model does well with the negative class (~92% accuracy). It
+doesn't do so well with the positive class (~61% accuracy) with a less
+then idea false negative rate (~39%). This is expected since we have
+more number of negative examples in the dataset.
+
+The performance of the model remains some what similar across the
+conditions on the protected attribute.
+
+There is a slight uptick in the true negative rate when we condition
+on the unprivileged group (right more plot). The true positive rate
+drops slightly here as well, with a rise in the false positive rate.
+So the model is able to classify women with a lower income with high
+accuracy. But the performance is 50-50 when it comes to women with a
+higher income. And this again is corroborated by the fact that we
+trained the model with very few examples of women with a high income.
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_cm-gen'
+  metrics = adult[adult['model'] == 'logisticregression']
+  cols = ['GTN', 'GFP', 'GFN', 'GTP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_cm-gen.png]]
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_cm-gen-rate'
+  metrics = adult[adult['model'] == 'logisticregression']
+  cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_cm-gen-rate.png]]
+
+The =num_generalized_*= metrics use the probability associated with
+the predicted label (rather than the absolute label). I assume there
+is some sort of rounding up going on internally which results in the
+true negative & true positive numbers to be exactly the same as the
+data. It will be interesting to experiment here more & see when (and
+if) these numbers change for variation in the dataset or model.
+
+** Analysis of =base_rate=
+The =base_rate= is the probability that the label of a given example
+is positive.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_base-rate'
 
   fig, ax = plt.subplots()
 
-  sns.barplot(data=metrics,
+  sns.barplot(data=adult,
 	      y='base_rate',
 	      x='subset',
 	      hue='privileged',
@@ -305,10 +519,9 @@ metrics are calculated using only the test set).
 #+RESULTS:
 [[file:adult_barplot_prot-sex_base-rate.png]]
 
-The =base_rate= is the probability that the label of a given example
-is positive. Here, we note that the =base_rate= is similar across the
-subsets and the conditions. This makes sense since we used random
-sampling to generate the train & test subsets.
+Here, we note that the =base_rate= is similar across the subsets and
+the conditions. This makes sense since we used random sampling to
+generate the train & test subsets.
 
 The unconditioned =base_rate= is ~25% and this makes sense since we
 have more examples of the negative class. The conditioned =base_rate=
@@ -316,8 +529,147 @@ for the privileged group is higher than the unprivileged group (~30%
 vs. ~11%). This makes sense as well since we have more examples of the
 privileged group.
 
-Lets look at the confusion matrices for the linear regression model
-next to understand the biases in the model. The confusion matrices
-come in two flavours: the absolute & normalised versions.
+** Analysis of ={positive,negative}_predictive_value= & =false_{discovery,omission}_rate=
+The wikipedia page on [[https://en.wikipedia.org/wiki/Binary_classification][binary classification]] was very helpful to make
+sense of these metrics. Following is a table summarising their
+mathematical formulas
 
-file:adult_heatmap_prot-sex_cm.pdf
+| PPV | TP/(TP+FP) |
+| FDR | FP/(TP+FP) |
+| FOR | FN/(TN+FN) |
+| NPV | TN/(TN+FN) |
+
+With the following model of confusion matrix (where =y_true= is on y
+axis and =y_pred= is on x axis):
+
+| y_true | 0 | TN     | FP     |
+| y_true | 1 | FN     | TP     |
+|        |   | 0      | 1      |
+|        |   | y_pred | y_pred |
+
+We visualise the above metrics in a confusion matrix like so:
+
+| y_true | 0 | NPV    | FDR    |
+| y_true | 1 | FOR    | PPV    |
+|        |   | 0      | 1      |
+|        |   | y_pred | y_pred |
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_cm-ppv-fdr-for-npv'
+  metrics = adult[adult['model'] == 'logisticregression']
+  cols = ['NPV', 'FDR', 'FOR', 'PPV']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_cm-ppv-fdr-for-npv.png]]
+
++ [ ] I still don't understand what the metrics imply?
++ [ ] PPV is also the precision, review precision & recall
+
+** Analysis of =disparate_impact= & =statistical_parity_difference=
+These metrics exist both for the data & the model so we should compare
+them and see how they differ. For each metric, we create two plots:
+First, we observe the distribution of the metric across the subsets.
+And second we compare the distribution of the metric when calculated
+with & without a model.
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-sex_subset-all_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=adult[adult['model'] == 'None'],
+	      y='disparate_impact',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-sex_subset-all_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-sex_subset-test_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=adult[adult['subset'] == 'test'],
+	      y='disparate_impact',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+    
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-sex_subset-test_disparate-impact.png]]
+
+=disparate_impact= when calculated without a model, is expressed
+mathematically as follows:
+
+\begin{equation}
+\frac{Pr(Y=1) | D = \text{unprivileged}}{Pr(Y=1) | D =
+\text{privileged}}
+\end{equation}
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-sex_subset-all_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=adult[adult['model'] == 'None'],
+	      y='statistical_parity_difference',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+    
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-sex_subset-all_stat-par-diff.png]]
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-sex_subset-test_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=adult[adult['subset'] == 'test'],
+	      y='statistical_parity_difference',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+    
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-sex_subset-test_stat-par-diff.png]]
+
