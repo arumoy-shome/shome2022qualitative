@@ -589,6 +589,20 @@ First, we observe the distribution of the metric across the subsets.
 And second we compare the distribution of the metric when calculated
 with & without a model.
 
+=disparate_impact= when calculated without a model, is expressed
+mathematically as follows:
+
+\begin{equation}
+\frac{Pr(Y=1) | D = \text{unprivileged}}{Pr(Y=1) | D =
+\text{privileged}}
+\end{equation}
+
+So intuitively, if we have more examples of positive class with the
+privileged group (sex is 'Male'), the metric will approach 0. Ideally,
+we want the metric to be high with a maximum value of 1 which
+indicates that we have equal number of positive examples for both
+privileged & unprivileged groups.
+
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_subset-all_disparate-impact'
 
@@ -604,6 +618,10 @@ with & without a model.
 
   utils.savefig(fig, name)
 #+end_src
+
+The =disparate_impact= across the various subsets is low. And this
+makes sense since we do not have that many examples of positive class
+for the unprivileged group in our dataset.
 
 #+RESULTS:
 [[file:adult_barplot_prot-sex_subset-all_disparate-impact.png]]
@@ -627,13 +645,18 @@ with & without a model.
 #+RESULTS:
 [[file:adult_barplot_prot-sex_subset-test_disparate-impact.png]]
 
-=disparate_impact= when calculated without a model, is expressed
-mathematically as follows:
+When we calculate =disparate_impact= using a model, we use the
+predictions instead of the actual label. The mathematical formula
+changes to the following.
 
 \begin{equation}
-\frac{Pr(Y=1) | D = \text{unprivileged}}{Pr(Y=1) | D =
+\frac{Pr(\hat{Y}=1) | D = \text{unprivileged}}{Pr(\hat{Y}=1) | D =
 \text{privileged}}
 \end{equation}
+
+The =disparate_impact= in the model is similar to what we see in the
+dataset. This makes sense since the model merely reflects the
+statistics of the dataset.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_subset-all_stat-par-diff'
@@ -650,6 +673,20 @@ mathematically as follows:
     
   utils.savefig(fig, name)
 #+end_src
+
+The =statistical_parity_difference= is expressed mathematically as
+follows.
+
+\begin{equation}
+Pr(Y=1 | D = \text{unprivileged} - Pr(Y=1 | D = \text{privileged}))
+\end{equation}
+
+Intuitively, the value for this metric falls within the range of $[-1,
+1]$. A value of 0 indicates that the dataset contains equal number of
+positive examples for both privileged & unprivileged groups. A value
+of -1 is not ideal since it indicates that the dataset contains
+significantly more examples of the positive class with the privileged
+group. The idea value for this metric thus lies between $[0, 1]$.
 
 #+RESULTS:
 [[file:adult_barplot_prot-sex_subset-all_stat-par-diff.png]]
@@ -673,3 +710,5 @@ mathematically as follows:
 #+RESULTS:
 [[file:adult_barplot_prot-sex_subset-test_stat-par-diff.png]]
 
+Again, the metric is negative both in the data & model since we have
+more examples of the positive class with the privileged group.

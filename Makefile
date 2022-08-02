@@ -7,9 +7,9 @@ etags:
 	find . -type f -not -path "*git*" -exec ctags -e --tag-relative=yes --languages=-javascript {} +
 
 fmt: $(PYFILES)
-	black $^
+	.venv/bin/black $^
 
 lint: $(PYFILES)
-	pyflakes $^
+	.venv/bin/pyflakes $^
 
 .PHONY: ctags etags fmt

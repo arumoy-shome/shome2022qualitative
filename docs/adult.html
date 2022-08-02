@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-02 Tue 15:17 -->
+<!-- 2022-08-02 Tue 18:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adult</title>
@@ -222,14 +222,14 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7d04273">1. Init</a></li>
-<li><a href="#org4e83383">2. Priliminary analysis</a></li>
-<li><a href="#orgc2454db">3. Analysis of metrics</a>
+<li><a href="#org8d0cb09">1. Init</a></li>
+<li><a href="#org7cfa97e">2. Priliminary analysis</a></li>
+<li><a href="#org7a930c2">3. Analysis of metrics</a>
 <ul>
-<li><a href="#orgf828e2c">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a></li>
-<li><a href="#orgd00b2fb">3.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org3e436e6">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a></li>
-<li><a href="#orgc528df6">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+<li><a href="#org98775fe">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a></li>
+<li><a href="#org02d6967">3.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org879d9e4">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a></li>
+<li><a href="#org22e1d02">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
 </ul>
@@ -244,8 +244,8 @@ we will analyse here. The dataset can be generated using the
 <code>bin/adult.py</code> script.
 </p>
 
-<div id="outline-container-org7d04273" class="outline-2">
-<h2 id="org7d04273"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-org8d0cb09" class="outline-2">
+<h2 id="org8d0cb09"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we perform some sanity checks, load the necessary
@@ -282,8 +282,8 @@ from src.utils import data_metrics_columns, model_metrics_columns
 </div>
 </div>
 
-<div id="outline-container-org4e83383" class="outline-2">
-<h2 id="org4e83383"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-org7cfa97e" class="outline-2">
+<h2 id="org7cfa97e"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
@@ -294,7 +294,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="orgcbe7bf6">
+<pre class="example" id="org6a24f09">
          NPV       TNR dataset  num_negatives  statistical_parity_difference  \
 0        NaN       NaN   adult        34014.0                      -0.198901   
 1        NaN       NaN   adult        20988.0                            NaN   
@@ -392,7 +392,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org2e7cce2">
+<pre class="example" id="orgeee72bd">
 NPV                              float64
 TNR                              float64
 dataset                           object
@@ -433,7 +433,7 @@ dtype: object
 </pre>
 </div>
 
-<pre class="example" id="orgd9a958d">
+<pre class="example" id="orgbe31fed">
              NPV       TNR dataset  num_negatives  \
 count   3.000000  3.000000      12       9.000000   
 unique       NaN       NaN       1            NaN   
@@ -525,8 +525,8 @@ unprivileged group (<code>sex</code> is 0 or 'Female').
 </div>
 </div>
 
-<div id="outline-container-orgc2454db" class="outline-2">
-<h2 id="orgc2454db"><span class="section-number-2">3.</span> Analysis of metrics</h2>
+<div id="outline-container-org7a930c2" class="outline-2">
+<h2 id="org7a930c2"><span class="section-number-2">3.</span> Analysis of metrics</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 In this section we analyse the fairness metrics. The section is
@@ -534,8 +534,8 @@ further divided into logical subsections.
 </p>
 </div>
 
-<div id="outline-container-orgf828e2c" class="outline-3">
-<h3 id="orgf828e2c"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-org98775fe" class="outline-3">
+<h3 id="org98775fe"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
@@ -574,7 +574,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgbae00a9" class="figure">
+<div id="org94391b6" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -635,7 +635,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgb83a036" class="figure">
+<div id="orgf34d3b4" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-test_num-pos-neg.png" />
 </p>
 </div>
@@ -670,7 +670,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgc7fd35a" class="figure">
+<div id="org2ed5188" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm.png" alt="adult_heatmap_prot-sex_cm.png" />
 </p>
 </div>
@@ -699,7 +699,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org680e8fd" class="figure">
+<div id="org62b4d29" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-rate.png" alt="adult_heatmap_prot-sex_cm-rate.png" />
 </p>
 </div>
@@ -750,7 +750,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org7157fe2" class="figure">
+<div id="orgafdba32" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-gen.png" alt="adult_heatmap_prot-sex_cm-gen.png" />
 </p>
 </div>
@@ -779,7 +779,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgcfccba4" class="figure">
+<div id="orga5d658c" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-gen-rate.png" alt="adult_heatmap_prot-sex_cm-gen-rate.png" />
 </p>
 </div>
@@ -795,8 +795,8 @@ if) these numbers change for variation in the dataset or model.
 </div>
 </div>
 
-<div id="outline-container-orgd00b2fb" class="outline-3">
-<h3 id="orgd00b2fb"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
+<div id="outline-container-org02d6967" class="outline-3">
+<h3 id="org02d6967"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The <code>base_rate</code> is the probability that the label of a given example
@@ -824,7 +824,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org5e42692" class="figure">
+<div id="org1a64bb5" class="figure">
 <p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
@@ -845,8 +845,8 @@ privileged group.
 </div>
 </div>
 
-<div id="outline-container-org3e436e6" class="outline-3">
-<h3 id="org3e436e6"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div id="outline-container-org879d9e4" class="outline-3">
+<h3 id="org879d9e4"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The wikipedia page on <a href="https://en.wikipedia.org/wiki/Binary_classification">binary classification</a> was very helpful to make
@@ -1004,7 +1004,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org4d736b4" class="figure">
+<div id="org2461983" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-sex_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
@@ -1016,8 +1016,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-orgc528df6" class="outline-3">
-<h3 id="orgc528df6"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div id="outline-container-org22e1d02" class="outline-3">
+<h3 id="org22e1d02"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 These metrics exist both for the data &amp; the model so we should compare
@@ -1025,6 +1025,24 @@ them and see how they differ. For each metric, we create two plots:
 First, we observe the distribution of the metric across the subsets.
 And second we compare the distribution of the metric when calculated
 with &amp; without a model.
+</p>
+
+<p>
+<code>disparate_impact</code> when calculated without a model, is expressed
+mathematically as follows:
+</p>
+
+\begin{equation}
+\frac{Pr(Y=1) | D = \text{unprivileged}}{Pr(Y=1) | D =
+\text{privileged}}
+\end{equation}
+
+<p>
+So intuitively, if we have more examples of positive class with the
+privileged group (sex is 'Male'), the metric will approach 0. Ideally,
+we want the metric to be high with a maximum value of 1 which
+indicates that we have equal number of positive examples for both
+privileged &amp; unprivileged groups.
 </p>
 
 <div class="org-src-container">
@@ -1044,8 +1062,14 @@ utils.savefig(fig, name)
 </pre>
 </div>
 
+<p>
+The <code>disparate_impact</code> across the various subsets is low. And this
+makes sense since we do not have that many examples of positive class
+for the unprivileged group in our dataset.
+</p>
 
-<div id="org89eb9b9" class="figure">
+
+<div id="orge4ca43a" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_disparate-impact.png" alt="adult_barplot_prot-sex_subset-all_disparate-impact.png" />
 </p>
 </div>
@@ -1068,20 +1092,27 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgafbeba6" class="figure">
+<div id="org83055dd" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_disparate-impact.png" alt="adult_barplot_prot-sex_subset-test_disparate-impact.png" />
 </p>
 </div>
 
 <p>
-<code>disparate_impact</code> when calculated without a model, is expressed
-mathematically as follows:
+When we calculate <code>disparate_impact</code> using a model, we use the
+predictions instead of the actual label. The mathematical formula
+changes to the following.
 </p>
 
 \begin{equation}
-\frac{Pr(Y=1) | D = \text{unprivileged}}{Pr(Y=1) | D =
+\frac{Pr(\hat{Y}=1) | D = \text{unprivileged}}{Pr(\hat{Y}=1) | D =
 \text{privileged}}
 \end{equation}
+
+<p>
+The <code>disparate_impact</code> in the model is similar to what we see in the
+dataset. This makes sense since the model merely reflects the
+statistics of the dataset.
+</p>
 
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-sex_subset-all_stat-par-diff'
@@ -1100,8 +1131,26 @@ utils.savefig(fig, name)
 </pre>
 </div>
 
+<p>
+The <code>statistical_parity_difference</code> is expressed mathematically as
+follows.
+</p>
 
-<div id="org80c1107" class="figure">
+\begin{equation}
+Pr(Y=1 | D = \text{unprivileged} - Pr(Y=1 | D = \text{privileged}))
+\end{equation}
+
+<p>
+Intuitively, the value for this metric falls within the range of \([-1,
+1]\). A value of 0 indicates that the dataset contains equal number of
+positive examples for both privileged &amp; unprivileged groups. A value
+of -1 is not ideal since it indicates that the dataset contains
+significantly more examples of the positive class with the privileged
+group. The idea value for this metric thus lies between \([0, 1]\).
+</p>
+
+
+<div id="org50b895c" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_stat-par-diff.png" alt="adult_barplot_prot-sex_subset-all_stat-par-diff.png" />
 </p>
 </div>
@@ -1124,10 +1173,15 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org5a28f98" class="figure">
+<div id="org824c843" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_stat-par-diff.png" alt="adult_barplot_prot-sex_subset-test_stat-par-diff.png" />
 </p>
 </div>
+
+<p>
+Again, the metric is negative both in the data &amp; model since we have
+more examples of the positive class with the privileged group.
+</p>
 </div>
 </div>
 </div>
@@ -1135,7 +1189,7 @@ utils.savefig(fig, name)
 <div id="postamble" class="status">
 <p class="date">Date: 2022-07-25 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-08-02 Tue 15:17</p>
+<p class="date">Created: 2022-08-02 Tue 18:57</p>
 </div>
 </body>
 </html>
