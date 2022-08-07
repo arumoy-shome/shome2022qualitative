@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-02 Tue 18:57 -->
+<!-- 2022-08-04 Thu 12:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adult</title>
@@ -222,14 +222,22 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8d0cb09">1. Init</a></li>
-<li><a href="#org7cfa97e">2. Priliminary analysis</a></li>
-<li><a href="#org7a930c2">3. Analysis of metrics</a>
+<li><a href="#orgdbfb2aa">1. Init</a></li>
+<li><a href="#orgd1272ee">2. Priliminary analysis</a></li>
+<li><a href="#org7416d61">3. Analysis of protected attribute <code>sex</code></a>
 <ul>
-<li><a href="#org98775fe">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a></li>
-<li><a href="#org02d6967">3.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org879d9e4">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a></li>
-<li><a href="#org22e1d02">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+<li><a href="#org550d54e">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a></li>
+<li><a href="#org697f23d">3.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org1ba21fe">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a></li>
+<li><a href="#orgbe4e9da">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+</ul>
+</li>
+<li><a href="#orgb64a297">4. Analysis of protected attribute <code>race</code></a>
+<ul>
+<li><a href="#orgbe59578">4.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a></li>
+<li><a href="#org5dd5120">4.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org8523ecc">4.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a></li>
+<li><a href="#orgcb45f6e">4.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
 </ul>
@@ -244,8 +252,8 @@ we will analyse here. The dataset can be generated using the
 <code>bin/adult.py</code> script.
 </p>
 
-<div id="outline-container-org8d0cb09" class="outline-2">
-<h2 id="org8d0cb09"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-orgdbfb2aa" class="outline-2">
+<h2 id="orgdbfb2aa"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we perform some sanity checks, load the necessary
@@ -282,8 +290,8 @@ from src.utils import data_metrics_columns, model_metrics_columns
 </div>
 </div>
 
-<div id="outline-container-org7cfa97e" class="outline-2">
-<h2 id="org7cfa97e"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-orgd1272ee" class="outline-2">
+<h2 id="orgd1272ee"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
@@ -294,80 +302,308 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org6a24f09">
-         NPV       TNR dataset  num_negatives  statistical_parity_difference  \
-0        NaN       NaN   adult        34014.0                      -0.198901   
-1        NaN       NaN   adult        20988.0                            NaN   
-2        NaN       NaN   adult        13026.0                            NaN   
-3        NaN       NaN   adult        25514.0                      -0.201944   
-4        NaN       NaN   adult        15720.0                            NaN   
-5        NaN       NaN   adult         9794.0                            NaN   
-6   0.878000  0.925412   adult            NaN                      -0.184484   
-7        NaN       NaN   adult         8500.0                      -0.189774   
-8   0.842962  0.894647   adult            NaN                            NaN   
-9        NaN       NaN   adult         5268.0                            NaN   
-10  0.936164  0.975557   adult            NaN                            NaN   
-11       NaN       NaN   adult         3232.0                            NaN   
+<pre class="example" id="orgacd6576">
+        FN       PPV       TNR      TP subset  statistical_parity_difference  \
+0      NaN       NaN       NaN     NaN   full                      -0.198901   
+1      NaN       NaN       NaN     NaN   full                            NaN   
+2      NaN       NaN       NaN     NaN   full                            NaN   
+3      NaN       NaN       NaN     NaN   full                      -0.103959   
+4      NaN       NaN       NaN     NaN   full                            NaN   
+5      NaN       NaN       NaN     NaN   full                            NaN   
+6      NaN       NaN       NaN     NaN  train                      -0.201944   
+7      NaN       NaN       NaN     NaN  train                            NaN   
+8      NaN       NaN       NaN     NaN  train                            NaN   
+9      NaN       NaN       NaN     NaN  train                      -0.105242   
+10     NaN       NaN       NaN     NaN  train                            NaN   
+11     NaN       NaN       NaN     NaN  train                            NaN   
+12  1093.0  0.729868  0.925412  1713.0   test                      -0.184484   
+13     NaN       NaN       NaN     NaN   test                      -0.189774   
+14   878.0  0.728208  0.894647  1487.0   test                            NaN   
+15     NaN       NaN       NaN     NaN   test                            NaN   
+16   215.0  0.740984  0.975557   226.0   test                            NaN   
+17     NaN       NaN       NaN     NaN   test                            NaN   
+18  1093.0  0.729868  0.925412  1713.0   test                      -0.095887   
+19     NaN       NaN       NaN     NaN   test                      -0.100076   
+20   973.0  0.734077  0.920401  1579.0   test                            NaN   
+21     NaN       NaN       NaN     NaN   test                            NaN   
+22   120.0  0.683673  0.952816   134.0   test                            NaN   
+23     NaN       NaN       NaN     NaN   test                            NaN   
 
-    disparate_impact       FDR       FPR  base_rate protected  num_positives  \
-0           0.363470       NaN       NaN   0.247844       sex        11208.0   
-1                NaN       NaN       NaN   0.312477       sex         9539.0   
-2                NaN       NaN       NaN   0.113576       sex         1669.0   
-3           0.355548       NaN       NaN   0.247730       sex         8402.0   
-4                NaN       NaN       NaN   0.313357       sex         7174.0   
-5                NaN       NaN       NaN   0.111414       sex         1228.0   
-6           0.310398  0.270132  0.074588        NaN       sex            NaN   
-7           0.387509       NaN       NaN   0.248187       sex         2806.0   
-8                NaN  0.271792  0.105353        NaN       sex            NaN   
-9                NaN       NaN       NaN   0.309839       sex         2365.0   
-10               NaN  0.259016  0.024443        NaN       sex            NaN   
-11               NaN       NaN       NaN   0.120065       sex          441.0   
+         FOR  GFPR  accuracy  num_positives     GTN protected  GFNR       FDR  \
+0        NaN   NaN       NaN        11208.0     NaN       sex   NaN       NaN   
+1        NaN   NaN       NaN         9539.0     NaN       sex   NaN       NaN   
+2        NaN   NaN       NaN         1669.0     NaN       sex   NaN       NaN   
+3        NaN   NaN       NaN        11208.0     NaN      race   NaN       NaN   
+4        NaN   NaN       NaN        10207.0     NaN      race   NaN       NaN   
+5        NaN   NaN       NaN         1001.0     NaN      race   NaN       NaN   
+6        NaN   NaN       NaN         8402.0     NaN       sex   NaN       NaN   
+7        NaN   NaN       NaN         7174.0     NaN       sex   NaN       NaN   
+8        NaN   NaN       NaN         1228.0     NaN       sex   NaN       NaN   
+9        NaN   NaN       NaN         8402.0     NaN      race   NaN       NaN   
+10       NaN   NaN       NaN         7655.0     NaN      race   NaN       NaN   
+11       NaN   NaN       NaN          747.0     NaN      race   NaN       NaN   
+12  0.122000   0.0  0.847249            NaN  8500.0       sex   0.0  0.270132   
+13       NaN   NaN       NaN         2806.0     NaN       sex   NaN       NaN   
+14  0.157038   0.0  0.812263            NaN  5268.0       sex   0.0  0.271792   
+15       NaN   NaN       NaN         2365.0     NaN       sex   NaN       NaN   
+16  0.063836   0.0  0.919956            NaN  3232.0       sex   0.0  0.259016   
+17       NaN   NaN       NaN          441.0     NaN       sex   NaN       NaN   
+18  0.122000   0.0  0.847249            NaN  8500.0      race   0.0  0.270132   
+19       NaN   NaN       NaN         2806.0     NaN      race   NaN       NaN   
+20  0.128246   0.0  0.841343            NaN  7186.0      race   0.0  0.265923   
+21       NaN   NaN       NaN         2552.0     NaN      race   NaN       NaN   
+22  0.087464   0.0  0.883929            NaN  1314.0      race   0.0  0.316327   
+23       NaN   NaN       NaN          254.0     NaN      race   NaN       NaN   
 
-    GFPR     GTP      TP  GTPR  GFNR       FNR  GFP privileged  theil_index  \
-0    NaN     NaN     NaN   NaN   NaN       NaN  NaN       None          NaN   
-1    NaN     NaN     NaN   NaN   NaN       NaN  NaN       True          NaN   
-2    NaN     NaN     NaN   NaN   NaN       NaN  NaN      False          NaN   
-3    NaN     NaN     NaN   NaN   NaN       NaN  NaN       None          NaN   
-4    NaN     NaN     NaN   NaN   NaN       NaN  NaN       True          NaN   
-5    NaN     NaN     NaN   NaN   NaN       NaN  NaN      False          NaN   
-6    0.0  2806.0  1713.0   1.0   0.0  0.389522  0.0       None     0.122473   
-7    NaN     NaN     NaN   NaN   NaN       NaN  NaN       None          NaN   
-8    0.0  2365.0  1487.0   1.0   0.0  0.371247  0.0       True          NaN   
-9    NaN     NaN     NaN   NaN   NaN       NaN  NaN       True          NaN   
-10   0.0   441.0   226.0   1.0   0.0  0.487528  0.0      False          NaN   
-11   NaN     NaN     NaN   NaN   NaN       NaN  NaN      False          NaN   
+   privileged  disparate_impact       FNR dataset     GTP       FPR  \
+0        None          0.363470       NaN   adult     NaN       NaN   
+1        True               NaN       NaN   adult     NaN       NaN   
+2       False               NaN       NaN   adult     NaN       NaN   
+3        None          0.603769       NaN   adult     NaN       NaN   
+4        True               NaN       NaN   adult     NaN       NaN   
+5       False               NaN       NaN   adult     NaN       NaN   
+6        None          0.355548       NaN   adult     NaN       NaN   
+7        True               NaN       NaN   adult     NaN       NaN   
+8       False               NaN       NaN   adult     NaN       NaN   
+9        None          0.599035       NaN   adult     NaN       NaN   
+10       True               NaN       NaN   adult     NaN       NaN   
+11      False               NaN       NaN   adult     NaN       NaN   
+12       None          0.310398  0.389522   adult  2806.0  0.074588   
+13       None          0.387509       NaN   adult     NaN       NaN   
+14       True               NaN  0.371247   adult  2365.0  0.105353   
+15       True               NaN       NaN   adult     NaN       NaN   
+16      False               NaN  0.487528   adult   441.0  0.024443   
+17      False               NaN       NaN   adult     NaN       NaN   
+18       None          0.565900  0.389522   adult  2806.0  0.074588   
+19       None          0.618126       NaN   adult     NaN       NaN   
+20       True               NaN  0.381270   adult  2552.0  0.079599   
+21       True               NaN       NaN   adult     NaN       NaN   
+22      False               NaN  0.472441   adult   254.0  0.047184   
+23      False               NaN       NaN   adult     NaN       NaN   
 
-       FP     GTN      FN       TPR  GFN       PPV               model  \
-0     NaN     NaN     NaN       NaN  NaN       NaN                None   
-1     NaN     NaN     NaN       NaN  NaN       NaN                None   
-2     NaN     NaN     NaN       NaN  NaN       NaN                None   
-3     NaN     NaN     NaN       NaN  NaN       NaN                None   
-4     NaN     NaN     NaN       NaN  NaN       NaN                None   
-5     NaN     NaN     NaN       NaN  NaN       NaN                None   
-6   634.0  8500.0  1093.0  0.610478  0.0  0.729868  logisticregression   
-7     NaN     NaN     NaN       NaN  NaN       NaN                None   
-8   555.0  5268.0   878.0  0.628753  0.0  0.728208  logisticregression   
-9     NaN     NaN     NaN       NaN  NaN       NaN                None   
-10   79.0  3232.0   215.0  0.512472  0.0  0.740984  logisticregression   
-11    NaN     NaN     NaN       NaN  NaN       NaN                None   
+    num_negatives  GTNR  base_rate  GFP       TPR               model      TN  \
+0         34014.0   NaN   0.247844  NaN       NaN                None     NaN   
+1         20988.0   NaN   0.312477  NaN       NaN                None     NaN   
+2         13026.0   NaN   0.113576  NaN       NaN                None     NaN   
+3         34014.0   NaN   0.247844  NaN       NaN                None     NaN   
+4         28696.0   NaN   0.262371  NaN       NaN                None     NaN   
+5          5318.0   NaN   0.158411  NaN       NaN                None     NaN   
+6         25514.0   NaN   0.247730  NaN       NaN                None     NaN   
+7         15720.0   NaN   0.313357  NaN       NaN                None     NaN   
+8          9794.0   NaN   0.111414  NaN       NaN                None     NaN   
+9         25514.0   NaN   0.247730  NaN       NaN                None     NaN   
+10        21510.0   NaN   0.262472  NaN       NaN                None     NaN   
+11         4004.0   NaN   0.157230  NaN       NaN                None     NaN   
+12            NaN   1.0        NaN  0.0  0.610478  logisticregression  7866.0   
+13         8500.0   NaN   0.248187  NaN       NaN                None     NaN   
+14            NaN   1.0        NaN  0.0  0.628753  logisticregression  4713.0   
+15         5268.0   NaN   0.309839  NaN       NaN                None     NaN   
+16            NaN   1.0        NaN  0.0  0.512472  logisticregression  3153.0   
+17         3232.0   NaN   0.120065  NaN       NaN                None     NaN   
+18            NaN   1.0        NaN  0.0  0.610478  logisticregression  7866.0   
+19         8500.0   NaN   0.248187  NaN       NaN                None     NaN   
+20            NaN   1.0        NaN  0.0  0.618730  logisticregression  6614.0   
+21         7186.0   NaN   0.262066  NaN       NaN                None     NaN   
+22            NaN   1.0        NaN  0.0  0.527559  logisticregression  1252.0   
+23         1314.0   NaN   0.161990  NaN       NaN                None     NaN   
 
-         FOR  accuracy      TN subset  GTNR  
-0        NaN       NaN     NaN   full   NaN  
-1        NaN       NaN     NaN   full   NaN  
-2        NaN       NaN     NaN   full   NaN  
-3        NaN       NaN     NaN  train   NaN  
-4        NaN       NaN     NaN  train   NaN  
-5        NaN       NaN     NaN  train   NaN  
-6   0.122000  0.847249  7866.0   test   1.0  
-7        NaN       NaN     NaN   test   NaN  
-8   0.157038  0.812263  4713.0   test   1.0  
-9        NaN       NaN     NaN   test   NaN  
-10  0.063836  0.919956  3153.0   test   1.0  
-11       NaN       NaN     NaN   test   NaN  
+       FP       NPV  GFN  GTPR  theil_index  
+0     NaN       NaN  NaN   NaN          NaN  
+1     NaN       NaN  NaN   NaN          NaN  
+2     NaN       NaN  NaN   NaN          NaN  
+3     NaN       NaN  NaN   NaN          NaN  
+4     NaN       NaN  NaN   NaN          NaN  
+5     NaN       NaN  NaN   NaN          NaN  
+6     NaN       NaN  NaN   NaN          NaN  
+7     NaN       NaN  NaN   NaN          NaN  
+8     NaN       NaN  NaN   NaN          NaN  
+9     NaN       NaN  NaN   NaN          NaN  
+10    NaN       NaN  NaN   NaN          NaN  
+11    NaN       NaN  NaN   NaN          NaN  
+12  634.0  0.878000  0.0   1.0     0.122473  
+13    NaN       NaN  NaN   NaN          NaN  
+14  555.0  0.842962  0.0   1.0          NaN  
+15    NaN       NaN  NaN   NaN          NaN  
+16   79.0  0.936164  0.0   1.0          NaN  
+17    NaN       NaN  NaN   NaN          NaN  
+18  634.0  0.878000  0.0   1.0     0.122473  
+19    NaN       NaN  NaN   NaN          NaN  
+20  572.0  0.871754  0.0   1.0          NaN  
+21    NaN       NaN  NaN   NaN          NaN  
+22   62.0  0.912536  0.0   1.0          NaN  
+23    NaN       NaN  NaN   NaN          NaN  
 </pre>
 
 <div class="org-src-container">
 <pre class="src src-python">adult.shape
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">24</td>
+<td class="org-right">32</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-python">adult.dtypes
+</pre>
+</div>
+
+<pre class="example" id="orgb821f99">
+FN                               float64
+PPV                              float64
+TNR                              float64
+TP                               float64
+subset                            object
+statistical_parity_difference    float64
+FOR                              float64
+GFPR                             float64
+accuracy                         float64
+num_positives                    float64
+GTN                              float64
+protected                         object
+GFNR                             float64
+FDR                              float64
+privileged                        object
+disparate_impact                 float64
+FNR                              float64
+dataset                           object
+GTP                              float64
+FPR                              float64
+num_negatives                    float64
+GTNR                             float64
+base_rate                        float64
+GFP                              float64
+TPR                              float64
+model                             object
+TN                               float64
+FP                               float64
+NPV                              float64
+GFN                              float64
+GTPR                             float64
+theil_index                      float64
+dtype: object
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python">adult.describe(include='all')
+</pre>
+</div>
+
+<pre class="example" id="org74ab807">
+                 FN       PPV       TNR           TP subset  \
+count      6.000000  6.000000  6.000000     6.000000     24   
+unique          NaN       NaN       NaN          NaN      3   
+top             NaN       NaN       NaN          NaN   test   
+freq            NaN       NaN       NaN          NaN     12   
+mean     728.666667  0.724446  0.932374  1142.000000    NaN   
+std      443.126468  0.020502  0.028094   750.625872    NaN   
+min      120.000000  0.683673  0.894647   134.000000    NaN   
+25%      380.750000  0.728623  0.921654   541.250000    NaN   
+50%      925.500000  0.729868  0.925412  1533.000000    NaN   
+75%     1063.000000  0.733025  0.945965  1679.500000    NaN   
+max     1093.000000  0.740984  0.975557  1713.000000    NaN   
+
+        statistical_parity_difference       FOR  GFPR  accuracy  \
+count                        8.000000  6.000000   6.0  6.000000   
+unique                            NaN       NaN   NaN       NaN   
+top                               NaN       NaN   NaN       NaN   
+freq                              NaN       NaN   NaN       NaN   
+mean                        -0.147533  0.113431   0.0  0.858665   
+std                          0.049793  0.032869   0.0  0.037706   
+min                         -0.201944  0.063836   0.0  0.812263   
+25%                         -0.192055  0.096098   0.0  0.842820   
+50%                         -0.144863  0.122000   0.0  0.847249   
+75%                         -0.102989  0.126684   0.0  0.874759   
+max                         -0.095887  0.157038   0.0  0.919956   
+
+        num_positives          GTN protected  GFNR       FDR privileged  \
+count       18.000000     6.000000        24   6.0  6.000000         24   
+unique            NaN          NaN         2   NaN       NaN          3   
+top               NaN          NaN       sex   NaN       NaN       None   
+freq              NaN          NaN        12   NaN       NaN          8   
+mean      4981.333333  5666.666667       NaN   0.0  0.275554        NaN   
+std       4094.371229  2946.054084       NaN   0.0  0.020502        NaN   
+min        254.000000  1314.000000       NaN   0.0  0.259016        NaN   
+25%       1338.250000  3741.000000       NaN   0.0  0.266975        NaN   
+50%       2806.000000  6227.000000       NaN   0.0  0.270132        NaN   
+75%       8402.000000  8171.500000       NaN   0.0  0.271377        NaN   
+max      11208.000000  8500.000000       NaN   0.0  0.316327        NaN   
+
+        disparate_impact       FNR dataset          GTP       FPR  \
+count           8.000000  6.000000      24     6.000000  6.000000   
+unique               NaN       NaN       1          NaN       NaN   
+top                  NaN       NaN   adult          NaN       NaN   
+freq                 NaN       NaN      24          NaN       NaN   
+mean            0.475469  0.415255     NaN  1870.666667  0.067626   
+std             0.132108  0.050813     NaN  1192.965660  0.028094   
+min             0.310398  0.371247     NaN   254.000000  0.024443   
+25%             0.361489  0.383333     NaN   922.000000  0.054035   
+50%             0.476704  0.389522     NaN  2458.500000  0.074588   
+75%             0.600219  0.451711     NaN  2742.500000  0.078346   
+max             0.618126  0.487528     NaN  2806.000000  0.105353   
+
+        num_negatives  GTNR  base_rate  GFP       TPR model           TN  \
+count       18.000000   6.0  18.000000  6.0  6.000000    24     6.000000   
+unique            NaN   NaN        NaN  NaN       NaN     2          NaN   
+top               NaN   NaN        NaN  NaN       NaN  None          NaN   
+freq              NaN   NaN        NaN  NaN       NaN    18          NaN   
+mean     15117.333333   1.0   0.224044  0.0  0.584745   NaN  5244.000000   
+std      10905.894596   0.0   0.068296  0.0  0.050813   NaN  2691.355569   
+min       1314.000000   1.0   0.111414  0.0  0.512472   NaN  1252.000000   
+25%       5785.000000   1.0   0.159306  0.0  0.548289   NaN  3543.000000   
+50%      11410.000000   1.0   0.247844  0.0  0.610478   NaN  5663.500000   
+75%      24513.000000   1.0   0.262294  0.0  0.616667   NaN  7553.000000   
+max      34014.000000   1.0   0.313357  0.0  0.628753   NaN  7866.000000   
+
+                FP       NPV  GFN  GTPR  theil_index  
+count     6.000000  6.000000  6.0   6.0     2.000000  
+unique         NaN       NaN  NaN   NaN          NaN  
+top            NaN       NaN  NaN   NaN          NaN  
+freq           NaN       NaN  NaN   NaN          NaN  
+mean    422.666667  0.886569  0.0   1.0     0.122473  
+std     274.708330  0.032869  0.0   0.0     0.000000  
+min      62.000000  0.842962  0.0   1.0     0.122473  
+25%     198.000000  0.873316  0.0   1.0     0.122473  
+50%     563.500000  0.878000  0.0   1.0     0.122473  
+75%     618.500000  0.903902  0.0   1.0     0.122473  
+max     634.000000  0.936164  0.0   1.0     0.122473  
+</pre>
+
+<p>
+Each metric is calculated for 3 different subsets of the dataset
+(<code>train</code>, <code>test</code> &amp; <code>full</code>). Each metric may further be conditioned in
+3 different manner as indicated by value in the <code>privileged</code> column.
+<code>None</code> means the metric is calculated on the full dataset, <code>True</code>
+means it is conditioned on the privileged group (ie. <code>sex</code> is 1 or
+'Male' in our case) and <code>False</code> means it is conditioned on the
+unprivileged group (<code>sex</code> is 0 or 'Female').
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7416d61" class="outline-2">
+<h2 id="org7416d61"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
+<div class="outline-text-2" id="text-3">
+<p>
+In this section we analyse the fairness metrics. The section is
+further divided into logical subsections.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">data = adult[adult['protected'] == 'sex']
+data.shape
 </pre>
 </div>
 
@@ -386,156 +622,10 @@ In this section we conduct some priliminary analysis of the dataset.
 </tr>
 </tbody>
 </table>
-
-<div class="org-src-container">
-<pre class="src src-python">adult.dtypes
-</pre>
 </div>
 
-<pre class="example" id="orgeee72bd">
-NPV                              float64
-TNR                              float64
-dataset                           object
-num_negatives                    float64
-statistical_parity_difference    float64
-disparate_impact                 float64
-FDR                              float64
-FPR                              float64
-base_rate                        float64
-protected                         object
-num_positives                    float64
-GFPR                             float64
-GTP                              float64
-TP                               float64
-GTPR                             float64
-GFNR                             float64
-FNR                              float64
-GFP                              float64
-privileged                        object
-theil_index                      float64
-FP                               float64
-GTN                              float64
-FN                               float64
-TPR                              float64
-GFN                              float64
-PPV                              float64
-model                             object
-FOR                              float64
-accuracy                         float64
-TN                               float64
-subset                            object
-GTNR                             float64
-dtype: object
-</pre>
-
-<div class="org-src-container">
-<pre class="src src-python">adult.describe(include='all')
-</pre>
-</div>
-
-<pre class="example" id="orgbe31fed">
-             NPV       TNR dataset  num_negatives  \
-count   3.000000  3.000000      12       9.000000   
-unique       NaN       NaN       1            NaN   
-top          NaN       NaN   adult            NaN   
-freq         NaN       NaN      12            NaN   
-mean    0.885709  0.931872     NaN   15117.333333   
-std     0.047077  0.040840     NaN   10091.913793   
-min     0.842962  0.894647     NaN    3232.000000   
-25%     0.860481  0.910029     NaN    8500.000000   
-50%     0.878000  0.925412     NaN   13026.000000   
-75%     0.907082  0.950484     NaN   20988.000000   
-max     0.936164  0.975557     NaN   34014.000000   
-
-        statistical_parity_difference  disparate_impact       FDR       FPR  \
-count                        4.000000          4.000000  3.000000  3.000000   
-unique                            NaN               NaN       NaN       NaN   
-top                               NaN               NaN       NaN       NaN   
-freq                              NaN               NaN       NaN       NaN   
-mean                        -0.193776          0.354231  0.266980  0.068128   
-std                          0.008069          0.032228  0.006947  0.040840   
-min                         -0.201944          0.310398  0.259016  0.024443   
-25%                         -0.199662          0.344260  0.264574  0.049516   
-50%                         -0.194337          0.359509  0.270132  0.074588   
-75%                         -0.188451          0.369479  0.270962  0.089971   
-max                         -0.184484          0.387509  0.271792  0.105353   
-
-        base_rate protected  num_positives  GFPR          GTP          TP  \
-count    9.000000        12       9.000000   3.0     3.000000     3.00000   
-unique        NaN         1            NaN   NaN          NaN         NaN   
-top           NaN       sex            NaN   NaN          NaN         NaN   
-freq          NaN        12            NaN   NaN          NaN         NaN   
-mean     0.224943       NaN    4981.333333   0.0  1870.666667  1142.00000   
-std      0.087007       NaN    4082.024865   0.0  1257.608975   801.28709   
-min      0.111414       NaN     441.000000   0.0   441.000000   226.00000   
-25%      0.120065       NaN    1669.000000   0.0  1403.000000   856.50000   
-50%      0.247844       NaN    2806.000000   0.0  2365.000000  1487.00000   
-75%      0.309839       NaN    8402.000000   0.0  2585.500000  1600.00000   
-max      0.313357       NaN   11208.000000   0.0  2806.000000  1713.00000   
-
-        GTPR  GFNR       FNR  GFP privileged  theil_index          FP  \
-count    3.0   3.0  3.000000  3.0         12     1.000000    3.000000   
-unique   NaN   NaN       NaN  NaN          3          NaN         NaN   
-top      NaN   NaN       NaN  NaN       None          NaN         NaN   
-freq     NaN   NaN       NaN  NaN          4          NaN         NaN   
-mean     1.0   0.0  0.416099  0.0        NaN     0.122473  422.666667   
-std      0.0   0.0  0.062531  0.0        NaN          NaN  300.233798   
-min      1.0   0.0  0.371247  0.0        NaN     0.122473   79.000000   
-25%      1.0   0.0  0.380385  0.0        NaN     0.122473  317.000000   
-50%      1.0   0.0  0.389522  0.0        NaN     0.122473  555.000000   
-75%      1.0   0.0  0.438525  0.0        NaN     0.122473  594.500000   
-max      1.0   0.0  0.487528  0.0        NaN     0.122473  634.000000   
-
-                GTN           FN       TPR  GFN       PPV model       FOR  \
-count      3.000000     3.000000  3.000000  3.0  3.000000    12  3.000000   
-unique          NaN          NaN       NaN  NaN       NaN     2       NaN   
-top             NaN          NaN       NaN  NaN       NaN  None       NaN   
-freq            NaN          NaN       NaN  NaN       NaN     9       NaN   
-mean    5666.666667   728.666667  0.583901  0.0  0.733020   NaN  0.114291   
-std     2656.531071   457.653071  0.062531  0.0  0.006947   NaN  0.047077   
-min     3232.000000   215.000000  0.512472  0.0  0.728208   NaN  0.063836   
-25%     4250.000000   546.500000  0.561475  0.0  0.729038   NaN  0.092918   
-50%     5268.000000   878.000000  0.610478  0.0  0.729868   NaN  0.122000   
-75%     6884.000000   985.500000  0.619615  0.0  0.735426   NaN  0.139519   
-max     8500.000000  1093.000000  0.628753  0.0  0.740984   NaN  0.157038   
-
-        accuracy           TN subset  GTNR  
-count   3.000000     3.000000     12   3.0  
-unique       NaN          NaN      3   NaN  
-top          NaN          NaN   test   NaN  
-freq         NaN          NaN      6   NaN  
-mean    0.859823  5244.000000    NaN   1.0  
-std     0.054937  2400.950437    NaN   0.0  
-min     0.812263  3153.000000    NaN   1.0  
-25%     0.829756  3933.000000    NaN   1.0  
-50%     0.847249  4713.000000    NaN   1.0  
-75%     0.883603  6289.500000    NaN   1.0  
-max     0.919956  7866.000000    NaN   1.0  
-</pre>
-
-<p>
-Each metric is calculated for 3 different subsets of the dataset
-(<code>train</code>, <code>test</code> &amp; <code>full</code>). Each metric may further be conditioned in
-3 different manner as indicated by value in the <code>privileged</code> column.
-<code>None</code> means the metric is calculated on the full dataset, <code>True</code>
-means it is conditioned on the privileged group (ie. <code>sex</code> is 1 or
-'Male' in our case) and <code>False</code> means it is conditioned on the
-unprivileged group (<code>sex</code> is 0 or 'Female').
-</p>
-</div>
-</div>
-
-<div id="outline-container-org7a930c2" class="outline-2">
-<h2 id="org7a930c2"><span class="section-number-2">3.</span> Analysis of metrics</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-In this section we analyse the fairness metrics. The section is
-further divided into logical subsections.
-</p>
-</div>
-
-<div id="outline-container-org98775fe" class="outline-3">
-<h3 id="org98775fe"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-org550d54e" class="outline-3">
+<h3 id="org550d54e"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
@@ -547,14 +637,14 @@ only using the dataset.
 
 fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
 
-sns.barplot(data=adult,
+sns.barplot(data=data,
 	    y='num_positives',
 	    x='subset',
 	    hue='privileged',
 	    hue_order=['None', 'True', 'False'],
 	    ax=axs[0])
 
-sns.barplot(data=adult,
+sns.barplot(data=data,
 	    y='num_negatives',
 	    x='subset',
 	    hue='privileged',
@@ -574,7 +664,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org94391b6" class="figure">
+<div id="org116f6d8" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -608,14 +698,14 @@ metrics are calculated using only the test set).
 
 fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
 
-sns.barplot(data=adult[adult['subset'] == 'test'],
+sns.barplot(data=data[data['subset'] == 'test'],
 	    y='num_positives',
 	    x='subset',
 	    hue='privileged',
 	    hue_order=['None', 'True', 'False'],
 	    ax=axs[0])
 
-sns.barplot(data=adult[adult['subset'] == 'test'],
+sns.barplot(data=data[data['subset'] == 'test'],
 	    y='num_negatives',
 	    x='subset',
 	    hue='privileged',
@@ -635,7 +725,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgf34d3b4" class="figure">
+<div id="orgb69e52f" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-test_num-pos-neg.png" />
 </p>
 </div>
@@ -648,7 +738,7 @@ come in two flavours: the absolute &amp; normalised versions.
 
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_cm'
-metrics = adult[adult['model'] == 'logisticregression']
+metrics = data[data['model'] == 'logisticregression']
 cols = ['TN', 'FP', 'FN', 'TP']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -670,14 +760,14 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org2ed5188" class="figure">
+<div id="org919f31b" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm.png" alt="adult_heatmap_prot-sex_cm.png" />
 </p>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_cm-rate'
-metrics = adult[adult['model'] == 'logisticregression']
+metrics = data[data['model'] == 'logisticregression']
 cols = ['TNR', 'FPR', 'FNR', 'TPR']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -699,7 +789,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org62b4d29" class="figure">
+<div id="org77777eb" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-rate.png" alt="adult_heatmap_prot-sex_cm-rate.png" />
 </p>
 </div>
@@ -728,7 +818,7 @@ trained the model with very few examples of women with a high income.
 
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_cm-gen'
-metrics = adult[adult['model'] == 'logisticregression']
+metrics = data[data['model'] == 'logisticregression']
 cols = ['GTN', 'GFP', 'GFN', 'GTP']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -750,14 +840,14 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgafdba32" class="figure">
+<div id="orgc182472" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-gen.png" alt="adult_heatmap_prot-sex_cm-gen.png" />
 </p>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_cm-gen-rate'
-metrics = adult[adult['model'] == 'logisticregression']
+metrics = data[data['model'] == 'logisticregression']
 cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -779,7 +869,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orga5d658c" class="figure">
+<div id="org78b39d0" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-gen-rate.png" alt="adult_heatmap_prot-sex_cm-gen-rate.png" />
 </p>
 </div>
@@ -795,8 +885,8 @@ if) these numbers change for variation in the dataset or model.
 </div>
 </div>
 
-<div id="outline-container-org02d6967" class="outline-3">
-<h3 id="org02d6967"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
+<div id="outline-container-org697f23d" class="outline-3">
+<h3 id="org697f23d"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The <code>base_rate</code> is the probability that the label of a given example
@@ -808,7 +898,7 @@ is positive.
 
 fig, ax = plt.subplots()
 
-sns.barplot(data=adult,
+sns.barplot(data=data,
 	    y='base_rate',
 	    x='subset',
 	    hue='privileged',
@@ -824,7 +914,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org1a64bb5" class="figure">
+<div id="org4447314" class="figure">
 <p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
@@ -845,8 +935,8 @@ privileged group.
 </div>
 </div>
 
-<div id="outline-container-org879d9e4" class="outline-3">
-<h3 id="org879d9e4"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div id="outline-container-org1ba21fe" class="outline-3">
+<h3 id="org1ba21fe"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The wikipedia page on <a href="https://en.wikipedia.org/wiki/Binary_classification">binary classification</a> was very helpful to make
@@ -982,7 +1072,7 @@ We visualise the above metrics in a confusion matrix like so:
 
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_cm-ppv-fdr-for-npv'
-metrics = adult[adult['model'] == 'logisticregression']
+metrics = data[data['model'] == 'logisticregression']
 cols = ['NPV', 'FDR', 'FOR', 'PPV']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -1004,7 +1094,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org2461983" class="figure">
+<div id="org5de9d45" class="figure">
 <p><img src="adult_heatmap_prot-sex_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-sex_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
@@ -1016,8 +1106,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-org22e1d02" class="outline-3">
-<h3 id="org22e1d02"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div id="outline-container-orgbe4e9da" class="outline-3">
+<h3 id="orgbe4e9da"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 These metrics exist both for the data &amp; the model so we should compare
@@ -1050,7 +1140,7 @@ privileged &amp; unprivileged groups.
 
 fig, ax = plt.subplots()
 
-sns.barplot(data=adult[adult['model'] == 'None'],
+sns.barplot(data=data[data['model'] == 'None'],
 	    y='disparate_impact',
 	    x='subset',
 	    ax=ax)
@@ -1062,24 +1152,24 @@ utils.savefig(fig, name)
 </pre>
 </div>
 
+
+<div id="orgfdb45f8" class="figure">
+<p><img src="adult_barplot_prot-sex_subset-all_disparate-impact.png" alt="adult_barplot_prot-sex_subset-all_disparate-impact.png" />
+</p>
+</div>
+
 <p>
 The <code>disparate_impact</code> across the various subsets is low. And this
 makes sense since we do not have that many examples of positive class
 for the unprivileged group in our dataset.
 </p>
 
-
-<div id="orge4ca43a" class="figure">
-<p><img src="adult_barplot_prot-sex_subset-all_disparate-impact.png" alt="adult_barplot_prot-sex_subset-all_disparate-impact.png" />
-</p>
-</div>
-
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-sex_subset-test_disparate-impact'
 
 fig, ax = plt.subplots()
 
-sns.barplot(data=adult[adult['subset'] == 'test'],
+sns.barplot(data=data[data['subset'] == 'test'],
 	    y='disparate_impact',
 	    x='model',
 	    ax=ax)
@@ -1092,7 +1182,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org83055dd" class="figure">
+<div id="org7b15c45" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_disparate-impact.png" alt="adult_barplot_prot-sex_subset-test_disparate-impact.png" />
 </p>
 </div>
@@ -1119,7 +1209,7 @@ statistics of the dataset.
 
 fig, ax = plt.subplots()
 
-sns.barplot(data=adult[adult['model'] == 'None'],
+sns.barplot(data=data[data['model'] == 'None'],
 	    y='statistical_parity_difference',
 	    x='subset',
 	    ax=ax)
@@ -1129,6 +1219,12 @@ for container in ax.containers:
 
 utils.savefig(fig, name)
 </pre>
+</div>
+
+
+<div id="org690dd60" class="figure">
+<p><img src="adult_barplot_prot-sex_subset-all_stat-par-diff.png" alt="adult_barplot_prot-sex_subset-all_stat-par-diff.png" />
+</p>
 </div>
 
 <p>
@@ -1149,18 +1245,12 @@ significantly more examples of the positive class with the privileged
 group. The idea value for this metric thus lies between \([0, 1]\).
 </p>
 
-
-<div id="org50b895c" class="figure">
-<p><img src="adult_barplot_prot-sex_subset-all_stat-par-diff.png" alt="adult_barplot_prot-sex_subset-all_stat-par-diff.png" />
-</p>
-</div>
-
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-sex_subset-test_stat-par-diff'
 
 fig, ax = plt.subplots()
 
-sns.barplot(data=adult[adult['subset'] == 'test'],
+sns.barplot(data=data[data['subset'] == 'test'],
 	    y='statistical_parity_difference',
 	    x='model',
 	    ax=ax)
@@ -1173,7 +1263,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org824c843" class="figure">
+<div id="org319770b" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_stat-par-diff.png" alt="adult_barplot_prot-sex_subset-test_stat-par-diff.png" />
 </p>
 </div>
@@ -1185,11 +1275,396 @@ more examples of the positive class with the privileged group.
 </div>
 </div>
 </div>
+
+<div id="outline-container-orgb64a297" class="outline-2">
+<h2 id="orgb64a297"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
+<div class="outline-text-2" id="text-4">
+<p>
+In this section we expand &amp; compare the metrics for both the protected
+attributes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">data = adult[adult['protected'] == 'race']
+data.shape
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">12</td>
+<td class="org-right">32</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-orgbe59578" class="outline-3">
+<h3 id="orgbe59578"><span class="section-number-3">4.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_num-pos-neg'
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+sns.barplot(data=data,
+	    y='num_positives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[0])
+
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+sns.barplot(data=data,
+	    y='num_negatives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[1])
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org64f5236" class="figure">
+<p><img src="adult_barplot_prot-race_subset-all_num-pos-neg.png" alt="adult_barplot_prot-race_subset-all_num-pos-neg.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_subset-test_num-pos-neg'
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='num_positives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[0])
+
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='num_negatives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[1])
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org47f93ef" class="figure">
+<p><img src="adult_barplot_prot-race_subset-test_num-pos-neg.png" alt="adult_barplot_prot-race_subset-test_num-pos-neg.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_cm'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org74194ae" class="figure">
+<p><img src="adult_heatmap_prot-race_cm.png" alt="adult_heatmap_prot-race_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-rate'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org40ca31d" class="figure">
+<p><img src="adult_heatmap_prot-race_cm-rate.png" alt="adult_heatmap_prot-race_cm-rate.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-gen'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['GTN', 'GFP', 'GFN', 'GTP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org334cb91" class="figure">
+<p><img src="adult_heatmap_prot-race_cm-gen.png" alt="adult_heatmap_prot-race_cm-gen.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-gen-rate'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org010c6e5" class="figure">
+<p><img src="adult_heatmap_prot-race_cm-gen-rate.png" alt="adult_heatmap_prot-race_cm-gen-rate.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5dd5120" class="outline-3">
+<h3 id="org5dd5120"><span class="section-number-3">4.2.</span> Analysis of <code>base_rate</code></h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_base-rate'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data,
+	    y='base_rate',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+
+</pre>
+</div>
+
+
+<div id="org0411ccc" class="figure">
+<p><img src="adult_barplot_prot-race_base-rate.png" alt="adult_barplot_prot-race_base-rate.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8523ecc" class="outline-3">
+<h3 id="org8523ecc"><span class="section-number-3">4.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-ppv-fdr-for-npv'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['NPV', 'FDR', 'FOR', 'PPV']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org8070c82" class="figure">
+<p><img src="adult_heatmap_prot-race_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-race_cm-ppv-fdr-for-npv.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcb45f6e" class="outline-3">
+<h3 id="orgcb45f6e"><span class="section-number-3">4.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='disparate_impact',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgaa18aa5" class="figure">
+<p><img src="adult_barplot_prot-race_subset-all_disparate-impact.png" alt="adult_barplot_prot-race_subset-all_disparate-impact.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_subset-test_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='disparate_impact',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org06098cd" class="figure">
+<p><img src="adult_barplot_prot-race_subset-test_disparate-impact.png" alt="adult_barplot_prot-race_subset-test_disparate-impact.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='statistical_parity_difference',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org63714ab" class="figure">
+<p><img src="adult_barplot_prot-race_subset-all_stat-par-diff.png" alt="adult_barplot_prot-race_subset-all_stat-par-diff.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_subset-test_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='statistical_parity_difference',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgdf773df" class="figure">
+<p><img src="adult_barplot_prot-race_subset-test_stat-par-diff.png" alt="adult_barplot_prot-race_subset-test_stat-par-diff.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2022-07-25 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-08-02 Tue 18:57</p>
+<p class="date">Created: 2022-08-04 Thu 12:24</p>
 </div>
 </body>
 </html>
