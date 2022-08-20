@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-20 Sat 14:22 -->
+<!-- 2022-08-20 Sat 14:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adult</title>
@@ -222,32 +222,42 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgdc59930">1. Init</a></li>
-<li><a href="#org36566f5">2. Priliminary analysis</a></li>
-<li><a href="#org5f0d9cf">3. Analysis of protected attribute <code>sex</code></a>
+<li><a href="#org1279515">1. Init</a></li>
+<li><a href="#org7ffbd4a">2. Priliminary analysis</a></li>
+<li><a href="#orgf3482bf">3. Analysis of protected attribute <code>sex</code></a>
 <ul>
-<li><a href="#org3dfed61">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
+<li><a href="#org4b9efce">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
 <ul>
-<li><a href="#orgae61634">3.1.1. model: logisticregression</a></li>
-<li><a href="#orgbeb60e4">3.1.2. model: decisiontreeclassifier</a></li>
+<li><a href="#orgca5f696">3.1.1. model: logisticregression</a></li>
+<li><a href="#org7a33563">3.1.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
-<li><a href="#orgb419475">3.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#orgd7de9c8">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a>
+<li><a href="#org42a706d">3.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org95bc5cc">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a>
 <ul>
-<li><a href="#orgdbb06c1">3.3.1. model: logisticregression</a></li>
-<li><a href="#orgd032a9a">3.3.2. model: decisiontreeclassifier</a></li>
+<li><a href="#orga08fa7d">3.3.1. model: logisticregression</a></li>
+<li><a href="#org5d51d36">3.3.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
-<li><a href="#org6a556b4">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+<li><a href="#org61c468a">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
-<li><a href="#org5cf4499">4. Analysis of protected attribute <code>race</code></a>
+<li><a href="#orgbb7fb88">4. Analysis of protected attribute <code>race</code></a>
 <ul>
-<li><a href="#orgff85056">4.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a></li>
-<li><a href="#org63b9086">4.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#orgc4e82b2">4.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a></li>
-<li><a href="#org4cc993b">4.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+<li><a href="#org289cd7b">4.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
+<ul>
+<li><a href="#orgcc0e962">4.1.1. model: logisticregression</a></li>
+<li><a href="#org3094f53">4.1.2. model: decisiontreeclassifier</a></li>
+</ul>
+</li>
+<li><a href="#orgbbf8c66">4.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org763bbc8">4.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a>
+<ul>
+<li><a href="#orgfc35c9d">4.3.1. model: logisticregression</a></li>
+<li><a href="#org5829140">4.3.2. model: decisiontreeclassifier</a></li>
+</ul>
+</li>
+<li><a href="#org1d608e1">4.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
 </ul>
@@ -265,8 +275,8 @@ attributes individually in our analysis.
 The data analysed here is generated using <code>bin/data.py</code>.
 </p>
 
-<div id="outline-container-orgdc59930" class="outline-2">
-<h2 id="orgdc59930"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-org1279515" class="outline-2">
+<h2 id="org1279515"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we perform some sanity checks, load the necessary
@@ -303,8 +313,8 @@ adult = adult[adult['dataset'] == 'adult']
 </div>
 </div>
 
-<div id="outline-container-org36566f5" class="outline-2">
-<h2 id="org36566f5"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-org7ffbd4a" class="outline-2">
+<h2 id="org7ffbd4a"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
@@ -315,7 +325,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="orgac0847d">
+<pre class="example" id="org06d6be0">
     GFP       FDR      TN subset  statistical_parity_difference  GFN  \
 0   NaN       NaN     NaN   full                      -0.198901  NaN   
 1   NaN       NaN     NaN   full                            NaN  NaN   
@@ -503,7 +513,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org1f3a84d">
+<pre class="example" id="orgcf33522">
 GFP                              float64
 FDR                              float64
 TN                               float64
@@ -544,7 +554,7 @@ dtype: object
 </pre>
 </div>
 
-<pre class="example" id="org0b1c80a">
+<pre class="example" id="orgc50d5f6">
          GFP        FDR           TN subset  statistical_parity_difference  \
 count   12.0  12.000000    12.000000     30                      10.000000   
 unique   NaN        NaN          NaN      3                            NaN   
@@ -636,8 +646,8 @@ unprivileged group (<code>sex</code> is 0 or 'Female').
 </div>
 </div>
 
-<div id="outline-container-org5f0d9cf" class="outline-2">
-<h2 id="org5f0d9cf"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
+<div id="outline-container-orgf3482bf" class="outline-2">
+<h2 id="orgf3482bf"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
 <div class="outline-text-2" id="text-3">
 <p>
 In this section we analyse the fairness metrics. The section is
@@ -671,7 +681,7 @@ data.shape
 </pre>
 </div>
 
-<pre class="example" id="orgddddac0">
+<pre class="example" id="org912af73">
     GFP       FDR      TN subset  statistical_parity_difference  GFN  \
 0   NaN       NaN     NaN   full                      -0.198901  NaN   
 1   NaN       NaN     NaN   full                            NaN  NaN   
@@ -759,8 +769,8 @@ data.shape
 </pre>
 </div>
 
-<div id="outline-container-org3dfed61" class="outline-3">
-<h3 id="org3dfed61"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-org4b9efce" class="outline-3">
+<h3 id="org4b9efce"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
@@ -799,7 +809,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org2d5a9a2" class="figure">
+<div id="org95927c1" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -860,7 +870,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org1c4c832" class="figure">
+<div id="org105ffa4" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-test_num-pos-neg.png" />
 </p>
 </div>
@@ -872,8 +882,8 @@ absolute &amp; normalised versions.
 </p>
 </div>
 
-<div id="outline-container-orgae61634" class="outline-4">
-<h4 id="orgae61634"><span class="section-number-4">3.1.1.</span> model: logisticregression</h4>
+<div id="outline-container-orgca5f696" class="outline-4">
+<h4 id="orgca5f696"><span class="section-number-4">3.1.1.</span> model: logisticregression</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Lets start with the logisticregression model first.
@@ -903,7 +913,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orge069ae7" class="figure">
+<div id="orgbf5eb73" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm.png" alt="adult_heatmap_prot-sex_mod-lr_cm.png" />
 </p>
 </div>
@@ -932,7 +942,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgb1429d7" class="figure">
+<div id="orgdf66fa8" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm-rate.png" alt="adult_heatmap_prot-sex_mod-lr_cm-rate.png" />
 </p>
 </div>
@@ -983,7 +993,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org250a596" class="figure">
+<div id="orgb50a25e" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm-gen.png" alt="adult_heatmap_prot-sex_mod-lr_cm-gen.png" />
 </p>
 </div>
@@ -1012,7 +1022,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgd329435" class="figure">
+<div id="orga40d34e" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm-gen-rate.png" alt="adult_heatmap_prot-sex_mod-lr_cm-gen-rate.png" />
 </p>
 </div>
@@ -1028,8 +1038,8 @@ if) these numbers change for variation in the dataset or model.
 </div>
 </div>
 
-<div id="outline-container-orgbeb60e4" class="outline-4">
-<h4 id="orgbeb60e4"><span class="section-number-4">3.1.2.</span> model: decisiontreeclassifier</h4>
+<div id="outline-container-org7a33563" class="outline-4">
+<h4 id="org7a33563"><span class="section-number-4">3.1.2.</span> model: decisiontreeclassifier</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Lets look at the decisiontree classifier next.
@@ -1059,7 +1069,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org784ca26" class="figure">
+<div id="org0e7e58a" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm.png" alt="adult_heatmap_prot-sex_mod-dt_cm.png" />
 </p>
 </div>
@@ -1088,7 +1098,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org237983c" class="figure">
+<div id="orgc57ed91" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm-rate.png" alt="adult_heatmap_prot-sex_mod-dt_cm-rate.png" />
 </p>
 </div>
@@ -1130,7 +1140,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orga376055" class="figure">
+<div id="orga88e7e1" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm-gen.png" alt="adult_heatmap_prot-sex_mod-dt_cm-gen.png" />
 </p>
 </div>
@@ -1159,7 +1169,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org6df7744" class="figure">
+<div id="orgfb229b4" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm-gen-rate.png" alt="adult_heatmap_prot-sex_mod-dt_cm-gen-rate.png" />
 </p>
 </div>
@@ -1167,8 +1177,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-orgb419475" class="outline-3">
-<h3 id="orgb419475"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
+<div id="outline-container-org42a706d" class="outline-3">
+<h3 id="org42a706d"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The <code>base_rate</code> is the probability that the label of a given example
@@ -1196,7 +1206,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org0958a3f" class="figure">
+<div id="orga0b1cdd" class="figure">
 <p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
@@ -1217,8 +1227,8 @@ privileged group.
 </div>
 </div>
 
-<div id="outline-container-orgd7de9c8" class="outline-3">
-<h3 id="orgd7de9c8"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div id="outline-container-org95bc5cc" class="outline-3">
+<h3 id="org95bc5cc"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 The wikipedia page on <a href="https://en.wikipedia.org/wiki/Binary_classification">binary classification</a> was very helpful to make
@@ -1390,8 +1400,8 @@ We visualise the above metrics in a confusion matrix like so:
 </table>
 </div>
 
-<div id="outline-container-orgdbb06c1" class="outline-4">
-<h4 id="orgdbb06c1"><span class="section-number-4">3.3.1.</span> model: logisticregression</h4>
+<div id="outline-container-orga08fa7d" class="outline-4">
+<h4 id="orga08fa7d"><span class="section-number-4">3.3.1.</span> model: logisticregression</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv'
@@ -1417,7 +1427,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org2de9311" class="figure">
+<div id="org3e5f0ed" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
@@ -1429,8 +1439,8 @@ these plots don't matter as much</li>
 </div>
 </div>
 
-<div id="outline-container-orgd032a9a" class="outline-4">
-<h4 id="orgd032a9a"><span class="section-number-4">3.3.2.</span> model: decisiontreeclassifier</h4>
+<div id="outline-container-org5d51d36" class="outline-4">
+<h4 id="org5d51d36"><span class="section-number-4">3.3.2.</span> model: decisiontreeclassifier</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv'
@@ -1456,7 +1466,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org8f32201" class="figure">
+<div id="org10822c8" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
@@ -1464,8 +1474,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-org6a556b4" class="outline-3">
-<h3 id="org6a556b4"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div id="outline-container-org61c468a" class="outline-3">
+<h3 id="org61c468a"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 These metrics exist both for the data &amp; the model so we should compare
@@ -1511,7 +1521,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgace0d5f" class="figure">
+<div id="org7541899" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-none_disparate-impact.png" alt="adult_barplot_prot-sex_mod-none_disparate-impact.png" />
 </p>
 </div>
@@ -1540,7 +1550,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgd9e6571" class="figure">
+<div id="orgcfb9de9" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-all_disparate-impact.png" alt="adult_barplot_prot-sex_mod-all_disparate-impact.png" />
 </p>
 </div>
@@ -1587,7 +1597,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgb97c426" class="figure">
+<div id="orgae6be27" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-none_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-none_stat-par-diff.png" />
 </p>
 </div>
@@ -1628,7 +1638,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orge07368c" class="figure">
+<div id="org78258a3" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-all_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-all_stat-par-diff.png" />
 </p>
 </div>
@@ -1645,8 +1655,8 @@ more examples of the positive class with the privileged group.
 </div>
 </div>
 
-<div id="outline-container-org5cf4499" class="outline-2">
-<h2 id="org5cf4499"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
+<div id="outline-container-orgbb7fb88" class="outline-2">
+<h2 id="orgbb7fb88"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
 <div class="outline-text-2" id="text-4">
 <p>
 In this section we expand &amp; compare the metrics for both the protected
@@ -1669,15 +1679,15 @@ data.shape
 </colgroup>
 <tbody>
 <tr>
-<td class="org-right">12</td>
+<td class="org-right">15</td>
 <td class="org-right">32</td>
 </tr>
 </tbody>
 </table>
 </div>
 
-<div id="outline-container-orgff85056" class="outline-3">
-<h3 id="orgff85056"><span class="section-number-3">4.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-org289cd7b" class="outline-3">
+<h3 id="org289cd7b"><span class="section-number-3">4.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_num-pos-neg'
@@ -1709,7 +1719,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org5ce3a89" class="figure">
+<div id="orgacdc151" class="figure">
 <p><img src="adult_barplot_prot-race_subset-all_num-pos-neg.png" alt="adult_barplot_prot-race_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -1744,13 +1754,17 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgfb37bc1" class="figure">
+<div id="org15e7460" class="figure">
 <p><img src="adult_barplot_prot-race_subset-test_num-pos-neg.png" alt="adult_barplot_prot-race_subset-test_num-pos-neg.png" />
 </p>
 </div>
+</div>
 
+<div id="outline-container-orgcc0e962" class="outline-4">
+<h4 id="orgcc0e962"><span class="section-number-4">4.1.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-4-1-1">
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_cm'
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm'
 metrics = data[data['model'] == 'logisticregression']
 cols = ['TN', 'FP', 'FN', 'TP']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
@@ -1773,13 +1787,13 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org24d6c79" class="figure">
-<p><img src="adult_heatmap_prot-race_cm.png" alt="adult_heatmap_prot-race_cm.png" />
+<div id="orgb1278f5" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-lr_cm.png" alt="adult_heatmap_prot-race_mod-lr_cm.png" />
 </p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-rate'
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm-rate'
 metrics = data[data['model'] == 'logisticregression']
 cols = ['TNR', 'FPR', 'FNR', 'TPR']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
@@ -1802,13 +1816,13 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org7dffce0" class="figure">
-<p><img src="adult_heatmap_prot-race_cm-rate.png" alt="adult_heatmap_prot-race_cm-rate.png" />
+<div id="org8e8114b" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-lr_cm-rate.png" alt="adult_heatmap_prot-race_mod-lr_cm-rate.png" />
 </p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-gen'
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm-gen'
 metrics = data[data['model'] == 'logisticregression']
 cols = ['GTN', 'GFP', 'GFN', 'GTP']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
@@ -1831,13 +1845,13 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org9e42f21" class="figure">
-<p><img src="adult_heatmap_prot-race_cm-gen.png" alt="adult_heatmap_prot-race_cm-gen.png" />
+<div id="org4ea3af9" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-lr_cm-gen.png" alt="adult_heatmap_prot-race_mod-lr_cm-gen.png" />
 </p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-gen-rate'
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm-gen-rate'
 metrics = data[data['model'] == 'logisticregression']
 cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
@@ -1860,15 +1874,137 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgdc3ee3e" class="figure">
-<p><img src="adult_heatmap_prot-race_cm-gen-rate.png" alt="adult_heatmap_prot-race_cm-gen-rate.png" />
+<div id="org4147e20" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-lr_cm-gen-rate.png" alt="adult_heatmap_prot-race_mod-lr_cm-gen-rate.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org63b9086" class="outline-3">
-<h3 id="org63b9086"><span class="section-number-3">4.2.</span> Analysis of <code>base_rate</code></h3>
+<div id="outline-container-org3094f53" class="outline-4">
+<h4 id="org3094f53"><span class="section-number-4">4.1.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org2d68ed6" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm.png" alt="adult_heatmap_prot-race_mod-dt_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm-rate'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgf4b5965" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm-rate.png" alt="adult_heatmap_prot-race_mod-dt_cm-rate.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm-gen'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['GTN', 'GFP', 'GFN', 'GTP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org8faeb93" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm-gen.png" alt="adult_heatmap_prot-race_mod-dt_cm-gen.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm-gen-rate'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org093af10" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm-gen-rate.png" alt="adult_heatmap_prot-race_mod-dt_cm-gen-rate.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbbf8c66" class="outline-3">
+<h3 id="orgbbf8c66"><span class="section-number-3">4.2.</span> Analysis of <code>base_rate</code></h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_base-rate'
@@ -1891,18 +2027,22 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org93edffa" class="figure">
+<div id="org2772c4f" class="figure">
 <p><img src="adult_barplot_prot-race_base-rate.png" alt="adult_barplot_prot-race_base-rate.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc4e82b2" class="outline-3">
-<h3 id="orgc4e82b2"><span class="section-number-3">4.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div id="outline-container-org763bbc8" class="outline-3">
+<h3 id="org763bbc8"><span class="section-number-3">4.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
 <div class="outline-text-3" id="text-4-3">
+</div>
+<div id="outline-container-orgfc35c9d" class="outline-4">
+<h4 id="orgfc35c9d"><span class="section-number-4">4.3.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-4-3-1">
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_cm-ppv-fdr-for-npv'
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv'
 metrics = data[data['model'] == 'logisticregression']
 cols = ['NPV', 'FDR', 'FOR', 'PPV']
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
@@ -1925,18 +2065,53 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org5f2bf52" class="figure">
-<p><img src="adult_heatmap_prot-race_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-race_cm-ppv-fdr-for-npv.png" />
+<div id="org1a4f42c" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4cc993b" class="outline-3">
-<h3 id="org4cc993b"><span class="section-number-3">4.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div id="outline-container-org5829140" class="outline-4">
+<h4 id="org5829140"><span class="section-number-4">4.3.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['NPV', 'FDR', 'FOR', 'PPV']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org95c1bcb" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv.png" alt="adult_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d608e1" class="outline-3">
+<h3 id="org1d608e1"><span class="section-number-3">4.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_disparate-impact'
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_disparate-impact'
 
 fig, ax = plt.subplots()
 
@@ -1953,13 +2128,13 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org1d9d359" class="figure">
-<p><img src="adult_barplot_prot-race_subset-all_disparate-impact.png" alt="adult_barplot_prot-race_subset-all_disparate-impact.png" />
+<div id="org1df4b6b" class="figure">
+<p><img src="adult_barplot_prot-race_mod-none_disparate-impact.png" alt="adult_barplot_prot-race_mod-none_disparate-impact.png" />
 </p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_subset-test_disparate-impact'
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-all_disparate-impact'
 
 fig, ax = plt.subplots()
 
@@ -1976,13 +2151,13 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgfd3083b" class="figure">
-<p><img src="adult_barplot_prot-race_subset-test_disparate-impact.png" alt="adult_barplot_prot-race_subset-test_disparate-impact.png" />
+<div id="orgab1797e" class="figure">
+<p><img src="adult_barplot_prot-race_mod-all_disparate-impact.png" alt="adult_barplot_prot-race_mod-all_disparate-impact.png" />
 </p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_stat-par-diff'
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_stat-par-diff'
 
 fig, ax = plt.subplots()
 
@@ -1999,13 +2174,13 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgdcf0474" class="figure">
-<p><img src="adult_barplot_prot-race_subset-all_stat-par-diff.png" alt="adult_barplot_prot-race_subset-all_stat-par-diff.png" />
+<div id="org6d69c00" class="figure">
+<p><img src="adult_barplot_prot-race_mod-none_stat-par-diff.png" alt="adult_barplot_prot-race_mod-none_stat-par-diff.png" />
 </p>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_subset-test_stat-par-diff'
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-all_stat-par-diff'
 
 fig, ax = plt.subplots()
 
@@ -2022,8 +2197,8 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgad8bc12" class="figure">
-<p><img src="adult_barplot_prot-race_subset-test_stat-par-diff.png" alt="adult_barplot_prot-race_subset-test_stat-par-diff.png" />
+<div id="org184c1a2" class="figure">
+<p><img src="adult_barplot_prot-race_mod-all_stat-par-diff.png" alt="adult_barplot_prot-race_mod-all_stat-par-diff.png" />
 </p>
 </div>
 </div>
@@ -2033,7 +2208,7 @@ utils.savefig(fig, name)
 <div id="postamble" class="status">
 <p class="date">Date: 2022-07-25 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-08-20 Sat 14:22</p>
+<p class="date">Created: 2022-08-20 Sat 14:37</p>
 </div>
 </body>
 </html>
