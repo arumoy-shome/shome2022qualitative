@@ -1045,8 +1045,8 @@ more examples of the positive class with the privileged group.
 - [ ] analyse results across models
 
 * Analysis of protected attribute =race=
-In this section we expand & compare the metrics for both the protected
-attributes.
+In this section we expand & compare the metrics for both the race
+attribute.
 
 #+begin_src python
   data = adult[adult['protected'] == 'race']

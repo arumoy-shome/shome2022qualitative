@@ -809,3 +809,341 @@ Lets look at the decisiontree classifier next.
 #+RESULTS:
 [[file:compas_barplot_prot-sex_mod-all_stat-par-diff.png]]
 
+* Analysis of protected attribute =race=
+In this section we expand & compare the metrics for the race
+attribute.
+
+#+begin_src python
+  data = compas[compas['protected'] == 'race']
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 15 | 32 |
+
+** Analysis of =num_{positive,negative}=, =num_{true,false}_{positive,negative}= & =num_{true,false}_{positive_negative}_rate=
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_subset-all_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data,
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  sns.barplot(data=data,
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_subset-all_num-pos-neg.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_subset-test_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_subset-test_num-pos-neg.png]]
+
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-race_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-race_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-race_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-race_mod-lr_cm-rate.png]]
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-race_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-race_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-race_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-race_mod-dt_cm-rate.png]]
+
+** Analysis of =base_rate=
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_base-rate'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data,
+	      y='base_rate',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_base-rate.png]]
+
+** Analysis of ={positive,negative}_predictive_value= & =false_{discovery,omission}_rate=
+
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['NPV', 'FDR', 'FOR', 'PPV']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv.png]]
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['NPV', 'FDR', 'FOR', 'PPV']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv.png]]
+
+** Analysis of =disparate_impact= & =statistical_parity_difference=
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_mod-none_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='disparate_impact',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_mod-none_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_mod-all_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='disparate_impact',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_mod-all_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_mod-none_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='statistical_parity_difference',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_mod-none_stat-par-diff.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-race_mod-all_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='statistical_parity_difference',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-race_mod-all_stat-par-diff.png]]
+

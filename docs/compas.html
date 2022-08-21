@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-21 Sun 13:11 -->
+<!-- 2022-08-21 Sun 13:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Compas</title>
@@ -201,24 +201,42 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org8f18144">1. Init</a></li>
-<li><a href="#org522f0c1">2. Priliminary analysis</a></li>
-<li><a href="#org3747f08">3. Analysis of protected attribute <code>sex</code></a>
+<li><a href="#org21b7e5f">1. Init</a></li>
+<li><a href="#orgbb25502">2. Priliminary analysis</a></li>
+<li><a href="#org34f734d">3. Analysis of protected attribute <code>sex</code></a>
 <ul>
-<li><a href="#org02c3ced">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
+<li><a href="#org8ee84e0">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
 <ul>
-<li><a href="#orgd90a0a9">3.1.1. model: logisticregression</a></li>
-<li><a href="#orgc40e03f">3.1.2. model: decisiontreeclassifier</a></li>
+<li><a href="#orgd2e7324">3.1.1. model: logisticregression</a></li>
+<li><a href="#orged59ff7">3.1.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
-<li><a href="#org1b46a81">3.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org1f7faca">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a>
+<li><a href="#orgd932b7d">3.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#orgdc8ff02">3.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a>
 <ul>
-<li><a href="#orgeb0da86">3.3.1. model: logisticregression</a></li>
-<li><a href="#org26ff480">3.3.2. model: decisiontreeclassifier</a></li>
+<li><a href="#org5478251">3.3.1. model: logisticregression</a></li>
+<li><a href="#org4c30d9a">3.3.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
-<li><a href="#org7d1efe5">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+<li><a href="#orge5d1738">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
+</ul>
+</li>
+<li><a href="#orgba31703">4. Analysis of protected attribute <code>race</code></a>
+<ul>
+<li><a href="#org0dce892">4.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
+<ul>
+<li><a href="#orgadde9e2">4.1.1. model: logisticregression</a></li>
+<li><a href="#orgd267438">4.1.2. model: decisiontreeclassifier</a></li>
+</ul>
+</li>
+<li><a href="#orgb62b458">4.2. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org3f71014">4.3. Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></a>
+<ul>
+<li><a href="#orge8e58f1">4.3.1. model: logisticregression</a></li>
+<li><a href="#org1a11420">4.3.2. model: decisiontreeclassifier</a></li>
+</ul>
+</li>
+<li><a href="#org03a78f9">4.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
 </ul>
@@ -234,8 +252,8 @@ both protected attributes individually in our analysis.
 The data analysed here is generated using <code>bin/data.py</code>.
 </p>
 
-<div id="outline-container-org8f18144" class="outline-2">
-<h2 id="org8f18144"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-org21b7e5f" class="outline-2">
+<h2 id="org21b7e5f"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we load the necessary modules &amp; the dataset.
@@ -271,8 +289,8 @@ compas = compas[compas['dataset'] == 'compas']
 </div>
 </div>
 
-<div id="outline-container-org522f0c1" class="outline-2">
-<h2 id="org522f0c1"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-orgbb25502" class="outline-2">
+<h2 id="orgbb25502"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
@@ -283,7 +301,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org144d7df">
+<pre class="example" id="orgc020e89">
     GFP       FDR     TN subset  statistical_parity_difference  GFN       FPR  \
 30  NaN       NaN    NaN   full                      -0.127687  NaN       NaN   
 31  NaN       NaN    NaN   full                            NaN  NaN       NaN   
@@ -471,7 +489,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org3eae850">
+<pre class="example" id="org24e60e1">
 GFP                              float64
 FDR                              float64
 TN                               float64
@@ -512,7 +530,7 @@ dtype: object
 </pre>
 </div>
 
-<pre class="example" id="org71946af">
+<pre class="example" id="org365a761">
          GFP        FDR          TN subset  statistical_parity_difference  \
 count   12.0  12.000000   12.000000     30                      10.000000   
 unique   NaN        NaN         NaN      3                            NaN   
@@ -594,8 +612,8 @@ max          NaN          0.846523
 </div>
 </div>
 
-<div id="outline-container-org3747f08" class="outline-2">
-<h2 id="org3747f08"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
+<div id="outline-container-org34f734d" class="outline-2">
+<h2 id="org34f734d"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-python">data = compas[compas['protected'] == 'sex']
@@ -624,7 +642,7 @@ data.shape
 </pre>
 </div>
 
-<pre class="example" id="org22014aa">
+<pre class="example" id="org8f905fd">
     GFP       FDR     TN subset  statistical_parity_difference  GFN       FPR  \
 30  NaN       NaN    NaN   full                      -0.127687  NaN       NaN   
 31  NaN       NaN    NaN   full                            NaN  NaN       NaN   
@@ -712,8 +730,8 @@ data.shape
 </pre>
 </div>
 
-<div id="outline-container-org02c3ced" class="outline-3">
-<h3 id="org02c3ced"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-org8ee84e0" class="outline-3">
+<h3 id="org8ee84e0"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
@@ -752,7 +770,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgd1db3b2" class="figure">
+<div id="orgfdd6830" class="figure">
 <p><img src="compas_barplot_prot-sex_subset-all_num-pos-neg.png" alt="compas_barplot_prot-sex_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -793,7 +811,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org4dfe550" class="figure">
+<div id="org63ac044" class="figure">
 <p><img src="compas_barplot_prot-sex_subset-test_num-pos-neg.png" alt="compas_barplot_prot-sex_subset-test_num-pos-neg.png" />
 </p>
 </div>
@@ -804,8 +822,8 @@ the biases in them.
 </p>
 </div>
 
-<div id="outline-container-orgd90a0a9" class="outline-4">
-<h4 id="orgd90a0a9"><span class="section-number-4">3.1.1.</span> model: logisticregression</h4>
+<div id="outline-container-orgd2e7324" class="outline-4">
+<h4 id="orgd2e7324"><span class="section-number-4">3.1.1.</span> model: logisticregression</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'compas_heatmap_prot-sex_mod-lr_cm'
@@ -831,7 +849,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org1ce88bd" class="figure">
+<div id="org58927ff" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-lr_cm.png" alt="compas_heatmap_prot-sex_mod-lr_cm.png" />
 </p>
 </div>
@@ -860,7 +878,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org81216c3" class="figure">
+<div id="org254057f" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-lr_cm-rate.png" alt="compas_heatmap_prot-sex_mod-lr_cm-rate.png" />
 </p>
 </div>
@@ -889,7 +907,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org0928564" class="figure">
+<div id="org1ee0d3e" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-lr_cm-gen.png" alt="compas_heatmap_prot-sex_mod-lr_cm-gen.png" />
 </p>
 </div>
@@ -900,8 +918,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-orgc40e03f" class="outline-4">
-<h4 id="orgc40e03f"><span class="section-number-4">3.1.2.</span> model: decisiontreeclassifier</h4>
+<div id="outline-container-orged59ff7" class="outline-4">
+<h4 id="orged59ff7"><span class="section-number-4">3.1.2.</span> model: decisiontreeclassifier</h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 Lets look at the decisiontree classifier next.
@@ -931,7 +949,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgb40575a" class="figure">
+<div id="org7104509" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-dt_cm.png" alt="compas_heatmap_prot-sex_mod-dt_cm.png" />
 </p>
 </div>
@@ -960,7 +978,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org82963d8" class="figure">
+<div id="orgac8ae14" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-dt_cm-rate.png" alt="compas_heatmap_prot-sex_mod-dt_cm-rate.png" />
 </p>
 </div>
@@ -968,8 +986,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-org1b46a81" class="outline-3">
-<h3 id="org1b46a81"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
+<div id="outline-container-orgd932b7d" class="outline-3">
+<h3 id="orgd932b7d"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'compas_barplot_prot-sex_base-rate'
@@ -992,19 +1010,19 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgd5505d9" class="figure">
+<div id="orga2d9f36" class="figure">
 <p><img src="compas_barplot_prot-sex_base-rate.png" alt="compas_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1f7faca" class="outline-3">
-<h3 id="org1f7faca"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div id="outline-container-orgdc8ff02" class="outline-3">
+<h3 id="orgdc8ff02"><span class="section-number-3">3.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-orgeb0da86" class="outline-4">
-<h4 id="orgeb0da86"><span class="section-number-4">3.3.1.</span> model: logisticregression</h4>
+<div id="outline-container-org5478251" class="outline-4">
+<h4 id="org5478251"><span class="section-number-4">3.3.1.</span> model: logisticregression</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'compas_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv'
@@ -1030,15 +1048,15 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgc671485" class="figure">
+<div id="org968413d" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv.png" alt="compas_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org26ff480" class="outline-4">
-<h4 id="org26ff480"><span class="section-number-4">3.3.2.</span> model: decisiontreeclassifier</h4>
+<div id="outline-container-org4c30d9a" class="outline-4">
+<h4 id="org4c30d9a"><span class="section-number-4">3.3.2.</span> model: decisiontreeclassifier</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'compas_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv'
@@ -1064,7 +1082,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org8db563f" class="figure">
+<div id="orgbf22488" class="figure">
 <p><img src="compas_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv.png" alt="compas_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv.png" />
 </p>
 </div>
@@ -1072,8 +1090,8 @@ utils.savefig(fig, name)
 </div>
 </div>
 
-<div id="outline-container-org7d1efe5" class="outline-3">
-<h3 id="org7d1efe5"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div id="outline-container-orge5d1738" class="outline-3">
+<h3 id="orge5d1738"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
 <div class="outline-text-3" id="text-3-4">
 <div class="org-src-container">
 <pre class="src src-python">name = 'compas_barplot_prot-sex_mod-none_disparate-impact'
@@ -1093,7 +1111,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org6392273" class="figure">
+<div id="org4ebc8e0" class="figure">
 <p><img src="compas_barplot_prot-sex_mod-none_disparate-impact.png" alt="compas_barplot_prot-sex_mod-none_disparate-impact.png" />
 </p>
 </div>
@@ -1116,7 +1134,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgc397ee2" class="figure">
+<div id="orgc3d3b68" class="figure">
 <p><img src="compas_barplot_prot-sex_mod-all_disparate-impact.png" alt="compas_barplot_prot-sex_mod-all_disparate-impact.png" />
 </p>
 </div>
@@ -1139,7 +1157,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org14c8001" class="figure">
+<div id="org94a8d4c" class="figure">
 <p><img src="compas_barplot_prot-sex_mod-none_stat-par-diff.png" alt="compas_barplot_prot-sex_mod-none_stat-par-diff.png" />
 </p>
 </div>
@@ -1162,8 +1180,442 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org74c5d2e" class="figure">
+<div id="org4127c63" class="figure">
 <p><img src="compas_barplot_prot-sex_mod-all_stat-par-diff.png" alt="compas_barplot_prot-sex_mod-all_stat-par-diff.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba31703" class="outline-2">
+<h2 id="orgba31703"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
+<div class="outline-text-2" id="text-4">
+<p>
+In this section we expand &amp; compare the metrics for the race
+attribute.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">data = compas[compas['protected'] == 'race']
+data.shape
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">15</td>
+<td class="org-right">32</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-org0dce892" class="outline-3">
+<h3 id="org0dce892"><span class="section-number-3">4.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_subset-all_num-pos-neg'
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+sns.barplot(data=data,
+	    y='num_positives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[0])
+
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+sns.barplot(data=data,
+	    y='num_negatives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[1])
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org4e11c32" class="figure">
+<p><img src="compas_barplot_prot-race_subset-all_num-pos-neg.png" alt="compas_barplot_prot-race_subset-all_num-pos-neg.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_subset-test_num-pos-neg'
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='num_positives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[0])
+
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='num_negatives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[1])
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgf20728d" class="figure">
+<p><img src="compas_barplot_prot-race_subset-test_num-pos-neg.png" alt="compas_barplot_prot-race_subset-test_num-pos-neg.png" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgadde9e2" class="outline-4">
+<h4 id="orgadde9e2"><span class="section-number-4">4.1.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_heatmap_prot-race_mod-lr_cm'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org4c3c812" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-lr_cm.png" alt="compas_heatmap_prot-race_mod-lr_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_heatmap_prot-race_mod-lr_cm-rate'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org8a8bc88" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-lr_cm-rate.png" alt="compas_heatmap_prot-race_mod-lr_cm-rate.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd267438" class="outline-4">
+<h4 id="orgd267438"><span class="section-number-4">4.1.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_heatmap_prot-race_mod-dt_cm'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org7631e46" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-dt_cm.png" alt="compas_heatmap_prot-race_mod-dt_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_heatmap_prot-race_mod-dt_cm-rate'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgc40e8a5" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-dt_cm-rate.png" alt="compas_heatmap_prot-race_mod-dt_cm-rate.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb62b458" class="outline-3">
+<h3 id="orgb62b458"><span class="section-number-3">4.2.</span> Analysis of <code>base_rate</code></h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_base-rate'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data,
+	    y='base_rate',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+
+</pre>
+</div>
+
+
+<div id="org28d9807" class="figure">
+<p><img src="compas_barplot_prot-race_base-rate.png" alt="compas_barplot_prot-race_base-rate.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3f71014" class="outline-3">
+<h3 id="org3f71014"><span class="section-number-3">4.3.</span> Analysis of <code>{positive,negative}_predictive_value</code> &amp; <code>false_{discovery,omission}_rate</code></h3>
+<div class="outline-text-3" id="text-4-3">
+</div>
+<div id="outline-container-orge8e58f1" class="outline-4">
+<h4 id="orge8e58f1"><span class="section-number-4">4.3.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['NPV', 'FDR', 'FOR', 'PPV']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org2694880" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv.png" alt="compas_heatmap_prot-race_mod-lr_cm-ppv-fdr-for-npv.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a11420" class="outline-4">
+<h4 id="org1a11420"><span class="section-number-4">4.3.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['NPV', 'FDR', 'FOR', 'PPV']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org0dcbf32" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv.png" alt="compas_heatmap_prot-race_mod-dt_cm-ppv-fdr-for-npv.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org03a78f9" class="outline-3">
+<h3 id="org03a78f9"><span class="section-number-3">4.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_mod-none_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='disparate_impact',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org0b28c0d" class="figure">
+<p><img src="compas_barplot_prot-race_mod-none_disparate-impact.png" alt="compas_barplot_prot-race_mod-none_disparate-impact.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_mod-all_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='disparate_impact',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org71f13ff" class="figure">
+<p><img src="compas_barplot_prot-race_mod-all_disparate-impact.png" alt="compas_barplot_prot-race_mod-all_disparate-impact.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_mod-none_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='statistical_parity_difference',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgb13b5b8" class="figure">
+<p><img src="compas_barplot_prot-race_mod-none_stat-par-diff.png" alt="compas_barplot_prot-race_mod-none_stat-par-diff.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'compas_barplot_prot-race_mod-all_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='statistical_parity_difference',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org1d7ffd7" class="figure">
+<p><img src="compas_barplot_prot-race_mod-all_stat-par-diff.png" alt="compas_barplot_prot-race_mod-all_stat-par-diff.png" />
 </p>
 </div>
 </div>
@@ -1173,7 +1625,7 @@ utils.savefig(fig, name)
 <div id="postamble" class="status">
 <p class="date">Date: 2022-08-21 Sun 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-08-21 Sun 13:11</p>
+<p class="date">Created: 2022-08-21 Sun 13:38</p>
 </div>
 </body>
 </html>
