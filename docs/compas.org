@@ -1,0 +1,811 @@
+#+title: Compas
+#+author: Arumoy Shome
+#+date: [2022-08-21 Sun]
+#+property: header-args:python :session *sh21qual-compas* :exports both :eval never-export
+
+In this file we analyse the results for the compas dataset. The
+dataset contains two protected attributes: sex & race. We consider
+both protected attributes individually in our analysis.
+
+The data analysed here is generated using =bin/data.py=.
+
+* Init
+In this section we load the necessary modules & the dataset.
+
+#+begin_src python :results silent
+  import pandas as pd
+  import numpy as np
+  pd.set_option('display.max_columns', None)
+  pd.set_option('display.max_colwidth', None)
+  pd.set_option('display.max_rows', None)
+
+  import matplotlib
+  matplotlib.use('Agg')           # non-interactive backend
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  import os
+  import sys
+  ROOTDIR = os.path.abspath(os.path.join(os.getcwd(), '..'))
+  DATADIR = os.path.join(ROOTDIR, 'data')
+
+  sys.path.insert(0, ROOTDIR)
+  from src import utils
+#+end_src
+
+#+begin_src python :results silent
+  compas = pd.read_csv(os.path.join(DATADIR, 'data.csv'))
+  compas = compas[compas['dataset'] == 'compas']
+#+end_src
+
+* Priliminary analysis
+In this section we conduct some priliminary analysis of the dataset.
+
+#+begin_src python
+  compas
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    GFP       FDR     TN subset  statistical_parity_difference  GFN       FPR  \
+30  NaN       NaN    NaN   full                      -0.127687  NaN       NaN   
+31  NaN       NaN    NaN   full                            NaN  NaN       NaN   
+32  NaN       NaN    NaN   full                            NaN  NaN       NaN   
+33  NaN       NaN    NaN   full                      -0.097138  NaN       NaN   
+34  NaN       NaN    NaN   full                            NaN  NaN       NaN   
+35  NaN       NaN    NaN   full                            NaN  NaN       NaN   
+36  NaN       NaN    NaN  train                      -0.117985  NaN       NaN   
+37  NaN       NaN    NaN  train                            NaN  NaN       NaN   
+38  NaN       NaN    NaN  train                            NaN  NaN       NaN   
+39  NaN       NaN    NaN  train                      -0.092778  NaN       NaN   
+40  NaN       NaN    NaN  train                            NaN  NaN       NaN   
+41  NaN       NaN    NaN  train                            NaN  NaN       NaN   
+42  NaN       NaN    NaN   test                      -0.158314  NaN       NaN   
+43  NaN       NaN    NaN   test                            NaN  NaN       NaN   
+44  NaN       NaN    NaN   test                            NaN  NaN       NaN   
+45  NaN       NaN    NaN   test                      -0.110937  NaN       NaN   
+46  NaN       NaN    NaN   test                            NaN  NaN       NaN   
+47  NaN       NaN    NaN   test                            NaN  NaN       NaN   
+48  0.0  0.334737  381.0   test                      -0.264937  0.0  0.454936   
+49  0.0  0.277778   26.0   test                            NaN  0.0  0.714286   
+50  0.0  0.353352  355.0   test                            NaN  0.0  0.416118   
+51  0.0  0.334737  381.0   test                      -0.194127  0.0  0.454936   
+52  0.0  0.306667   75.0   test                            NaN  0.0  0.605263   
+53  0.0  0.353043  306.0   test                            NaN  0.0  0.398821   
+54  0.0  0.371396  377.0   test                      -0.174095  0.0  0.460658   
+55  0.0  0.272727   37.0   test                            NaN  0.0  0.593407   
+56  0.0  0.400598  340.0   test                            NaN  0.0  0.440789   
+57  0.0  0.371396  377.0   test                      -0.105582  0.0  0.460658   
+58  0.0  0.345912   80.0   test                            NaN  0.0  0.578947   
+59  0.0  0.386157  297.0   test                            NaN  0.0  0.416503   
+
+    theil_index    GTP  GFPR  GTPR       FNR       FOR  GTNR       NPV  \
+30          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+31          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+32          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+33          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+34          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+35          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+36          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+37          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+38          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+39          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+40          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+41          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+42          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+43          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+44          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+45          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+46          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+47          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+48     0.200250  843.0   0.0   1.0  0.250297  0.356419   1.0  0.643581   
+49          NaN  190.0   0.0   1.0  0.110526  0.446809   1.0  0.553191   
+50          NaN  653.0   0.0   1.0  0.290965  0.348624   1.0  0.651376   
+51     0.200250  843.0   0.0   1.0  0.250297  0.356419   1.0  0.643581   
+52          NaN  312.0   0.0   1.0  0.166667  0.409449   1.0  0.590551   
+53          NaN  531.0   0.0   1.0  0.299435  0.341935   1.0  0.658065   
+54     0.269605  843.0   0.0   1.0  0.353499  0.441481   1.0  0.558519   
+55          NaN  190.0   0.0   1.0  0.242105  0.554217   1.0  0.445783   
+56          NaN  653.0   0.0   1.0  0.385911  0.425676   1.0  0.574324   
+57     0.269605  843.0   0.0   1.0  0.353499  0.441481   1.0  0.558519   
+58          NaN  312.0   0.0   1.0  0.333333  0.565217   1.0  0.434783   
+59          NaN  531.0   0.0   1.0  0.365348  0.395112   1.0  0.604888   
+
+         TPR       PPV     FN       TNR    GTN     FP                   model  \
+30       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+31       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+32       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+33       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+34       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+35       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+36       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+37       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+38       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+39       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+40       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+41       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+42       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+43       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+44       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+45       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+46       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+47       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+48  0.749703  0.665263  211.0  0.545064  699.0  318.0      logisticregression   
+49  0.889474  0.722222   21.0  0.285714   91.0   65.0      logisticregression   
+50  0.709035  0.646648  190.0  0.583882  608.0  253.0      logisticregression   
+51  0.749703  0.665263  211.0  0.545064  699.0  318.0      logisticregression   
+52  0.833333  0.693333   52.0  0.394737  190.0  115.0      logisticregression   
+53  0.700565  0.646957  159.0  0.601179  509.0  203.0      logisticregression   
+54  0.646501  0.628604  298.0  0.539342  699.0  322.0  decisiontreeclassifier   
+55  0.757895  0.727273   46.0  0.406593   91.0   54.0  decisiontreeclassifier   
+56  0.614089  0.599402  252.0  0.559211  608.0  268.0  decisiontreeclassifier   
+57  0.646501  0.628604  298.0  0.539342  699.0  322.0  decisiontreeclassifier   
+58  0.666667  0.654088  104.0  0.421053  190.0  110.0  decisiontreeclassifier   
+59  0.634652  0.613843  194.0  0.583497  509.0  212.0  decisiontreeclassifier   
+
+       TP  accuracy  num_positives  num_negatives  base_rate privileged  GFNR  \
+30    NaN       NaN         3358.0         2809.0   0.544511       None   NaN   
+31    NaN       NaN          760.0          413.0   0.647911       True   NaN   
+32    NaN       NaN         2598.0         2396.0   0.520224      False   NaN   
+33    NaN       NaN         3358.0         2809.0   0.544511       None   NaN   
+34    NaN       NaN         1278.0          822.0   0.608571       True   NaN   
+35    NaN       NaN         2080.0         1987.0   0.511433      False   NaN   
+36    NaN       NaN         2515.0         2110.0   0.543784       None   NaN   
+37    NaN       NaN          570.0          322.0   0.639013       True   NaN   
+38    NaN       NaN         1945.0         1788.0   0.521029      False   NaN   
+39    NaN       NaN         2515.0         2110.0   0.543784       None   NaN   
+40    NaN       NaN          966.0          632.0   0.604506       True   NaN   
+41    NaN       NaN         1549.0         1478.0   0.511728      False   NaN   
+42    NaN       NaN          843.0          699.0   0.546693       None   NaN   
+43    NaN       NaN          190.0           91.0   0.676157       True   NaN   
+44    NaN       NaN          653.0          608.0   0.517843      False   NaN   
+45    NaN       NaN          843.0          699.0   0.546693       None   NaN   
+46    NaN       NaN          312.0          190.0   0.621514       True   NaN   
+47    NaN       NaN          531.0          509.0   0.510577      False   NaN   
+48  632.0  0.656939            NaN            NaN        NaN       None   0.0   
+49  169.0  0.693950            NaN            NaN        NaN       True   0.0   
+50  463.0  0.648692            NaN            NaN        NaN      False   0.0   
+51  632.0  0.656939            NaN            NaN        NaN       None   0.0   
+52  260.0  0.667331            NaN            NaN        NaN       True   0.0   
+53  372.0  0.651923            NaN            NaN        NaN      False   0.0   
+54  545.0  0.597925            NaN            NaN        NaN       None   0.0   
+55  144.0  0.644128            NaN            NaN        NaN       True   0.0   
+56  401.0  0.587629            NaN            NaN        NaN      False   0.0   
+57  545.0  0.597925            NaN            NaN        NaN       None   0.0   
+58  208.0  0.573705            NaN            NaN        NaN       True   0.0   
+59  337.0  0.609615            NaN            NaN        NaN      False   0.0   
+
+   dataset protected  disparate_impact  
+30  compas       sex          0.802925  
+31  compas       sex               NaN  
+32  compas       sex               NaN  
+33  compas      race          0.840384  
+34  compas      race               NaN  
+35  compas      race               NaN  
+36  compas       sex          0.815364  
+37  compas       sex               NaN  
+38  compas       sex               NaN  
+39  compas      race          0.846523  
+40  compas      race               NaN  
+41  compas      race               NaN  
+42  compas       sex          0.765863  
+43  compas       sex               NaN  
+44  compas       sex               NaN  
+45  compas      race          0.821505  
+46  compas      race               NaN  
+47  compas      race               NaN  
+48  compas       sex          0.681849  
+49  compas       sex               NaN  
+50  compas       sex               NaN  
+51  compas      race          0.740128  
+52  compas      race               NaN  
+53  compas      race               NaN  
+54  compas       sex          0.752926  
+55  compas       sex               NaN  
+56  compas       sex               NaN  
+57  compas      race          0.833327  
+58  compas      race               NaN  
+59  compas      race               NaN  
+#+end_example
+
+#+begin_src python
+  compas.shape
+#+end_src
+
+#+RESULTS:
+| 30 | 32 |
+
+#+begin_src python
+  compas.dtypes
+#+end_src
+
+#+RESULTS:
+#+begin_example
+GFP                              float64
+FDR                              float64
+TN                               float64
+subset                            object
+statistical_parity_difference    float64
+GFN                              float64
+FPR                              float64
+theil_index                      float64
+GTP                              float64
+GFPR                             float64
+GTPR                             float64
+FNR                              float64
+FOR                              float64
+GTNR                             float64
+NPV                              float64
+TPR                              float64
+PPV                              float64
+FN                               float64
+TNR                              float64
+GTN                              float64
+FP                               float64
+model                             object
+TP                               float64
+accuracy                         float64
+num_positives                    float64
+num_negatives                    float64
+base_rate                        float64
+privileged                        object
+GFNR                             float64
+dataset                           object
+protected                         object
+disparate_impact                 float64
+dtype: object
+#+end_example
+
+#+begin_src python
+  compas.describe(include='all')
+#+end_src
+
+#+RESULTS:
+#+begin_example
+         GFP        FDR          TN subset  statistical_parity_difference  \
+count   12.0  12.000000   12.000000     30                      10.000000   
+unique   NaN        NaN         NaN      3                            NaN   
+top      NaN        NaN         NaN   test                            NaN   
+freq     NaN        NaN         NaN     18                            NaN   
+mean     0.0   0.342375  252.666667    NaN                      -0.144358   
+std      0.0   0.040061  149.555300    NaN                       0.054344   
+min      0.0   0.272727   26.000000    NaN                      -0.264937   
+25%      0.0   0.327719   78.750000    NaN                      -0.170150   
+50%      0.0   0.349478  323.000000    NaN                      -0.122836   
+75%      0.0   0.371396  377.000000    NaN                      -0.106920   
+max      0.0   0.400598  381.000000    NaN                      -0.092778   
+
+         GFN        FPR  theil_index         GTP  GFPR  GTPR        FNR  \
+count   12.0  12.000000     4.000000   12.000000  12.0  12.0  12.000000   
+unique   NaN        NaN          NaN         NaN   NaN   NaN        NaN   
+top      NaN        NaN          NaN         NaN   NaN   NaN        NaN   
+freq     NaN        NaN          NaN         NaN   NaN   NaN        NaN   
+mean     0.0   0.499610     0.234927  562.000000   0.0   1.0   0.283490   
+std      0.0   0.098564     0.040042  258.684785   0.0   0.0   0.083812   
+min      0.0   0.398821     0.200250  190.000000   0.0   1.0   0.110526   
+25%      0.0   0.434718     0.200250  312.000000   0.0   1.0   0.248249   
+50%      0.0   0.457797     0.234927  592.000000   0.0   1.0   0.295200   
+75%      0.0   0.582562     0.269605  843.000000   0.0   1.0   0.353499   
+max      0.0   0.714286     0.269605  843.000000   0.0   1.0   0.385911   
+
+              FOR  GTNR        NPV        TPR        PPV          FN  \
+count   12.000000  12.0  12.000000  12.000000  12.000000   12.000000   
+unique        NaN   NaN        NaN        NaN        NaN         NaN   
+top           NaN   NaN        NaN        NaN        NaN         NaN   
+freq          NaN   NaN        NaN        NaN        NaN         NaN   
+mean     0.423570   1.0   0.576430   0.716510   0.657625  169.666667   
+std      0.074240   0.0   0.074240   0.083812   0.040061   95.254046   
+min      0.341935   1.0   0.434783   0.614089   0.599402   21.000000   
+25%      0.356419   1.0   0.557187   0.646501   0.628604   91.000000   
+50%      0.417562   1.0   0.582438   0.704800   0.650522  192.000000   
+75%      0.442813   1.0   0.643581   0.751751   0.672281  221.250000   
+max      0.565217   1.0   0.658065   0.889474   0.727273  298.000000   
+
+              TNR         GTN          FP model          TP   accuracy  \
+count   12.000000   12.000000   12.000000    30   12.000000  12.000000   
+unique        NaN         NaN         NaN     3         NaN        NaN   
+top           NaN         NaN         NaN  None         NaN        NaN   
+freq          NaN         NaN         NaN    18         NaN        NaN   
+mean     0.500390  466.000000  213.333333   NaN  392.333333   0.632225   
+std      0.098564  251.320874  103.543872   NaN  174.010623   0.037347   
+min      0.285714   91.000000   54.000000   NaN  144.000000   0.573705   
+25%      0.417438  190.000000  113.750000   NaN  247.000000   0.597925   
+50%      0.542203  558.500000  232.500000   NaN  386.500000   0.646410   
+75%      0.565282  699.000000  318.000000   NaN  545.000000   0.656939   
+max      0.601179  699.000000  322.000000   NaN  632.000000   0.693950   
+
+        num_positives  num_negatives  base_rate privileged  GFNR dataset  \
+count       18.000000      18.000000  18.000000         30  12.0      30   
+unique            NaN            NaN        NaN          3   NaN       1   
+top               NaN            NaN        NaN       None   NaN  compas   
+freq              NaN            NaN        NaN         10   NaN      30   
+mean      1492.444444    1248.444444   0.564471        NaN   0.0     NaN   
+std       1031.852487     929.902602   0.053467        NaN   0.0     NaN   
+min        190.000000      91.000000   0.510577        NaN   0.0     NaN   
+25%        679.750000     533.750000   0.520425        NaN   0.0     NaN   
+50%       1122.000000     760.500000   0.544511        NaN   0.0     NaN   
+75%       2406.250000    2079.250000   0.607555        NaN   0.0     NaN   
+max       3358.000000    2809.000000   0.676157        NaN   0.0     NaN   
+
+       protected  disparate_impact  
+count         30         10.000000  
+unique         2               NaN  
+top          sex               NaN  
+freq          15               NaN  
+mean         NaN          0.790079  
+std          NaN          0.053286  
+min          NaN          0.681849  
+25%          NaN          0.756160  
+50%          NaN          0.809145  
+75%          NaN          0.830372  
+max          NaN          0.846523  
+#+end_example
+
+* Analysis of protected attribute =sex=
+
+#+begin_src python
+  data = compas[compas['protected'] == 'sex']
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 15 | 32 |
+
+#+begin_src python
+  data
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    GFP       FDR     TN subset  statistical_parity_difference  GFN       FPR  \
+30  NaN       NaN    NaN   full                      -0.127687  NaN       NaN   
+31  NaN       NaN    NaN   full                            NaN  NaN       NaN   
+32  NaN       NaN    NaN   full                            NaN  NaN       NaN   
+36  NaN       NaN    NaN  train                      -0.117985  NaN       NaN   
+37  NaN       NaN    NaN  train                            NaN  NaN       NaN   
+38  NaN       NaN    NaN  train                            NaN  NaN       NaN   
+42  NaN       NaN    NaN   test                      -0.158314  NaN       NaN   
+43  NaN       NaN    NaN   test                            NaN  NaN       NaN   
+44  NaN       NaN    NaN   test                            NaN  NaN       NaN   
+48  0.0  0.334737  381.0   test                      -0.264937  0.0  0.454936   
+49  0.0  0.277778   26.0   test                            NaN  0.0  0.714286   
+50  0.0  0.353352  355.0   test                            NaN  0.0  0.416118   
+54  0.0  0.371396  377.0   test                      -0.174095  0.0  0.460658   
+55  0.0  0.272727   37.0   test                            NaN  0.0  0.593407   
+56  0.0  0.400598  340.0   test                            NaN  0.0  0.440789   
+
+    theil_index    GTP  GFPR  GTPR       FNR       FOR  GTNR       NPV  \
+30          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+31          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+32          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+36          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+37          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+38          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+42          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+43          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+44          NaN    NaN   NaN   NaN       NaN       NaN   NaN       NaN   
+48     0.200250  843.0   0.0   1.0  0.250297  0.356419   1.0  0.643581   
+49          NaN  190.0   0.0   1.0  0.110526  0.446809   1.0  0.553191   
+50          NaN  653.0   0.0   1.0  0.290965  0.348624   1.0  0.651376   
+54     0.269605  843.0   0.0   1.0  0.353499  0.441481   1.0  0.558519   
+55          NaN  190.0   0.0   1.0  0.242105  0.554217   1.0  0.445783   
+56          NaN  653.0   0.0   1.0  0.385911  0.425676   1.0  0.574324   
+
+         TPR       PPV     FN       TNR    GTN     FP                   model  \
+30       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+31       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+32       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+36       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+37       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+38       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+42       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+43       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+44       NaN       NaN    NaN       NaN    NaN    NaN                    None   
+48  0.749703  0.665263  211.0  0.545064  699.0  318.0      logisticregression   
+49  0.889474  0.722222   21.0  0.285714   91.0   65.0      logisticregression   
+50  0.709035  0.646648  190.0  0.583882  608.0  253.0      logisticregression   
+54  0.646501  0.628604  298.0  0.539342  699.0  322.0  decisiontreeclassifier   
+55  0.757895  0.727273   46.0  0.406593   91.0   54.0  decisiontreeclassifier   
+56  0.614089  0.599402  252.0  0.559211  608.0  268.0  decisiontreeclassifier   
+
+       TP  accuracy  num_positives  num_negatives  base_rate privileged  GFNR  \
+30    NaN       NaN         3358.0         2809.0   0.544511       None   NaN   
+31    NaN       NaN          760.0          413.0   0.647911       True   NaN   
+32    NaN       NaN         2598.0         2396.0   0.520224      False   NaN   
+36    NaN       NaN         2515.0         2110.0   0.543784       None   NaN   
+37    NaN       NaN          570.0          322.0   0.639013       True   NaN   
+38    NaN       NaN         1945.0         1788.0   0.521029      False   NaN   
+42    NaN       NaN          843.0          699.0   0.546693       None   NaN   
+43    NaN       NaN          190.0           91.0   0.676157       True   NaN   
+44    NaN       NaN          653.0          608.0   0.517843      False   NaN   
+48  632.0  0.656939            NaN            NaN        NaN       None   0.0   
+49  169.0  0.693950            NaN            NaN        NaN       True   0.0   
+50  463.0  0.648692            NaN            NaN        NaN      False   0.0   
+54  545.0  0.597925            NaN            NaN        NaN       None   0.0   
+55  144.0  0.644128            NaN            NaN        NaN       True   0.0   
+56  401.0  0.587629            NaN            NaN        NaN      False   0.0   
+
+   dataset protected  disparate_impact  
+30  compas       sex          0.802925  
+31  compas       sex               NaN  
+32  compas       sex               NaN  
+36  compas       sex          0.815364  
+37  compas       sex               NaN  
+38  compas       sex               NaN  
+42  compas       sex          0.765863  
+43  compas       sex               NaN  
+44  compas       sex               NaN  
+48  compas       sex          0.681849  
+49  compas       sex               NaN  
+50  compas       sex               NaN  
+54  compas       sex          0.752926  
+55  compas       sex               NaN  
+56  compas       sex               NaN  
+#+end_example
+
+** Analysis of =num_{positive,negative}=, =num_{true,false}_{positive,negative}= & =num_{true,false}_{positive_negative}_rate=
+
+We start with the =num_positives=, =num_negatives= which are computed
+only using the dataset.
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_subset-all_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data,
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  sns.barplot(data=data,
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  # label the bars with the value, taken from
+  # <https://stackoverflow.com/a/68323374>
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_subset-all_num-pos-neg.png]]
+
+- [ ] analyse results
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_subset-test_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  # label the bars with the value, taken from
+  # <https://stackoverflow.com/a/68323374>
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_subset-test_num-pos-neg.png]]
+
+Lets look at the confusion matrices for the models next to understand
+the biases in them.
+
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-lr_cm-rate.png]]
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-lr_cm-gen'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['GTN', 'GFP', 'GFN', 'GTP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-lr_cm-gen.png]]
+
+- [ ] investigate why the gen variants of the cms are not useful
+
+*** model: decisiontreeclassifier
+Lets look at the decisiontree classifier next.
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-dt_cm-rate.png]]
+
+** Analysis of =base_rate=
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_base-rate'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data,
+	      y='base_rate',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_base-rate.png]]
+
+** Analysis of ={positive,negative}_predictive_value= & =false_{discovery,omission}_rate=
+
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['NPV', 'FDR', 'FOR', 'PPV']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-lr_cm-ppv-fdr-for-npv.png]]
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'compas_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['NPV', 'FDR', 'FOR', 'PPV']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_heatmap_prot-sex_mod-dt_cm-ppv-fdr-for-npv.png]]
+
+** Analysis of =disparate_impact= & =statistical_parity_difference=
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_mod-none_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='disparate_impact',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_mod-none_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_mod-all_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='disparate_impact',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_mod-all_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_mod-none_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='statistical_parity_difference',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_mod-none_stat-par-diff.png]]
+
+#+begin_src python :results file
+  name = 'compas_barplot_prot-sex_mod-all_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='statistical_parity_difference',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:compas_barplot_prot-sex_mod-all_stat-par-diff.png]]
+

@@ -3,17 +3,14 @@
 #+date: [2022-07-25 Mon]
 #+property: header-args:python :session *sh21qual-adult* :exports both :eval never-export
 
-In this file we analyse the results obtained from computing all
-=BinaryLabelDatasetMetric= & =ClassificationMetric= for the adult
-dataset with a =LinearRegression= model. The dataset contains two
-protected attributes: sex & race. We consider both protected
-attributes individually in our analysis.
+In this file we analyse the results for the adult dataset. The dataset
+contains two protected attributes: sex & race. We consider both
+protected attributes individually in our analysis.
 
 The data analysed here is generated using =bin/data.py=.
 
 * Init
-In this section we perform some sanity checks, load the necessary
-modules & the dataset.
+In this section we load the necessary modules & the dataset.
 
 #+begin_src python :results silent
   import pandas as pd
@@ -353,6 +350,7 @@ means it is conditioned on the privileged group (ie. =sex= is 1 or
 unprivileged group (=sex= is 0 or 'Female').
 
 * Analysis of protected attribute =sex=
+
 In this section we analyse the fairness metrics. The section is
 further divided into logical subsections.
 
