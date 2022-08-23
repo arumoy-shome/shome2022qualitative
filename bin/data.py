@@ -161,15 +161,24 @@ def populate_model_metrics(rows, dataset, classified_dataset, protected, **kwarg
             row["GFN"] = metrics.num_generalized_false_negatives(privileged=privileged)
             row["GTN"] = metrics.num_generalized_true_negatives(privileged=privileged)
             # performance measures
-            row["TPR"] = metrics.true_positive_rate(privileged=privileged)
+            recall = metrics.true_positive_rate(
+                privileged=privileged
+            )  # alias recall
+            precision = metrics.positive_predictive_value(
+                privileged=privileged
+            )  # alias precision
+            row["TPR"] = recall
             row["FPR"] = metrics.false_positive_rate(privileged=privileged)
             row["FNR"] = metrics.false_negative_rate(privileged=privileged)
             row["TNR"] = metrics.true_negative_rate(privileged=privileged)
-            row["PPV"] = metrics.positive_predictive_value(privileged=privileged)
+            row["PPV"] = precision
             row["NPV"] = metrics.negative_predictive_value(privileged=privileged)
             row["FDR"] = metrics.false_discovery_rate(privileged=privileged)
             row["FOR"] = metrics.false_omission_rate(privileged=privileged)
             row["accuracy"] = metrics.accuracy(privileged=privileged)
+            row["f1"] = (2 * precision * recall) / (
+                precision + recall
+            )  # harmonic mean of precision & recall
             # generalized performance measures
             row["GTPR"] = metrics.generalized_true_positive_rate(privileged=privileged)
             row["GFPR"] = metrics.generalized_false_positive_rate(privileged=privileged)
