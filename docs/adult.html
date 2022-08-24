@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-24 Wed 15:31 -->
+<!-- 2022-08-24 Wed 16:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adult</title>
@@ -222,42 +222,40 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org51a11d8">1. Init</a></li>
-<li><a href="#org72852f1">2. Priliminary analysis</a></li>
-<li><a href="#org3df970a">3. Analysis of protected attribute <code>sex</code></a>
+<li><a href="#orgaa1e72b">1. Init</a></li>
+<li><a href="#orgb459b44">2. Priliminary analysis</a></li>
+<li><a href="#org2b32924">3. Analysis of protected attribute <code>sex</code></a>
 <ul>
-<li><a href="#org197c681">3.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
+<li><a href="#orgd12e56f">3.1. Analysis of fairness metrics</a>
 <ul>
-<li><a href="#orgf3e3415">3.1.1. model: logisticregression</a></li>
-<li><a href="#orgb77225b">3.1.2. model: decisiontreeclassifier</a></li>
+<li><a href="#orgdd4fb61">3.1.1. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org69b249a">3.1.2. Analysis of <code>disparate_impact</code></a></li>
+<li><a href="#org3964345">3.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
-<li><a href="#org4074dcc">3.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org268301f">3.3. Analysis of <code>accuracy</code>, <code>precision</code>, <code>recall</code> &amp; <code>f1</code></a>
+<li><a href="#org4ed0f82">3.2. Analysis of performance metrics</a>
 <ul>
-<li><a href="#orga01592d">3.3.1. model: logisticregression</a></li>
-<li><a href="#orgab4002b">3.3.2. model: decisiontreeclassifier</a></li>
+<li><a href="#orgc476673">3.2.1. model: logisticregression</a></li>
+<li><a href="#org7df38d5">3.2.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
-<li><a href="#orge4943d7">3.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
-<li><a href="#orge6885c4">4. Analysis of protected attribute <code>race</code></a>
+<li><a href="#org3c175ba">4. Analysis of protected attribute <code>race</code></a>
 <ul>
-<li><a href="#org7428d1c">4.1. Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></a>
+<li><a href="#orgaad9f89">4.1. Analysis of fairness metrics</a>
 <ul>
-<li><a href="#org94f4779">4.1.1. model: logisticregression</a></li>
-<li><a href="#org2af724c">4.1.2. model: decisiontreeclassifier</a></li>
+<li><a href="#org45242a1">4.1.1. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org17a0164">4.1.2. Analysis of <code>disparate_impact</code></a></li>
+<li><a href="#org15c368d">4.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
-<li><a href="#orgde6c583">4.2. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org4b8939d">4.3. Analysis of <code>accuracy</code>, <code>precision</code>, <code>recall</code> &amp; <code>f1</code></a>
+<li><a href="#org0fc83dc">4.2. Analysis of performance metrics</a>
 <ul>
-<li><a href="#org5eb410c">4.3.1. model: logisticregression</a></li>
-<li><a href="#orga5e3700">4.3.2. model: decisiontreeclassifier</a></li>
+<li><a href="#orgb5f800d">4.2.1. model: logisticregression</a></li>
+<li><a href="#org3be2bc9">4.2.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
-<li><a href="#org26ed1ce">4.4. Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
 </ul>
@@ -273,8 +271,8 @@ protected attributes individually in our analysis.
 The data analysed here is generated using <code>bin/data.py</code>.
 </p>
 
-<div id="outline-container-org51a11d8" class="outline-2">
-<h2 id="org51a11d8"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-orgaa1e72b" class="outline-2">
+<h2 id="orgaa1e72b"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we load the necessary modules &amp; the dataset.
@@ -310,8 +308,8 @@ adult = adult[adult['dataset'] == 'adult']
 </div>
 </div>
 
-<div id="outline-container-org72852f1" class="outline-2">
-<h2 id="org72852f1"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-orgb459b44" class="outline-2">
+<h2 id="orgb459b44"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
@@ -322,7 +320,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="orgdc21999">
+<pre class="example" id="org04d23e5">
    dataset  GFNR  num_negatives  disparate_impact       FDR  \
 0    adult   NaN        34014.0          0.363470       NaN   
 1    adult   NaN        20988.0               NaN       NaN   
@@ -510,7 +508,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="orgc0cd3e4">
+<pre class="example" id="org7636258">
 dataset                           object
 GFNR                             float64
 num_negatives                    float64
@@ -552,7 +550,7 @@ dtype: object
 </pre>
 </div>
 
-<pre class="example" id="org84ee6e0">
+<pre class="example" id="orgec8ff87">
        dataset  GFNR  num_negatives  disparate_impact        FDR  \
 count       30  12.0      18.000000         10.000000  12.000000   
 unique       1   NaN            NaN               NaN        NaN   
@@ -644,8 +642,8 @@ unprivileged group (<code>sex</code> is 0 or 'Female').
 </div>
 </div>
 
-<div id="outline-container-org3df970a" class="outline-2">
-<h2 id="org3df970a"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
+<div id="outline-container-org2b32924" class="outline-2">
+<h2 id="org2b32924"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
 <div class="outline-text-2" id="text-3">
 <p>
 In this section we analyse the fairness metrics. The section is
@@ -679,7 +677,7 @@ data.shape
 </pre>
 </div>
 
-<pre class="example" id="org69585fb">
+<pre class="example" id="org29a49c6">
    dataset  GFNR  num_negatives  disparate_impact       FDR  \
 0    adult   NaN        34014.0          0.363470       NaN   
 1    adult   NaN        20988.0               NaN       NaN   
@@ -767,8 +765,8 @@ data.shape
 </pre>
 </div>
 
-<div id="outline-container-org197c681" class="outline-3">
-<h3 id="org197c681"><span class="section-number-3">3.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-orgd12e56f" class="outline-3">
+<h3 id="orgd12e56f"><span class="section-number-3">3.1.</span> Analysis of fairness metrics</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
@@ -807,7 +805,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orge6028cf" class="figure">
+<div id="org7b004aa" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -868,7 +866,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgc8fb4c1" class="figure">
+<div id="org7df1470" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-test_num-pos-neg.png" />
 </p>
 </div>
@@ -880,179 +878,9 @@ absolute &amp; normalised versions.
 </p>
 </div>
 
-<div id="outline-container-orgf3e3415" class="outline-4">
-<h4 id="orgf3e3415"><span class="section-number-4">3.1.1.</span> model: logisticregression</h4>
+<div id="outline-container-orgdd4fb61" class="outline-4">
+<h4 id="orgdd4fb61"><span class="section-number-4">3.1.1.</span> Analysis of <code>base_rate</code></h4>
 <div class="outline-text-4" id="text-3-1-1">
-<p>
-Lets start with the logisticregression model first.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-lr_cm'
-metrics = data[data['model'] == 'logisticregression']
-cols = ['TN', 'FP', 'FN', 'TP']
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-for idx, privileged in enumerate(['None', 'True', 'False']):
-    cm = metrics[metrics['privileged'] == privileged]
-    cm = cm[cols].values.reshape(2,2)
-    sns.heatmap(data=cm,
-		annot=cm,
-		fmt="",
-		cbar=False,
-		cmap='Blues',
-		ax=axs[idx])
-    axs[idx].set_xlabel("y_pred")
-    axs[idx].set_ylabel("y_true")
-    axs[idx].set_title(privileged)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org7ff82f9" class="figure">
-<p><img src="adult_heatmap_prot-sex_mod-lr_cm.png" alt="adult_heatmap_prot-sex_mod-lr_cm.png" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-lr_cm-rate'
-metrics = data[data['model'] == 'logisticregression']
-cols = ['TNR', 'FPR', 'FNR', 'TPR']
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-for idx, privileged in enumerate(['None', 'True', 'False']):
-    cm = metrics[metrics['privileged'] == privileged]
-    cm = cm[cols].values.reshape(2,2)
-    sns.heatmap(data=cm,
-		annot=cm,
-		fmt=".3f",
-		cbar=False,
-		cmap='Blues',
-		ax=axs[idx])
-    axs[idx].set_xlabel("y_pred")
-    axs[idx].set_ylabel("y_true")
-    axs[idx].set_title(privileged)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org0d2506d" class="figure">
-<p><img src="adult_heatmap_prot-sex_mod-lr_cm-rate.png" alt="adult_heatmap_prot-sex_mod-lr_cm-rate.png" />
-</p>
-</div>
-
-<p>
-The model does well with the negative class (~92% accuracy). It
-doesn't do so well with the positive class (~61% accuracy) with a less
-then idea false negative rate (~39%). This is expected since we have
-more number of negative examples in the dataset.
-</p>
-
-<p>
-The performance of the model remains some what similar across the
-conditions on the protected attribute.
-</p>
-
-<p>
-There is a slight uptick in the true negative rate when we condition
-on the unprivileged group (right more plot). The true positive rate
-drops slightly here as well, with a rise in the false positive rate.
-So the model is able to classify women with a lower income with high
-accuracy. But the performance is 50-50 when it comes to women with a
-higher income. And this again is corroborated by the fact that we
-trained the model with very few examples of women with a high income.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgb77225b" class="outline-4">
-<h4 id="orgb77225b"><span class="section-number-4">3.1.2.</span> model: decisiontreeclassifier</h4>
-<div class="outline-text-4" id="text-3-1-2">
-<p>
-Lets look at the decisiontree classifier next.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-dt_cm'
-metrics = data[data['model'] == 'decisiontreeclassifier']
-cols = ['TN', 'FP', 'FN', 'TP']
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-for idx, privileged in enumerate(['None', 'True', 'False']):
-    cm = metrics[metrics['privileged'] == privileged]
-    cm = cm[cols].values.reshape(2,2)
-    sns.heatmap(data=cm,
-		annot=cm,
-		fmt="",
-		cbar=False,
-		cmap='Blues',
-		ax=axs[idx])
-    axs[idx].set_xlabel("y_pred")
-    axs[idx].set_ylabel("y_true")
-    axs[idx].set_title(privileged)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="orgd64df15" class="figure">
-<p><img src="adult_heatmap_prot-sex_mod-dt_cm.png" alt="adult_heatmap_prot-sex_mod-dt_cm.png" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-dt_cm-rate'
-metrics = data[data['model'] == 'decisiontreeclassifier']
-cols = ['TNR', 'FPR', 'FNR', 'TPR']
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-for idx, privileged in enumerate(['None', 'True', 'False']):
-    cm = metrics[metrics['privileged'] == privileged]
-    cm = cm[cols].values.reshape(2,2)
-    sns.heatmap(data=cm,
-		annot=cm,
-		fmt=".3f",
-		cbar=False,
-		cmap='Blues',
-		ax=axs[idx])
-    axs[idx].set_xlabel("y_pred")
-    axs[idx].set_ylabel("y_true")
-    axs[idx].set_title(privileged)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org4471a7f" class="figure">
-<p><img src="adult_heatmap_prot-sex_mod-dt_cm-rate.png" alt="adult_heatmap_prot-sex_mod-dt_cm-rate.png" />
-</p>
-</div>
-
-<p>
-The general trend is the same across both models: they are able to
-detect the negative class well but fail to do so for the positive
-class.
-</p>
-
-<p>
-Compared to logisticregression, the decisiontreeclassifier performs
-slightly worse. However, we must account for the fact that the model
-is not tuned. The performance many increase with some effort invested
-in model tuning.
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org4074dcc" class="outline-3">
-<h3 id="org4074dcc"><span class="section-number-3">3.2.</span> Analysis of <code>base_rate</code></h3>
-<div class="outline-text-3" id="text-3-2">
 <p>
 The <code>base_rate</code> is the probability that the label of a given example
 is positive.
@@ -1079,7 +907,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org1894586" class="figure">
+<div id="orgf33a31e" class="figure">
 <p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
@@ -1105,9 +933,216 @@ Note that the <code>base_rate</code> can be derived mathematically using
 </div>
 </div>
 
-<div id="outline-container-org268301f" class="outline-3">
-<h3 id="org268301f"><span class="section-number-3">3.3.</span> Analysis of <code>accuracy</code>, <code>precision</code>, <code>recall</code> &amp; <code>f1</code></h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-org69b249a" class="outline-4">
+<h4 id="org69b249a"><span class="section-number-4">3.1.2.</span> Analysis of <code>disparate_impact</code></h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+These metrics exist both for the data &amp; the model so we should compare
+them and see how they differ. For each metric, we create two plots:
+First, we observe the distribution of the metric across the subsets.
+And second we compare the distribution of the metric when calculated
+with &amp; without a model.
+</p>
+
+<p>
+<code>disparate_impact</code> when calculated without a model, is expressed
+mathematically as follows:
+</p>
+
+\begin{equation}
+\frac{Pr(Y=1 | D = \text{unprivileged})}{Pr(Y=1 | D =
+\text{privileged})}
+\end{equation}
+
+<p>
+So intuitively, if we have more examples of positive class with the
+privileged group (sex is 'Male'), the metric will approach 0. Ideally,
+we want the metric to be high with a maximum value of 1 which
+indicates that we have equal number of positive examples for both
+privileged &amp; unprivileged groups. A value higher than 1 indicates that
+we have more examples of unprivileged positive class in our dataset.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-none_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='disparate_impact',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org6ec310c" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-none_disparate-impact.png" alt="adult_barplot_prot-sex_mod-none_disparate-impact.png" />
+</p>
+</div>
+
+<p>
+The <code>disparate_impact</code> across the various subsets is low. And this
+makes sense since we do not have that many examples of positive class
+for the unprivileged group in our dataset.
+</p>
+
+<p>
+<b>Note</b> that we can calculate the disparate impact using the
+ probabilities obtained from the <code>base_rate</code> figure.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-all_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='disparate_impact',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org76941e0" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-all_disparate-impact.png" alt="adult_barplot_prot-sex_mod-all_disparate-impact.png" />
+</p>
+</div>
+
+<p>
+When we calculate <code>disparate_impact</code> using a model, we use the
+predictions instead of the actual label. The mathematical formula
+changes to the following.
+</p>
+
+\begin{equation}
+\frac{Pr(\hat{Y}=1 | D = \text{unprivileged})}{Pr(\hat{Y}=1 | D =
+\text{privileged})}
+\end{equation}
+
+<p>
+The <code>disparate_impact</code> in the model is similar to what we see in the
+dataset. This makes sense since the model merely reflects the
+statistics of the dataset.
+</p>
+
+<p>
+The <code>disparate_impact</code> in the decisiontreeclassifier is slightly
+higher than the rest. This indicates that the model is "learning"
+something different &amp; is able to account for the bias in the dataset.
+Perhaps with more tuning this score can be improved?
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3964345" class="outline-4">
+<h4 id="org3964345"><span class="section-number-4">3.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+The <code>statistical_parity_difference</code> is expressed mathematically as
+follows.
+</p>
+
+\begin{equation}
+Pr(Y=1 | D = \text{unprivileged}) - Pr(Y=1 | D = \text{privileged})
+\end{equation}
+
+<p>
+Intuitively, the value for this metric falls within the range of \([-1,
+1]\). A value of 0 indicates that the dataset contains equal number of
+positive examples for both privileged &amp; unprivileged groups. A value
+of -1 is not ideal since it indicates that the dataset contains
+significantly more examples of the positive class with the privileged
+group. The idea value for this metric thus lies between \([0, 1]\).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-none_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='statistical_parity_difference',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org3cdf03d" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-none_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-none_stat-par-diff.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-all_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='statistical_parity_difference',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org93a2ff7" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-all_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-all_stat-par-diff.png" />
+</p>
+</div>
+
+<p>
+Again, the metric is negative both in the data &amp; model since we have
+more examples of the positive class with the privileged group.
+</p>
+
+<p>
+Again, we see that decisiontreeclassifier performs better than others.
+</p>
+
+<p>
+<b>Main takeaway</b> here is that we can explain &amp; derive the above metrics
+using statistics from the data. However, when using a model, the
+numbers deviate from those calculated using just the data. This is
+expected since the models introduce non-linearity into the mix.
+</p>
+
+<p>
+Thus, we can use the data-centric metrics to give us an indication of
+what the model-centric metrics may look like. But we need to train,
+test &amp; analyse the model predictions to be sure. This is the first
+point of divergence where we can no longer explain the model metrics
+using the data metrics.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4ed0f82" class="outline-3">
+<h3 id="org4ed0f82"><span class="section-number-3">3.2.</span> Analysis of performance metrics</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 The wikipedia page on <a href="https://en.wikipedia.org/wiki/Binary_classification">binary classification</a> was very helpful to make
 sense of these metrics. Following is a table summarising their
@@ -1259,11 +1294,96 @@ predictions.</dd>
 <dt>f1</dt><dd>Harmonic mean of precision &amp; recall. It combines the two
 metrics into a single one.</dd>
 </dl>
+
+<p>
+The section is further divided based on the model. For each model, we
+analyse the confusion matrices and the performance metrics.
+</p>
 </div>
 
-<div id="outline-container-orga01592d" class="outline-4">
-<h4 id="orga01592d"><span class="section-number-4">3.3.1.</span> model: logisticregression</h4>
-<div class="outline-text-4" id="text-3-3-1">
+<div id="outline-container-orgc476673" class="outline-4">
+<h4 id="orgc476673"><span class="section-number-4">3.2.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-lr_cm'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org8ee8461" class="figure">
+<p><img src="adult_heatmap_prot-sex_mod-lr_cm.png" alt="adult_heatmap_prot-sex_mod-lr_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-lr_cm-rate'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org575e761" class="figure">
+<p><img src="adult_heatmap_prot-sex_mod-lr_cm-rate.png" alt="adult_heatmap_prot-sex_mod-lr_cm-rate.png" />
+</p>
+</div>
+
+<p>
+The model does well with the negative class (~92% accuracy). It
+doesn't do so well with the positive class (~61% accuracy) with a less
+then idea false negative rate (~39%). This is expected since we have
+more number of negative examples in the dataset.
+</p>
+
+<p>
+The performance of the model remains some what similar across the
+conditions on the protected attribute.
+</p>
+
+<p>
+There is a slight uptick in the true negative rate when we condition
+on the unprivileged group (right more plot). The true positive rate
+drops slightly here as well, with a rise in the false positive rate.
+So the model is able to classify women with a lower income with high
+accuracy. But the performance is 50-50 when it comes to women with a
+higher income. And this again is corroborated by the fact that we
+trained the model with very few examples of women with a high income.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1'
 metrics = data[data['model'] == 'logisticregression']
@@ -1309,7 +1429,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgd770ed5" class="figure">
+<div id="orgc1d44cd" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" />
 </p>
 </div>
@@ -1327,9 +1447,80 @@ negative examples.
 </div>
 </div>
 
-<div id="outline-container-orgab4002b" class="outline-4">
-<h4 id="orgab4002b"><span class="section-number-4">3.3.2.</span> model: decisiontreeclassifier</h4>
-<div class="outline-text-4" id="text-3-3-2">
+<div id="outline-container-org7df38d5" class="outline-4">
+<h4 id="org7df38d5"><span class="section-number-4">3.2.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-dt_cm'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org856fceb" class="figure">
+<p><img src="adult_heatmap_prot-sex_mod-dt_cm.png" alt="adult_heatmap_prot-sex_mod-dt_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-dt_cm-rate'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org35fc8ac" class="figure">
+<p><img src="adult_heatmap_prot-sex_mod-dt_cm-rate.png" alt="adult_heatmap_prot-sex_mod-dt_cm-rate.png" />
+</p>
+</div>
+
+<p>
+The general trend is the same across both models: they are able to
+detect the negative class well but fail to do so for the positive
+class.
+</p>
+
+<p>
+Compared to logisticregression, the decisiontreeclassifier performs
+slightly worse. However, we must account for the fact that the model
+is not tuned. The performance many increase with some effort invested
+in model tuning.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1'
 metrics = data[data['model'] == 'decisiontreeclassifier']
@@ -1375,7 +1566,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org381f9df" class="figure">
+<div id="org47c6de0" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" />
 </p>
 </div>
@@ -1386,211 +1577,10 @@ Similar results; similar reasons.
 </div>
 </div>
 </div>
-
-<div id="outline-container-orge4943d7" class="outline-3">
-<h3 id="orge4943d7"><span class="section-number-3">3.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
-<div class="outline-text-3" id="text-3-4">
-<p>
-These metrics exist both for the data &amp; the model so we should compare
-them and see how they differ. For each metric, we create two plots:
-First, we observe the distribution of the metric across the subsets.
-And second we compare the distribution of the metric when calculated
-with &amp; without a model.
-</p>
-
-<p>
-<code>disparate_impact</code> when calculated without a model, is expressed
-mathematically as follows:
-</p>
-
-\begin{equation}
-\frac{Pr(Y=1 | D = \text{unprivileged})}{Pr(Y=1 | D =
-\text{privileged})}
-\end{equation}
-
-<p>
-So intuitively, if we have more examples of positive class with the
-privileged group (sex is 'Male'), the metric will approach 0. Ideally,
-we want the metric to be high with a maximum value of 1 which
-indicates that we have equal number of positive examples for both
-privileged &amp; unprivileged groups. A value higher than 1 indicates that
-we have more examples of unprivileged positive class in our dataset.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-none_disparate-impact'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['model'] == 'None'],
-	    y='disparate_impact',
-	    x='subset',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
 </div>
 
-
-<div id="org1816ccb" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-none_disparate-impact.png" alt="adult_barplot_prot-sex_mod-none_disparate-impact.png" />
-</p>
-</div>
-
-<p>
-The <code>disparate_impact</code> across the various subsets is low. And this
-makes sense since we do not have that many examples of positive class
-for the unprivileged group in our dataset.
-</p>
-
-<p>
-<b>Note</b> that we can calculate the disparate impact using the
- probabilities obtained from the <code>base_rate</code> figure.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-all_disparate-impact'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['subset'] == 'test'],
-	    y='disparate_impact',
-	    x='model',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org58dc14c" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-all_disparate-impact.png" alt="adult_barplot_prot-sex_mod-all_disparate-impact.png" />
-</p>
-</div>
-
-<p>
-When we calculate <code>disparate_impact</code> using a model, we use the
-predictions instead of the actual label. The mathematical formula
-changes to the following.
-</p>
-
-\begin{equation}
-\frac{Pr(\hat{Y}=1 | D = \text{unprivileged})}{Pr(\hat{Y}=1 | D =
-\text{privileged})}
-\end{equation}
-
-<p>
-The <code>disparate_impact</code> in the model is similar to what we see in the
-dataset. This makes sense since the model merely reflects the
-statistics of the dataset.
-</p>
-
-<p>
-The <code>disparate_impact</code> in the decisiontreeclassifier is slightly
-higher than the rest. This indicates that the model is "learning"
-something different &amp; is able to account for the bias in the dataset.
-Perhaps with more tuning this score can be improved?
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-none_stat-par-diff'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['model'] == 'None'],
-	    y='statistical_parity_difference',
-	    x='subset',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org2e078ac" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-none_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-none_stat-par-diff.png" />
-</p>
-</div>
-
-<p>
-The <code>statistical_parity_difference</code> is expressed mathematically as
-follows.
-</p>
-
-\begin{equation}
-Pr(Y=1 | D = \text{unprivileged}) - Pr(Y=1 | D = \text{privileged})
-\end{equation}
-
-<p>
-Intuitively, the value for this metric falls within the range of \([-1,
-1]\). A value of 0 indicates that the dataset contains equal number of
-positive examples for both privileged &amp; unprivileged groups. A value
-of -1 is not ideal since it indicates that the dataset contains
-significantly more examples of the positive class with the privileged
-group. The idea value for this metric thus lies between \([0, 1]\).
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-sex_mod-all_stat-par-diff'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['subset'] == 'test'],
-	    y='statistical_parity_difference',
-	    x='model',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="orgd39ea87" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-all_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-all_stat-par-diff.png" />
-</p>
-</div>
-
-<p>
-Again, the metric is negative both in the data &amp; model since we have
-more examples of the positive class with the privileged group.
-</p>
-
-<p>
-Again, we see that decisiontreeclassifier performs better than others.
-</p>
-
-<p>
-<b>Main takeaway</b> here is that we can explain &amp; derive the above metrics
-using statistics from the data. However, when using a model, the
-numbers deviate from those calculated using just the data. This is
-expected since the models introduce non-linearity into the mix.
-</p>
-
-<p>
-Thus, we can use the data-centric metrics to give us an indication of
-what the model-centric metrics may look like. But we need to train,
-test &amp; analyse the model predictions to be sure. This is the first
-point of divergence where we can no longer explain the model metrics
-using the data metrics.
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orge6885c4" class="outline-2">
-<h2 id="orge6885c4"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
+<div id="outline-container-org3c175ba" class="outline-2">
+<h2 id="org3c175ba"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
 <div class="outline-text-2" id="text-4">
 <p>
 In this section we expand &amp; compare the metrics for both the race
@@ -1620,8 +1610,8 @@ data.shape
 </table>
 </div>
 
-<div id="outline-container-org7428d1c" class="outline-3">
-<h3 id="org7428d1c"><span class="section-number-3">4.1.</span> Analysis of <code>num_{positive,negative}</code>, <code>num_{true,false}_{positive,negative}</code> &amp; <code>num_{true,false}_{positive_negative}_rate</code></h3>
+<div id="outline-container-orgaad9f89" class="outline-3">
+<h3 id="orgaad9f89"><span class="section-number-3">4.1.</span> Analysis of fairness metrics</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_num-pos-neg'
@@ -1653,7 +1643,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org5650a2b" class="figure">
+<div id="org3fa0b06" class="figure">
 <p><img src="adult_barplot_prot-race_subset-all_num-pos-neg.png" alt="adult_barplot_prot-race_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -1695,15 +1685,191 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org24b12f9" class="figure">
+<div id="org29963e6" class="figure">
 <p><img src="adult_barplot_prot-race_subset-test_num-pos-neg.png" alt="adult_barplot_prot-race_subset-test_num-pos-neg.png" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-org94f4779" class="outline-4">
-<h4 id="org94f4779"><span class="section-number-4">4.1.1.</span> model: logisticregression</h4>
+<div id="outline-container-org45242a1" class="outline-4">
+<h4 id="org45242a1"><span class="section-number-4">4.1.1.</span> Analysis of <code>base_rate</code></h4>
 <div class="outline-text-4" id="text-4-1-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_base-rate'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data,
+	    y='base_rate',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+
+</pre>
+</div>
+
+
+<div id="orgeca98de" class="figure">
+<p><img src="adult_barplot_prot-race_base-rate.png" alt="adult_barplot_prot-race_base-rate.png" />
+</p>
+</div>
+
+<p>
+The base rate is similar across all subsets since we derive the
+training &amp; testing set by random sampling of the entire dataset. The
+base rate conditioned on the privileged group is higher than the the
+unprivileged group and this too is reflected in the training data.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org17a0164" class="outline-4">
+<h4 id="org17a0164"><span class="section-number-4">4.1.2.</span> Analysis of <code>disparate_impact</code></h4>
+<div class="outline-text-4" id="text-4-1-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='disparate_impact',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orga50fbfa" class="figure">
+<p><img src="adult_barplot_prot-race_mod-none_disparate-impact.png" alt="adult_barplot_prot-race_mod-none_disparate-impact.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-all_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='disparate_impact',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org695b781" class="figure">
+<p><img src="adult_barplot_prot-race_mod-all_disparate-impact.png" alt="adult_barplot_prot-race_mod-all_disparate-impact.png" />
+</p>
+</div>
+
+<p>
+The <code>disparate_impact</code> in the model is similar to that observed in the
+dataset.
+</p>
+
+<p>
+The <code>disparate_impact</code> for race attribute is higher compared to that
+observed in sex. This can be explained by taking a closer look at the
+mathematical formulas. Lets take a closer look.
+</p>
+
+\begin{equation}
+\text{disparate impact} = \frac{P(Y=1 | D=\text{unprivileged})}{P(Y=1 | D=\text{privileged})}
+\end{equation}
+
+\begin{equation}
+P(Y=1 | D=\text{privileged}) = \frac{P(Y=1 \cap D=\text{privileged})}{P(D=\text{privileged})}
+\end{equation}
+
+\begin{equation}
+P(D=\text{privileged}) = \frac{\text{number of privileged examples}}{\text{total number of examples}}
+\end{equation}
+
+\begin{equation}
+\text{number of privileged examples} \propto P(D=\text{privileged}) \propto \frac{1}{P(Y=1 | D=\text{privileged})} \propto \frac{1}{\text{disparate impact}}
+\end{equation}
+
+<p>
+Thus, a higher number of privileged group examples (which is the case
+for the race attribute), results in a higher <code>disparate_impact</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org15c368d" class="outline-4">
+<h4 id="org15c368d"><span class="section-number-4">4.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
+<div class="outline-text-4" id="text-4-1-3">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='statistical_parity_difference',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orga04739a" class="figure">
+<p><img src="adult_barplot_prot-race_mod-none_stat-par-diff.png" alt="adult_barplot_prot-race_mod-none_stat-par-diff.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_barplot_prot-race_mod-all_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='statistical_parity_difference',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org9c4c2d9" class="figure">
+<p><img src="adult_barplot_prot-race_mod-all_stat-par-diff.png" alt="adult_barplot_prot-race_mod-all_stat-par-diff.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org0fc83dc" class="outline-3">
+<h3 id="org0fc83dc"><span class="section-number-3">4.2.</span> Analysis of performance metrics</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-orgb5f800d" class="outline-4">
+<h4 id="orgb5f800d"><span class="section-number-4">4.2.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-4-2-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm'
 metrics = data[data['model'] == 'logisticregression']
@@ -1728,7 +1894,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgc3dfc4d" class="figure">
+<div id="org593f640" class="figure">
 <p><img src="adult_heatmap_prot-race_mod-lr_cm.png" alt="adult_heatmap_prot-race_mod-lr_cm.png" />
 </p>
 </div>
@@ -1757,7 +1923,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org9260538" class="figure">
+<div id="org9430984" class="figure">
 <p><img src="adult_heatmap_prot-race_mod-lr_cm-rate.png" alt="adult_heatmap_prot-race_mod-lr_cm-rate.png" />
 </p>
 </div>
@@ -1775,125 +1941,7 @@ class is worse than the privileged positive class. This makes sense
 since we have more examples of privileged positive class in our
 training dataset.
 </p>
-</div>
-</div>
 
-<div id="outline-container-org2af724c" class="outline-4">
-<h4 id="org2af724c"><span class="section-number-4">4.1.2.</span> model: decisiontreeclassifier</h4>
-<div class="outline-text-4" id="text-4-1-2">
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm'
-metrics = data[data['model'] == 'decisiontreeclassifier']
-cols = ['TN', 'FP', 'FN', 'TP']
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-for idx, privileged in enumerate(['None', 'True', 'False']):
-    cm = metrics[metrics['privileged'] == privileged]
-    cm = cm[cols].values.reshape(2,2)
-    sns.heatmap(data=cm,
-		annot=cm,
-		fmt="",
-		cbar=False,
-		cmap='Blues',
-		ax=axs[idx])
-    axs[idx].set_xlabel("y_pred")
-    axs[idx].set_ylabel("y_true")
-    axs[idx].set_title(privileged)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org80a71a2" class="figure">
-<p><img src="adult_heatmap_prot-race_mod-dt_cm.png" alt="adult_heatmap_prot-race_mod-dt_cm.png" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm-rate'
-metrics = data[data['model'] == 'decisiontreeclassifier']
-cols = ['TNR', 'FPR', 'FNR', 'TPR']
-fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-for idx, privileged in enumerate(['None', 'True', 'False']):
-    cm = metrics[metrics['privileged'] == privileged]
-    cm = cm[cols].values.reshape(2,2)
-    sns.heatmap(data=cm,
-		annot=cm,
-		fmt=".3f",
-		cbar=False,
-		cmap='Blues',
-		ax=axs[idx])
-    axs[idx].set_xlabel("y_pred")
-    axs[idx].set_ylabel("y_true")
-    axs[idx].set_title(privileged)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org859c7f5" class="figure">
-<p><img src="adult_heatmap_prot-race_mod-dt_cm-rate.png" alt="adult_heatmap_prot-race_mod-dt_cm-rate.png" />
-</p>
-</div>
-
-<p>
-Both models are able to detect the negative class better than the
-positive class. There is a slight performance decrease in the
-decisiontreeclassifier compared to the logisticregression, however
-keep in mind that we did not tune the model.
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgde6c583" class="outline-3">
-<h3 id="orgde6c583"><span class="section-number-3">4.2.</span> Analysis of <code>base_rate</code></h3>
-<div class="outline-text-3" id="text-4-2">
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_base-rate'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data,
-	    y='base_rate',
-	    x='subset',
-	    hue='privileged',
-	    hue_order=['None', 'True', 'False'],
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-
-</pre>
-</div>
-
-
-<div id="orgbab5d6c" class="figure">
-<p><img src="adult_barplot_prot-race_base-rate.png" alt="adult_barplot_prot-race_base-rate.png" />
-</p>
-</div>
-
-<p>
-The base rate is similar across all subsets since we derive the
-training &amp; testing set by random sampling of the entire dataset. The
-base rate conditioned on the privileged group is higher than the the
-unprivileged group and this too is reflected in the training data.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org4b8939d" class="outline-3">
-<h3 id="org4b8939d"><span class="section-number-3">4.3.</span> Analysis of <code>accuracy</code>, <code>precision</code>, <code>recall</code> &amp; <code>f1</code></h3>
-<div class="outline-text-3" id="text-4-3">
-</div>
-<div id="outline-container-org5eb410c" class="outline-4">
-<h4 id="org5eb410c"><span class="section-number-4">4.3.1.</span> model: logisticregression</h4>
-<div class="outline-text-4" id="text-4-3-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_mod-lr_acc-pre-rec-f1'
 metrics = data[data['model'] == 'logisticregression']
@@ -1945,16 +1993,81 @@ similar as well), precision is higher than recall since the sum
 </p>
 
 
-<div id="org8e669b1" class="figure">
+<div id="org89e4779" class="figure">
 <p><img src="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orga5e3700" class="outline-4">
-<h4 id="orga5e3700"><span class="section-number-4">4.3.2.</span> model: decisiontreeclassifier</h4>
-<div class="outline-text-4" id="text-4-3-2">
+<div id="outline-container-org3be2bc9" class="outline-4">
+<h4 id="org3be2bc9"><span class="section-number-4">4.2.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org91002e8" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm.png" alt="adult_heatmap_prot-race_mod-dt_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm-rate'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org1920bdf" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm-rate.png" alt="adult_heatmap_prot-race_mod-dt_cm-rate.png" />
+</p>
+</div>
+
+<p>
+Both models are able to detect the negative class better than the
+positive class. There is a slight performance decrease in the
+decisiontreeclassifier compared to the logisticregression, however
+keep in mind that we did not tune the model.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_mod-dt_acc-pre-rec-f1'
 metrics = data[data['model'] == 'decisiontreeclassifier']
@@ -2009,139 +2122,10 @@ Results are similar to decisiontreeclassifier for the sex attribute.
 </p>
 
 
-<div id="org01071c6" class="figure">
+<div id="orgda6ba61" class="figure">
 <p><img src="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" />
 </p>
 </div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org26ed1ce" class="outline-3">
-<h3 id="org26ed1ce"><span class="section-number-3">4.4.</span> Analysis of <code>disparate_impact</code> &amp; <code>statistical_parity_difference</code></h3>
-<div class="outline-text-3" id="text-4-4">
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_disparate-impact'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['model'] == 'None'],
-	    y='disparate_impact',
-	    x='subset',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org9dd7e58" class="figure">
-<p><img src="adult_barplot_prot-race_mod-none_disparate-impact.png" alt="adult_barplot_prot-race_mod-none_disparate-impact.png" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_mod-all_disparate-impact'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['subset'] == 'test'],
-	    y='disparate_impact',
-	    x='model',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org2e399d1" class="figure">
-<p><img src="adult_barplot_prot-race_mod-all_disparate-impact.png" alt="adult_barplot_prot-race_mod-all_disparate-impact.png" />
-</p>
-</div>
-
-<p>
-The <code>disparate_impact</code> in the model is similar to that observed in the
-dataset.
-</p>
-
-<p>
-The <code>disparate_impact</code> for race attribute is higher compared to that
-observed in sex. This can be explained by taking a closer look at the
-mathematical formulas. Lets take a closer look.
-</p>
-
-\begin{equation}
-\text{disparate impact} = \frac{P(Y=1 | D=\text{unprivileged})}{P(Y=1 | D=\text{privileged})}
-\end{equation}
-
-\begin{equation}
-P(Y=1 | D=\text{privileged}) = \frac{P(Y=1 \cap D=\text{privileged})}{P(D=\text{privileged})}
-\end{equation}
-
-\begin{equation}
-P(D=\text{privileged}) = \frac{\text{number of privileged examples}}{\text{total number of examples}}
-\end{equation}
-
-\begin{equation}
-\text{number of privileged examples} \propto P(D=\text{privileged}) \propto \frac{1}{P(Y=1 | D=\text{privileged})} \propto \frac{1}{\text{disparate impact}}
-\end{equation}
-
-<p>
-Thus, a higher number of privileged group examples (which is the case
-for the race attribute), results in a higher <code>disparate_impact</code>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_stat-par-diff'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['model'] == 'None'],
-	    y='statistical_parity_difference',
-	    x='subset',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org0a72e23" class="figure">
-<p><img src="adult_barplot_prot-race_mod-none_stat-par-diff.png" alt="adult_barplot_prot-race_mod-none_stat-par-diff.png" />
-</p>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-python">name = 'adult_barplot_prot-race_mod-all_stat-par-diff'
-
-fig, ax = plt.subplots()
-
-sns.barplot(data=data[data['subset'] == 'test'],
-	    y='statistical_parity_difference',
-	    x='model',
-	    ax=ax)
-
-for container in ax.containers:
-    ax.bar_label(container)
-
-utils.savefig(fig, name)
-</pre>
-</div>
-
-
-<div id="org8683729" class="figure">
-<p><img src="adult_barplot_prot-race_mod-all_stat-par-diff.png" alt="adult_barplot_prot-race_mod-all_stat-par-diff.png" />
-</p>
 </div>
 </div>
 </div>
@@ -2150,7 +2134,7 @@ utils.savefig(fig, name)
 <div id="postamble" class="status">
 <p class="date">Date: 2022-07-25 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-08-24 Wed 15:31</p>
+<p class="date">Created: 2022-08-24 Wed 16:05</p>
 </div>
 </body>
 </html>

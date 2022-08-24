@@ -455,7 +455,7 @@ further divided into logical subsections.
 26       sex  0.943998   195.0      False  0.442177  0.897631   0.0   1.0  0.0  
 #+end_example
 
-** Analysis of =num_{positive,negative}=, =num_{true,false}_{positive,negative}= & =num_{true,false}_{positive_negative}_rate=
+** Analysis of fairness metrics
 We start with the =num_positives=, =num_negatives= which are computed
 only using the dataset.
 
@@ -545,138 +545,7 @@ Lets look at the confusion matrices for the models next to understand
 the biases in them. The confusion matrices come in two flavours: the
 absolute & normalised versions.
 
-*** model: logisticregression
-Lets start with the logisticregression model first.
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-lr_cm'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['TN', 'FP', 'FN', 'TP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-lr_cm.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-lr_cm-rate'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['TNR', 'FPR', 'FNR', 'TPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-lr_cm-rate.png]]
-
-The model does well with the negative class (~92% accuracy). It
-doesn't do so well with the positive class (~61% accuracy) with a less
-then idea false negative rate (~39%). This is expected since we have
-more number of negative examples in the dataset.
-
-The performance of the model remains some what similar across the
-conditions on the protected attribute.
-
-There is a slight uptick in the true negative rate when we condition
-on the unprivileged group (right more plot). The true positive rate
-drops slightly here as well, with a rise in the false positive rate.
-So the model is able to classify women with a lower income with high
-accuracy. But the performance is 50-50 when it comes to women with a
-higher income. And this again is corroborated by the fact that we
-trained the model with very few examples of women with a high income.
-
-*** model: decisiontreeclassifier
-Lets look at the decisiontree classifier next.
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-dt_cm'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['TN', 'FP', 'FN', 'TP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-dt_cm.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-dt_cm-rate'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['TNR', 'FPR', 'FNR', 'TPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-dt_cm-rate.png]]
-
-The general trend is the same across both models: they are able to
-detect the negative class well but fail to do so for the positive
-class.
-
-Compared to logisticregression, the decisiontreeclassifier performs
-slightly worse. However, we must account for the fact that the model
-is not tuned. The performance many increase with some effort invested
-in model tuning.
-
-** Analysis of =base_rate=
+*** Analysis of =base_rate=
 The =base_rate= is the probability that the label of a given example
 is positive.
 
@@ -715,152 +584,7 @@ privileged group.
 Note that the =base_rate= can be derived mathematically using
 =num_{positives,negatives}= and conditional probability.
 
-** Analysis of =accuracy=, =precision=, =recall= & =f1=
-The wikipedia page on [[https://en.wikipedia.org/wiki/Binary_classification][binary classification]] was very helpful to make
-sense of these metrics. Following is a table summarising their
-mathematical formulas
-
-| metric   | formula                               | alias              |
-|----------+---------------------------------------+--------------------|
-| TPR      | TP/P OR TP/(TP+FN)                    | recall/sensitivity |
-| FPR      | FP/N                                  | 1 - TNR            |
-| FNR      | FN/P                                  | 1 - TPR            |
-| TNR      | TN/N                                  | specificity        |
-| PPV      | TP/(TP+FP)                            | precision          |
-| FDR      | FP/(TP+FP)                            | 1 - PPV            |
-| FOR      | FN/(TN+FN)                            | 1 - NPV            |
-| NPV      | TN/(TN+FN)                            |                    |
-| accuracy | (TP+TN)/P+N                           |                    |
-| f1       | (2*precision*recall)/precision+recall |                    |
-
-Following is a model of the binary confusion matrix.
-
-| y_true | 0 | TN     | FP     |
-| y_true | 1 | FN     | TP     |
-|        |   | 0      | 1      |
-|        |   | y_pred | y_pred |
-
-We focus on a subset of the metrics above. The following are the
-metrics we focus on along with a short description & interpretation of
-the metric.
-
-+ Accuracy :: The accuracy determines the correctness of the model's
-  predictions. Although, with an imbalanced dataset, this metric can
-  be misleading.
-+ Precision :: The correctness of the model in predicting the positive
-  class out of all positive class predictions. In other words, the
-  precision is the accuracy of the negative class.
-+ Recall :: The recall provides an indication of the missed positive
-  predictions.
-+ f1 :: Harmonic mean of precision & recall. It combines the two
-  metrics into a single one.
-
-*** model: logisticregression
-
-#+begin_src python :results file
-  name = 'adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1'
-  metrics = data[data['model'] == 'logisticregression']
-  hue_order = ['None', 'True', 'False']
-
-  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
-
-  sns.barplot(data=metrics,
-	      y='accuracy',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[0])
-
-  sns.barplot(data=metrics,
-	      y='PPV',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[1])
-  axs[1].set_ylabel('precision')
-
-  sns.barplot(data=metrics,
-	      y='TPR',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[2])
-  axs[2].set_ylabel('recall')
-
-  sns.barplot(data=metrics,
-	      y='f1',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[3])
-
-  for idx in range(4):
-      for container in axs[idx].containers: axs[idx].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
-
-The accuracy of the model is high however the dataset is skewed so we
-should focus on the precision & recall instead.
-
-The precision is higher than the recall since $(TP+FP) < (TP+FN)$. And
-we have more FN since we trained with a dataset with more number of
-negative examples.
-
-*** model: decisiontreeclassifier
-
-#+begin_src python :results file
-  name = 'adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  hue_order = ['None', 'True', 'False']
-
-  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
-
-  sns.barplot(data=metrics,
-	      y='accuracy',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[0])
-
-  sns.barplot(data=metrics,
-	      y='PPV',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[1])
-  axs[1].set_ylabel('precision')
-
-  sns.barplot(data=metrics,
-	      y='TPR',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[2])
-  axs[2].set_ylabel('recall')
-
-  sns.barplot(data=metrics,
-	      y='f1',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[3])
-
-  for idx in range(4):
-      for container in axs[idx].containers: axs[idx].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
-
-Similar results; similar reasons.
-
-** Analysis of =disparate_impact= & =statistical_parity_difference=
+*** Analysis of =disparate_impact=
 These metrics exist both for the data & the model so we should compare
 them and see how they differ. For each metric, we create two plots:
 First, we observe the distribution of the metric across the subsets.
@@ -945,6 +669,21 @@ higher than the rest. This indicates that the model is "learning"
 something different & is able to account for the bias in the dataset.
 Perhaps with more tuning this score can be improved?
 
+*** Analysis of =statistical_parity_difference=
+The =statistical_parity_difference= is expressed mathematically as
+follows.
+
+\begin{equation}
+Pr(Y=1 | D = \text{unprivileged}) - Pr(Y=1 | D = \text{privileged})
+\end{equation}
+
+Intuitively, the value for this metric falls within the range of $[-1,
+1]$. A value of 0 indicates that the dataset contains equal number of
+positive examples for both privileged & unprivileged groups. A value
+of -1 is not ideal since it indicates that the dataset contains
+significantly more examples of the positive class with the privileged
+group. The idea value for this metric thus lies between $[0, 1]$.
+
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-none_stat-par-diff'
 
@@ -963,20 +702,6 @@ Perhaps with more tuning this score can be improved?
 
 #+RESULTS:
 [[file:adult_barplot_prot-sex_mod-none_stat-par-diff.png]]
-
-The =statistical_parity_difference= is expressed mathematically as
-follows.
-
-\begin{equation}
-Pr(Y=1 | D = \text{unprivileged}) - Pr(Y=1 | D = \text{privileged})
-\end{equation}
-
-Intuitively, the value for this metric falls within the range of $[-1,
-1]$. A value of 0 indicates that the dataset contains equal number of
-positive examples for both privileged & unprivileged groups. A value
-of -1 is not ideal since it indicates that the dataset contains
-significantly more examples of the positive class with the privileged
-group. The idea value for this metric thus lies between $[0, 1]$.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-all_stat-par-diff'
@@ -1013,6 +738,279 @@ test & analyse the model predictions to be sure. This is the first
 point of divergence where we can no longer explain the model metrics
 using the data metrics.
 
+** Analysis of performance metrics
+The wikipedia page on [[https://en.wikipedia.org/wiki/Binary_classification][binary classification]] was very helpful to make
+sense of these metrics. Following is a table summarising their
+mathematical formulas
+
+| metric   | formula                               | alias              |
+|----------+---------------------------------------+--------------------|
+| TPR      | TP/P OR TP/(TP+FN)                    | recall/sensitivity |
+| FPR      | FP/N                                  | 1 - TNR            |
+| FNR      | FN/P                                  | 1 - TPR            |
+| TNR      | TN/N                                  | specificity        |
+| PPV      | TP/(TP+FP)                            | precision          |
+| FDR      | FP/(TP+FP)                            | 1 - PPV            |
+| FOR      | FN/(TN+FN)                            | 1 - NPV            |
+| NPV      | TN/(TN+FN)                            |                    |
+| accuracy | (TP+TN)/P+N                           |                    |
+| f1       | (2*precision*recall)/precision+recall |                    |
+
+Following is a model of the binary confusion matrix.
+
+| y_true | 0 | TN     | FP     |
+| y_true | 1 | FN     | TP     |
+|        |   | 0      | 1      |
+|        |   | y_pred | y_pred |
+
+We focus on a subset of the metrics above. The following are the
+metrics we focus on along with a short description & interpretation of
+the metric.
+
++ Accuracy :: The accuracy determines the correctness of the model's
+  predictions. Although, with an imbalanced dataset, this metric can
+  be misleading.
++ Precision :: The correctness of the model in predicting the positive
+  class out of all positive class predictions. In other words, the
+  precision is the accuracy of the negative class.
++ Recall :: The recall provides an indication of the missed positive
+  predictions.
++ f1 :: Harmonic mean of precision & recall. It combines the two
+  metrics into a single one.
+
+The section is further divided based on the model. For each model, we
+analyse the confusion matrices and the performance metrics.
+
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_mod-lr_cm-rate.png]]
+
+The model does well with the negative class (~92% accuracy). It
+doesn't do so well with the positive class (~61% accuracy) with a less
+then idea false negative rate (~39%). This is expected since we have
+more number of negative examples in the dataset.
+
+The performance of the model remains some what similar across the
+conditions on the protected attribute.
+
+There is a slight uptick in the true negative rate when we condition
+on the unprivileged group (right more plot). The true positive rate
+drops slightly here as well, with a rise in the false positive rate.
+So the model is able to classify women with a lower income with high
+accuracy. But the performance is 50-50 when it comes to women with a
+higher income. And this again is corroborated by the fact that we
+trained the model with very few examples of women with a high income.
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'logisticregression']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+
+The accuracy of the model is high however the dataset is skewed so we
+should focus on the precision & recall instead.
+
+The precision is higher than the recall since $(TP+FP) < (TP+FN)$. And
+we have more FN since we trained with a dataset with more number of
+negative examples.
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-sex_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-sex_mod-dt_cm-rate.png]]
+
+The general trend is the same across both models: they are able to
+detect the negative class well but fail to do so for the positive
+class.
+
+Compared to logisticregression, the decisiontreeclassifier performs
+slightly worse. However, we must account for the fact that the model
+is not tuned. The performance many increase with some effort invested
+in model tuning.
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+
+Similar results; similar reasons.
+
 * Analysis of protected attribute =race=
 In this section we expand & compare the metrics for both the race
 attribute.
@@ -1025,7 +1023,7 @@ attribute.
 #+RESULTS:
 | 15 | 33 |
 
-** Analysis of =num_{positive,negative}=, =num_{true,false}_{positive,negative}= & =num_{true,false}_{positive_negative}_rate=
+** Analysis of fairness metrics
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-race_subset-all_num-pos-neg'
@@ -1094,126 +1092,7 @@ class.
 #+RESULTS:
 [[file:adult_barplot_prot-race_subset-test_num-pos-neg.png]]
 
-*** model: logisticregression
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-lr_cm'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['TN', 'FP', 'FN', 'TP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-lr_cm.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-lr_cm-rate'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['TNR', 'FPR', 'FNR', 'TPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-lr_cm-rate.png]]
-
-As with sex, the model performs well with the negative class. This is
-expected since the training set contains more examples of the negative
-class.
-
-The performance of the model for the negative class is consistent
-across the conditions. The performance for the unprivileged positive
-class is worse than the privileged positive class. This makes sense
-since we have more examples of privileged positive class in our
-training dataset.
-
-*** model: decisiontreeclassifier
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-dt_cm'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['TN', 'FP', 'FN', 'TP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-dt_cm.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-dt_cm-rate'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['TNR', 'FPR', 'FNR', 'TPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-dt_cm-rate.png]]
-
-Both models are able to detect the negative class better than the
-positive class. There is a slight performance decrease in the
-decisiontreeclassifier compared to the logisticregression, however
-keep in mind that we did not tune the model.
-
-** Analysis of =base_rate=
+*** Analysis of =base_rate=
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-race_base-rate'
@@ -1242,114 +1121,7 @@ training & testing set by random sampling of the entire dataset. The
 base rate conditioned on the privileged group is higher than the the
 unprivileged group and this too is reflected in the training data.
 
-** Analysis of =accuracy=, =precision=, =recall= & =f1=
-
-*** model: logisticregression
-
-#+begin_src python :results file
-  name = 'adult_barplot_prot-race_mod-lr_acc-pre-rec-f1'
-  metrics = data[data['model'] == 'logisticregression']
-  hue_order = ['None', 'True', 'False']
-
-  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
-
-  sns.barplot(data=metrics,
-	      y='accuracy',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[0])
-
-  sns.barplot(data=metrics,
-	      y='PPV',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[1])
-  axs[1].set_ylabel('precision')
-
-  sns.barplot(data=metrics,
-	      y='TPR',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[2])
-  axs[2].set_ylabel('recall')
-
-  sns.barplot(data=metrics,
-	      y='f1',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[3])
-
-  for idx in range(4):
-      for container in axs[idx].containers: axs[idx].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-The results are similar to that of sex attribute (the numbers are
-similar as well), precision is higher than recall since the sum
-$(TP+FP)$ is lower than $(TP+FN)$.
-
-#+RESULTS:
-[[file:adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png]]
-
-*** model: decisiontreeclassifier
-
-#+begin_src python :results file
-  name = 'adult_barplot_prot-race_mod-dt_acc-pre-rec-f1'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  hue_order = ['None', 'True', 'False']
-
-  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
-
-  sns.barplot(data=metrics,
-	      y='accuracy',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[0])
-
-  sns.barplot(data=metrics,
-	      y='PPV',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[1])
-  axs[1].set_ylabel('precision')
-
-  sns.barplot(data=metrics,
-	      y='TPR',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[2])
-  axs[2].set_ylabel('recall')
-
-  sns.barplot(data=metrics,
-	      y='f1',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=hue_order,
-	      ax=axs[3])
-
-  for idx in range(4):
-      for container in axs[idx].containers: axs[idx].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-Results are similar to logisticregression although the difference
-between precision & recall is lower.
-
-Results are similar to decisiontreeclassifier for the sex attribute.
-
-#+RESULTS:
-[[file:adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png]]
-
-** Analysis of =disparate_impact= & =statistical_parity_difference=
+*** Analysis of =disparate_impact=
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-race_mod-none_disparate-impact'
@@ -1415,6 +1187,7 @@ P(D=\text{privileged}) = \frac{\text{number of privileged examples}}{\text{total
 Thus, a higher number of privileged group examples (which is the case
 for the race attribute), results in a higher =disparate_impact=.
 
+*** Analysis of =statistical_parity_difference=
 #+begin_src python :results file
   name = 'adult_barplot_prot-race_mod-none_stat-par-diff'
 
@@ -1452,3 +1225,225 @@ for the race attribute), results in a higher =disparate_impact=.
 
 #+RESULTS:
 [[file:adult_barplot_prot-race_mod-all_stat-par-diff.png]]
+** Analysis of performance metrics
+
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-race_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-race_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-race_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-race_mod-lr_cm-rate.png]]
+
+As with sex, the model performs well with the negative class. This is
+expected since the training set contains more examples of the negative
+class.
+
+The performance of the model for the negative class is consistent
+across the conditions. The performance for the unprivileged positive
+class is worse than the privileged positive class. This makes sense
+since we have more examples of privileged positive class in our
+training dataset.
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-race_mod-lr_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'logisticregression']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+The results are similar to that of sex attribute (the numbers are
+similar as well), precision is higher than recall since the sum
+$(TP+FP)$ is lower than $(TP+FN)$.
+
+#+RESULTS:
+[[file:adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png]]
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-race_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-race_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'adult_heatmap_prot-race_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:adult_heatmap_prot-race_mod-dt_cm-rate.png]]
+
+Both models are able to detect the negative class better than the
+positive class. There is a slight performance decrease in the
+decisiontreeclassifier compared to the logisticregression, however
+keep in mind that we did not tune the model.
+
+#+begin_src python :results file
+  name = 'adult_barplot_prot-race_mod-dt_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+Results are similar to logisticregression although the difference
+between precision & recall is lower.
+
+Results are similar to decisiontreeclassifier for the sex attribute.
+
+#+RESULTS:
+[[file:adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png]]
+
