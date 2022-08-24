@@ -504,47 +504,6 @@ Thus we have two separate biases that we are dealing with: first is
 the imbalance in the =class= column and second is the imbalance in the
 =sex= column.
 
-Lets zoom into only the train subset. This is purely for convenience
-of comparing the data & model metrics together (since all model
-metrics are calculated using only the test set).
-
-#+begin_src python :results file
-  name = 'adult_barplot_prot-sex_subset-test_num-pos-neg'
-
-  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_positives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[0])
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_negatives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[1])
-
-  # label the bars with the value, taken from
-  # <https://stackoverflow.com/a/68323374>
-  for container in axs[0].containers:
-      axs[0].bar_label(container)
-
-  for container in axs[1].containers:
-      axs[1].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_barplot_prot-sex_subset-test_num-pos-neg.png]]
-
-Lets look at the confusion matrices for the models next to understand
-the biases in them. The confusion matrices come in two flavours: the
-absolute & normalised versions.
-
 *** Analysis of =base_rate=
 The =base_rate= is the probability that the label of a given example
 is positive.
@@ -1061,37 +1020,6 @@ protected attribute as well (which is expected). As with sex, we have
 more examples of the privileged group for both positive & negative
 class.
 
-#+begin_src python :results file
-  name = 'adult_barplot_prot-race_subset-test_num-pos-neg'
-
-  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_positives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[0])
-
-  for container in axs[0].containers:
-      axs[0].bar_label(container)
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_negatives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[1])
-
-  for container in axs[1].containers:
-      axs[1].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_barplot_prot-race_subset-test_num-pos-neg.png]]
-
 *** Analysis of =base_rate=
 
 #+begin_src python :results file
@@ -1332,6 +1260,9 @@ training dataset.
   utils.savefig(fig, name)
 #+end_src
 
+#+RESULTS:
+[[file:adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png]]
+
 The results are similar to that of sex attribute (the numbers are
 similar as well), precision is higher than recall since the sum
 $(TP+FP)$ is lower than $(TP+FN)$.
@@ -1438,6 +1369,9 @@ keep in mind that we did not tune the model.
 
   utils.savefig(fig, name)
 #+end_src
+
+#+RESULTS:
+[[file:adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png]]
 
 Results are similar to logisticregression although the difference
 between precision & recall is lower.

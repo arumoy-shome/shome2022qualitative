@@ -486,42 +486,6 @@ The dataset is mostly balanced with slightly more number of examples
 from the positive class. However the data does contain more examples
 of the unprivileged group than the privileged group.
 
-#+begin_src python :results file
-  name = 'compas_barplot_prot-sex_subset-test_num-pos-neg'
-
-  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_positives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[0])
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_negatives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[1])
-
-  # label the bars with the value, taken from
-  # <https://stackoverflow.com/a/68323374>
-  for container in axs[0].containers:
-      axs[0].bar_label(container)
-
-  for container in axs[1].containers:
-      axs[1].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:compas_barplot_prot-sex_subset-test_num-pos-neg.png]]
-
-Lets look at the confusion matrices for the models next to understand
-the biases in them.
-
 *** Analysis of =base_rate=
 
 #+begin_src python :results file
@@ -545,6 +509,49 @@ the biases in them.
 
 #+RESULTS:
 [[file:compas_barplot_prot-sex_base-rate.png]]
+
+The unconditioned =base_rate= is ~55% and this makes sense since we
+have slightly more number of examples for the positive class.
+
+The =base_rate= across the various subsets is similar since we derived
+the training & testing sets via random sampling.
+
+The =base_rate= for the privileged group is higher compared to the
+unprivileged group. This may seem counter-intuitive given that we have
+more examples of the unprivileged group in the dataset. However the
+maths is sound, as shown below. I derive the =base_rate= for the test
+subset manually, as shown below.
+
+\begin{equation}
+\text{positive class examples} = 843 \\
+\text{negative class examples} = 699 \\
+\text{total examples} = 1542 \\
+\\
+\text{privileged, positive class examples} = 190 \\
+\text{privileged, negative class examples} = 91 \\
+\text{total privileged class examples} = 281 \\
+\\
+\text{unprivileged, positive class examples} = 653 \\
+\text{unprivileged, negative class examples} = 608 \\
+\text{total privileged class examples} = 1261 \\
+\\
+P(Y=1) = \frac{843}{1542} = 0.546693
+\end{equation}
+
+\begin{equation}
+P(Y=1 | D=\text{privileged}) = \frac{P(Y=1 \cap D=\text{privileged})}{P(D=\text{privileged})} \\
+= \frac{\frac{190}{1542}}{\frac{281}{1542}} \\
+= 0.676157
+\end{equation}
+
+\begin{equation}
+P(Y=1 | D=\text{unprivileged}) = \frac{P(Y=1 \cap D=\text{unprivileged})}{P(D=\text{unprivileged})} \\
+= \frac{\frac{653}{1542}}{\frac{1261}{1542}} \\
+= 0.517843
+\end{equation}
+
+Note that values obtained for $P(Y=1)$, $P(Y=1 | D=\text{privileged})$
+& $P(Y=1 | D=\text{unprivileged})$ match what we see in the figure.
 
 *** Analysis of =disparate_impact=
 

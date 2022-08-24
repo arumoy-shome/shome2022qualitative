@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-24 Wed 16:05 -->
+<!-- 2022-08-24 Wed 16:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adult</title>
@@ -222,38 +222,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgaa1e72b">1. Init</a></li>
-<li><a href="#orgb459b44">2. Priliminary analysis</a></li>
-<li><a href="#org2b32924">3. Analysis of protected attribute <code>sex</code></a>
+<li><a href="#org2d69fba">1. Init</a></li>
+<li><a href="#org760a397">2. Priliminary analysis</a></li>
+<li><a href="#org65b068c">3. Analysis of protected attribute <code>sex</code></a>
 <ul>
-<li><a href="#orgd12e56f">3.1. Analysis of fairness metrics</a>
+<li><a href="#org83ccc00">3.1. Analysis of fairness metrics</a>
 <ul>
-<li><a href="#orgdd4fb61">3.1.1. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org69b249a">3.1.2. Analysis of <code>disparate_impact</code></a></li>
-<li><a href="#org3964345">3.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
+<li><a href="#orge5e8afe">3.1.1. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org6237346">3.1.2. Analysis of <code>disparate_impact</code></a></li>
+<li><a href="#orgb2d1f4f">3.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
-<li><a href="#org4ed0f82">3.2. Analysis of performance metrics</a>
+<li><a href="#org7608f04">3.2. Analysis of performance metrics</a>
 <ul>
-<li><a href="#orgc476673">3.2.1. model: logisticregression</a></li>
-<li><a href="#org7df38d5">3.2.2. model: decisiontreeclassifier</a></li>
+<li><a href="#org5f1bd6d">3.2.1. model: logisticregression</a></li>
+<li><a href="#org2da597d">3.2.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org3c175ba">4. Analysis of protected attribute <code>race</code></a>
+<li><a href="#orgb7c290f">4. Analysis of protected attribute <code>race</code></a>
 <ul>
-<li><a href="#orgaad9f89">4.1. Analysis of fairness metrics</a>
+<li><a href="#orged13339">4.1. Analysis of fairness metrics</a>
 <ul>
-<li><a href="#org45242a1">4.1.1. Analysis of <code>base_rate</code></a></li>
-<li><a href="#org17a0164">4.1.2. Analysis of <code>disparate_impact</code></a></li>
-<li><a href="#org15c368d">4.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
+<li><a href="#org2fd084b">4.1.1. Analysis of <code>base_rate</code></a></li>
+<li><a href="#orgd1a508f">4.1.2. Analysis of <code>disparate_impact</code></a></li>
+<li><a href="#orgeb3aea7">4.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
 </ul>
 </li>
-<li><a href="#org0fc83dc">4.2. Analysis of performance metrics</a>
+<li><a href="#org44a8b1e">4.2. Analysis of performance metrics</a>
 <ul>
-<li><a href="#orgb5f800d">4.2.1. model: logisticregression</a></li>
-<li><a href="#org3be2bc9">4.2.2. model: decisiontreeclassifier</a></li>
+<li><a href="#org85c9996">4.2.1. model: logisticregression</a></li>
+<li><a href="#orgde804fc">4.2.2. model: decisiontreeclassifier</a></li>
 </ul>
 </li>
 </ul>
@@ -271,8 +271,8 @@ protected attributes individually in our analysis.
 The data analysed here is generated using <code>bin/data.py</code>.
 </p>
 
-<div id="outline-container-orgaa1e72b" class="outline-2">
-<h2 id="orgaa1e72b"><span class="section-number-2">1.</span> Init</h2>
+<div id="outline-container-org2d69fba" class="outline-2">
+<h2 id="org2d69fba"><span class="section-number-2">1.</span> Init</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 In this section we load the necessary modules &amp; the dataset.
@@ -308,8 +308,8 @@ adult = adult[adult['dataset'] == 'adult']
 </div>
 </div>
 
-<div id="outline-container-orgb459b44" class="outline-2">
-<h2 id="orgb459b44"><span class="section-number-2">2.</span> Priliminary analysis</h2>
+<div id="outline-container-org760a397" class="outline-2">
+<h2 id="org760a397"><span class="section-number-2">2.</span> Priliminary analysis</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In this section we conduct some priliminary analysis of the dataset.
@@ -320,7 +320,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org04d23e5">
+<pre class="example" id="org5ccceb5">
    dataset  GFNR  num_negatives  disparate_impact       FDR  \
 0    adult   NaN        34014.0          0.363470       NaN   
 1    adult   NaN        20988.0               NaN       NaN   
@@ -508,7 +508,7 @@ In this section we conduct some priliminary analysis of the dataset.
 </pre>
 </div>
 
-<pre class="example" id="org7636258">
+<pre class="example" id="orge30a91f">
 dataset                           object
 GFNR                             float64
 num_negatives                    float64
@@ -550,7 +550,7 @@ dtype: object
 </pre>
 </div>
 
-<pre class="example" id="orgec8ff87">
+<pre class="example" id="org1813c54">
        dataset  GFNR  num_negatives  disparate_impact        FDR  \
 count       30  12.0      18.000000         10.000000  12.000000   
 unique       1   NaN            NaN               NaN        NaN   
@@ -642,8 +642,8 @@ unprivileged group (<code>sex</code> is 0 or 'Female').
 </div>
 </div>
 
-<div id="outline-container-org2b32924" class="outline-2">
-<h2 id="org2b32924"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
+<div id="outline-container-org65b068c" class="outline-2">
+<h2 id="org65b068c"><span class="section-number-2">3.</span> Analysis of protected attribute <code>sex</code></h2>
 <div class="outline-text-2" id="text-3">
 <p>
 In this section we analyse the fairness metrics. The section is
@@ -677,7 +677,7 @@ data.shape
 </pre>
 </div>
 
-<pre class="example" id="org29a49c6">
+<pre class="example" id="org1fac379">
    dataset  GFNR  num_negatives  disparate_impact       FDR  \
 0    adult   NaN        34014.0          0.363470       NaN   
 1    adult   NaN        20988.0               NaN       NaN   
@@ -765,8 +765,8 @@ data.shape
 </pre>
 </div>
 
-<div id="outline-container-orgd12e56f" class="outline-3">
-<h3 id="orgd12e56f"><span class="section-number-3">3.1.</span> Analysis of fairness metrics</h3>
+<div id="outline-container-org83ccc00" class="outline-3">
+<h3 id="org83ccc00"><span class="section-number-3">3.1.</span> Analysis of fairness metrics</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
@@ -805,7 +805,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org7b004aa" class="figure">
+<div id="org58b1a03" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-all_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -866,7 +866,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org7df1470" class="figure">
+<div id="org545fe1f" class="figure">
 <p><img src="adult_barplot_prot-sex_subset-test_num-pos-neg.png" alt="adult_barplot_prot-sex_subset-test_num-pos-neg.png" />
 </p>
 </div>
@@ -878,8 +878,8 @@ absolute &amp; normalised versions.
 </p>
 </div>
 
-<div id="outline-container-orgdd4fb61" class="outline-4">
-<h4 id="orgdd4fb61"><span class="section-number-4">3.1.1.</span> Analysis of <code>base_rate</code></h4>
+<div id="outline-container-orge5e8afe" class="outline-4">
+<h4 id="orge5e8afe"><span class="section-number-4">3.1.1.</span> Analysis of <code>base_rate</code></h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 The <code>base_rate</code> is the probability that the label of a given example
@@ -907,7 +907,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgf33a31e" class="figure">
+<div id="orgb6a466e" class="figure">
 <p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
 </p>
 </div>
@@ -933,8 +933,8 @@ Note that the <code>base_rate</code> can be derived mathematically using
 </div>
 </div>
 
-<div id="outline-container-org69b249a" class="outline-4">
-<h4 id="org69b249a"><span class="section-number-4">3.1.2.</span> Analysis of <code>disparate_impact</code></h4>
+<div id="outline-container-org6237346" class="outline-4">
+<h4 id="org6237346"><span class="section-number-4">3.1.2.</span> Analysis of <code>disparate_impact</code></h4>
 <div class="outline-text-4" id="text-3-1-2">
 <p>
 These metrics exist both for the data &amp; the model so we should compare
@@ -981,7 +981,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org6ec310c" class="figure">
+<div id="org09f2fc3" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-none_disparate-impact.png" alt="adult_barplot_prot-sex_mod-none_disparate-impact.png" />
 </p>
 </div>
@@ -1015,7 +1015,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org76941e0" class="figure">
+<div id="orgc8b74e1" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-all_disparate-impact.png" alt="adult_barplot_prot-sex_mod-all_disparate-impact.png" />
 </p>
 </div>
@@ -1046,8 +1046,8 @@ Perhaps with more tuning this score can be improved?
 </div>
 </div>
 
-<div id="outline-container-org3964345" class="outline-4">
-<h4 id="org3964345"><span class="section-number-4">3.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
+<div id="outline-container-orgb2d1f4f" class="outline-4">
+<h4 id="orgb2d1f4f"><span class="section-number-4">3.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
 <div class="outline-text-4" id="text-3-1-3">
 <p>
 The <code>statistical_parity_difference</code> is expressed mathematically as
@@ -1085,7 +1085,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org3cdf03d" class="figure">
+<div id="org3a16c74" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-none_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-none_stat-par-diff.png" />
 </p>
 </div>
@@ -1108,7 +1108,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org93a2ff7" class="figure">
+<div id="orgf812292" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-all_stat-par-diff.png" alt="adult_barplot_prot-sex_mod-all_stat-par-diff.png" />
 </p>
 </div>
@@ -1140,8 +1140,8 @@ using the data metrics.
 </div>
 </div>
 
-<div id="outline-container-org4ed0f82" class="outline-3">
-<h3 id="org4ed0f82"><span class="section-number-3">3.2.</span> Analysis of performance metrics</h3>
+<div id="outline-container-org7608f04" class="outline-3">
+<h3 id="org7608f04"><span class="section-number-3">3.2.</span> Analysis of performance metrics</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 The wikipedia page on <a href="https://en.wikipedia.org/wiki/Binary_classification">binary classification</a> was very helpful to make
@@ -1301,8 +1301,8 @@ analyse the confusion matrices and the performance metrics.
 </p>
 </div>
 
-<div id="outline-container-orgc476673" class="outline-4">
-<h4 id="orgc476673"><span class="section-number-4">3.2.1.</span> model: logisticregression</h4>
+<div id="outline-container-org5f1bd6d" class="outline-4">
+<h4 id="org5f1bd6d"><span class="section-number-4">3.2.1.</span> model: logisticregression</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-lr_cm'
@@ -1328,7 +1328,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org8ee8461" class="figure">
+<div id="orgda997ed" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm.png" alt="adult_heatmap_prot-sex_mod-lr_cm.png" />
 </p>
 </div>
@@ -1357,7 +1357,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org575e761" class="figure">
+<div id="org4a72e2c" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-lr_cm-rate.png" alt="adult_heatmap_prot-sex_mod-lr_cm-rate.png" />
 </p>
 </div>
@@ -1429,7 +1429,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgc1d44cd" class="figure">
+<div id="org46e3cd3" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" />
 </p>
 </div>
@@ -1447,8 +1447,8 @@ negative examples.
 </div>
 </div>
 
-<div id="outline-container-org7df38d5" class="outline-4">
-<h4 id="org7df38d5"><span class="section-number-4">3.2.2.</span> model: decisiontreeclassifier</h4>
+<div id="outline-container-org2da597d" class="outline-4">
+<h4 id="org2da597d"><span class="section-number-4">3.2.2.</span> model: decisiontreeclassifier</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-sex_mod-dt_cm'
@@ -1474,7 +1474,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org856fceb" class="figure">
+<div id="org0f504ae" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm.png" alt="adult_heatmap_prot-sex_mod-dt_cm.png" />
 </p>
 </div>
@@ -1503,7 +1503,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org35fc8ac" class="figure">
+<div id="org68aa977" class="figure">
 <p><img src="adult_heatmap_prot-sex_mod-dt_cm-rate.png" alt="adult_heatmap_prot-sex_mod-dt_cm-rate.png" />
 </p>
 </div>
@@ -1566,7 +1566,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org47c6de0" class="figure">
+<div id="orgccb6c66" class="figure">
 <p><img src="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" />
 </p>
 </div>
@@ -1579,8 +1579,8 @@ Similar results; similar reasons.
 </div>
 </div>
 
-<div id="outline-container-org3c175ba" class="outline-2">
-<h2 id="org3c175ba"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
+<div id="outline-container-orgb7c290f" class="outline-2">
+<h2 id="orgb7c290f"><span class="section-number-2">4.</span> Analysis of protected attribute <code>race</code></h2>
 <div class="outline-text-2" id="text-4">
 <p>
 In this section we expand &amp; compare the metrics for both the race
@@ -1610,8 +1610,8 @@ data.shape
 </table>
 </div>
 
-<div id="outline-container-orgaad9f89" class="outline-3">
-<h3 id="orgaad9f89"><span class="section-number-3">4.1.</span> Analysis of fairness metrics</h3>
+<div id="outline-container-orged13339" class="outline-3">
+<h3 id="orged13339"><span class="section-number-3">4.1.</span> Analysis of fairness metrics</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_subset-all_num-pos-neg'
@@ -1643,7 +1643,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org3fa0b06" class="figure">
+<div id="orgac044a4" class="figure">
 <p><img src="adult_barplot_prot-race_subset-all_num-pos-neg.png" alt="adult_barplot_prot-race_subset-all_num-pos-neg.png" />
 </p>
 </div>
@@ -1685,14 +1685,14 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org29963e6" class="figure">
+<div id="org2ec7acb" class="figure">
 <p><img src="adult_barplot_prot-race_subset-test_num-pos-neg.png" alt="adult_barplot_prot-race_subset-test_num-pos-neg.png" />
 </p>
 </div>
 </div>
 
-<div id="outline-container-org45242a1" class="outline-4">
-<h4 id="org45242a1"><span class="section-number-4">4.1.1.</span> Analysis of <code>base_rate</code></h4>
+<div id="outline-container-org2fd084b" class="outline-4">
+<h4 id="org2fd084b"><span class="section-number-4">4.1.1.</span> Analysis of <code>base_rate</code></h4>
 <div class="outline-text-4" id="text-4-1-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_base-rate'
@@ -1715,7 +1715,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orgeca98de" class="figure">
+<div id="orgb8c0d9a" class="figure">
 <p><img src="adult_barplot_prot-race_base-rate.png" alt="adult_barplot_prot-race_base-rate.png" />
 </p>
 </div>
@@ -1729,8 +1729,8 @@ unprivileged group and this too is reflected in the training data.
 </div>
 </div>
 
-<div id="outline-container-org17a0164" class="outline-4">
-<h4 id="org17a0164"><span class="section-number-4">4.1.2.</span> Analysis of <code>disparate_impact</code></h4>
+<div id="outline-container-orgd1a508f" class="outline-4">
+<h4 id="orgd1a508f"><span class="section-number-4">4.1.2.</span> Analysis of <code>disparate_impact</code></h4>
 <div class="outline-text-4" id="text-4-1-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_disparate-impact'
@@ -1750,7 +1750,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orga50fbfa" class="figure">
+<div id="orga73d1ac" class="figure">
 <p><img src="adult_barplot_prot-race_mod-none_disparate-impact.png" alt="adult_barplot_prot-race_mod-none_disparate-impact.png" />
 </p>
 </div>
@@ -1773,7 +1773,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org695b781" class="figure">
+<div id="orgbf0346f" class="figure">
 <p><img src="adult_barplot_prot-race_mod-all_disparate-impact.png" alt="adult_barplot_prot-race_mod-all_disparate-impact.png" />
 </p>
 </div>
@@ -1812,8 +1812,8 @@ for the race attribute), results in a higher <code>disparate_impact</code>.
 </div>
 </div>
 
-<div id="outline-container-org15c368d" class="outline-4">
-<h4 id="org15c368d"><span class="section-number-4">4.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
+<div id="outline-container-orgeb3aea7" class="outline-4">
+<h4 id="orgeb3aea7"><span class="section-number-4">4.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
 <div class="outline-text-4" id="text-4-1-3">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_barplot_prot-race_mod-none_stat-par-diff'
@@ -1833,7 +1833,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="orga04739a" class="figure">
+<div id="org8f73c1d" class="figure">
 <p><img src="adult_barplot_prot-race_mod-none_stat-par-diff.png" alt="adult_barplot_prot-race_mod-none_stat-par-diff.png" />
 </p>
 </div>
@@ -1856,19 +1856,19 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org9c4c2d9" class="figure">
+<div id="orgc19987d" class="figure">
 <p><img src="adult_barplot_prot-race_mod-all_stat-par-diff.png" alt="adult_barplot_prot-race_mod-all_stat-par-diff.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org0fc83dc" class="outline-3">
-<h3 id="org0fc83dc"><span class="section-number-3">4.2.</span> Analysis of performance metrics</h3>
+<div id="outline-container-org44a8b1e" class="outline-3">
+<h3 id="org44a8b1e"><span class="section-number-3">4.2.</span> Analysis of performance metrics</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-orgb5f800d" class="outline-4">
-<h4 id="orgb5f800d"><span class="section-number-4">4.2.1.</span> model: logisticregression</h4>
+<div id="outline-container-org85c9996" class="outline-4">
+<h4 id="org85c9996"><span class="section-number-4">4.2.1.</span> model: logisticregression</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-race_mod-lr_cm'
@@ -1894,7 +1894,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org593f640" class="figure">
+<div id="orge552db6" class="figure">
 <p><img src="adult_heatmap_prot-race_mod-lr_cm.png" alt="adult_heatmap_prot-race_mod-lr_cm.png" />
 </p>
 </div>
@@ -1923,7 +1923,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org9430984" class="figure">
+<div id="org0441bc8" class="figure">
 <p><img src="adult_heatmap_prot-race_mod-lr_cm-rate.png" alt="adult_heatmap_prot-race_mod-lr_cm-rate.png" />
 </p>
 </div>
@@ -1986,6 +1986,12 @@ utils.savefig(fig, name)
 </pre>
 </div>
 
+
+<div id="org1277a08" class="figure">
+<p><img src="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" />
+</p>
+</div>
+
 <p>
 The results are similar to that of sex attribute (the numbers are
 similar as well), precision is higher than recall since the sum
@@ -1993,15 +1999,15 @@ similar as well), precision is higher than recall since the sum
 </p>
 
 
-<div id="org89e4779" class="figure">
+<div id="org54c7951" class="figure">
 <p><img src="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3be2bc9" class="outline-4">
-<h4 id="org3be2bc9"><span class="section-number-4">4.2.2.</span> model: decisiontreeclassifier</h4>
+<div id="outline-container-orgde804fc" class="outline-4">
+<h4 id="orgde804fc"><span class="section-number-4">4.2.2.</span> model: decisiontreeclassifier</h4>
 <div class="outline-text-4" id="text-4-2-2">
 <div class="org-src-container">
 <pre class="src src-python">name = 'adult_heatmap_prot-race_mod-dt_cm'
@@ -2027,7 +2033,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org91002e8" class="figure">
+<div id="orge0716ff" class="figure">
 <p><img src="adult_heatmap_prot-race_mod-dt_cm.png" alt="adult_heatmap_prot-race_mod-dt_cm.png" />
 </p>
 </div>
@@ -2056,7 +2062,7 @@ utils.savefig(fig, name)
 </div>
 
 
-<div id="org1920bdf" class="figure">
+<div id="org9842d96" class="figure">
 <p><img src="adult_heatmap_prot-race_mod-dt_cm-rate.png" alt="adult_heatmap_prot-race_mod-dt_cm-rate.png" />
 </p>
 </div>
@@ -2112,6 +2118,12 @@ utils.savefig(fig, name)
 </pre>
 </div>
 
+
+<div id="org1022152" class="figure">
+<p><img src="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" />
+</p>
+</div>
+
 <p>
 Results are similar to logisticregression although the difference
 between precision &amp; recall is lower.
@@ -2122,7 +2134,7 @@ Results are similar to decisiontreeclassifier for the sex attribute.
 </p>
 
 
-<div id="orgda6ba61" class="figure">
+<div id="orge37c2ef" class="figure">
 <p><img src="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" />
 </p>
 </div>
@@ -2134,7 +2146,7 @@ Results are similar to decisiontreeclassifier for the sex attribute.
 <div id="postamble" class="status">
 <p class="date">Date: 2022-07-25 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-08-24 Wed 16:05</p>
+<p class="date">Created: 2022-08-24 Wed 16:38</p>
 </div>
 </body>
 </html>
