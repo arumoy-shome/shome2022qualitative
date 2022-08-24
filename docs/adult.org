@@ -819,6 +819,9 @@ for the privileged group is higher than the unprivileged group (~30%
 vs. ~11%). This makes sense as well since we have more examples of the
 privileged group.
 
+Note that the =base_rate= can be derived mathematically using
+=num_{positives,negatives}= and conditional probability.
+
 ** Analysis of =accuracy=, =precision=, =recall= & =f1=
 The wikipedia page on [[https://en.wikipedia.org/wiki/Binary_classification][binary classification]] was very helpful to make
 sense of these metrics. Following is a table summarising their
@@ -1009,6 +1012,9 @@ The =disparate_impact= across the various subsets is low. And this
 makes sense since we do not have that many examples of positive class
 for the unprivileged group in our dataset.
 
+*Note* that we can calculate the disparate impact using the
+ probabilities obtained from the =base_rate= figure.
+
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-all_disparate-impact'
 
@@ -1103,8 +1109,16 @@ more examples of the positive class with the privileged group.
 
 Again, we see that decisiontreeclassifier performs better than others.
 
-*Main takeaway here is that these metrics cannot solely be explained
-by the data.*
+*Main takeaway* here is that we can explain & derive the above metrics
+using statistics from the data. However, when using a model, the
+numbers deviate from those calculated using just the data. This is
+expected since the models introduce non-linearity into the mix.
+
+Thus, we can use the data-centric metrics to give us an indication of
+what the model-centric metrics may look like. But we need to train,
+test & analyse the model predictions to be sure. This is the first
+point of divergence where we can no longer explain the model metrics
+using the data metrics.
 
 * Analysis of protected attribute =race=
 In this section we expand & compare the metrics for both the race
@@ -1438,10 +1452,6 @@ training & testing set by random sampling of the entire dataset. The
 base rate conditioned on the privileged group is higher than the the
 unprivileged group and this too is reflected in the training data.
 
-- [ ] =base_rate= for race is higher compared to sex. Although, the
-  number of positive examples (across all conditions) is lower in
-  race. Why is that?
-
 ** Analysis of =accuracy=, =precision=, =recall= & =f1=
 
 *** model: logisticregression
@@ -1589,12 +1599,31 @@ Results are similar to decisiontreeclassifier for the sex attribute.
 #+RESULTS:
 [[file:adult_barplot_prot-race_mod-all_disparate-impact.png]]
 
-- [ ] The =disparate_impact= is higher compared to sex attribute
-  however =num_positives= for the privileged group is higher than that
-  observed in sex attribute. This does not make sense?
-
 The =disparate_impact= in the model is similar to that observed in the
 dataset.
+
+The =disparate_impact= for race attribute is higher compared to that
+observed in sex. This can be explained by taking a closer look at the
+mathematical formulas. Lets take a closer look.
+
+\begin{equation}
+\text{disparate impact} = \frac{P(Y=1 | D=\text{unprivileged})}{P(Y=1 | D=\text{privileged})}
+\end{equation}
+
+\begin{equation}
+P(Y=1 | D=\text{privileged}) = \frac{P(Y=1 \cap D=\text{privileged})}{P(D=\text{privileged})}
+\end{equation}
+
+\begin{equation}
+P(D=\text{privileged}) = \frac{\text{number of privileged examples}}{\text{total number of examples}}
+\end{equation}
+
+\begin{equation}
+\text{number of privileged examples} \propto P(D=\text{privileged}) \propto \frac{1}{P(Y=1 | D=\text{privileged})} \propto \frac{1}{\text{disparate impact}}
+\end{equation}
+
+Thus, a higher number of privileged group examples (which is the case
+for the race attribute), results in a higher =disparate_impact=.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-race_mod-none_stat-par-diff'
@@ -1633,8 +1662,3 @@ dataset.
 
 #+RESULTS:
 [[file:adult_barplot_prot-race_mod-all_stat-par-diff.png]]
-
-- [ ] similar discrepency as observed in =disparate_impact=.
-  =statistical_parity_difference= is significantly lower compared to
-  sex attribute which is not justifiable looking at =num_positives=
-  for the privileged & unprivileged groups. Why is that so?
