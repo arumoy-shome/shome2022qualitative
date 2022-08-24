@@ -614,63 +614,6 @@ accuracy. But the performance is 50-50 when it comes to women with a
 higher income. And this again is corroborated by the fact that we
 trained the model with very few examples of women with a high income.
 
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-lr_cm-gen'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['GTN', 'GFP', 'GFN', 'GTP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-lr_cm-gen.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-lr_cm-gen-rate'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-lr_cm-gen-rate.png]]
-
-The =num_generalized_*= metrics use the probability associated with
-the predicted label (rather than the absolute label). I assume there
-is some sort of rounding up going on internally which results in the
-true negative & true positive numbers to be exactly the same as the
-data. It will be interesting to experiment here more & see when (and
-if) these numbers change for variation in the dataset or model.
-
 *** model: decisiontreeclassifier
 Lets look at the decisiontree classifier next.
 
@@ -732,56 +675,6 @@ Compared to logisticregression, the decisiontreeclassifier performs
 slightly worse. However, we must account for the fact that the model
 is not tuned. The performance many increase with some effort invested
 in model tuning.
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-dt_cm-gen'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['GTN', 'GFP', 'GFN', 'GTP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-dt_cm-gen.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-sex_mod-dt_cm-gen-rate'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-sex_mod-dt_cm-gen-rate.png]]
 
 ** Analysis of =base_rate=
 The =base_rate= is the probability that the label of a given example
@@ -1263,59 +1156,6 @@ class is worse than the privileged positive class. This makes sense
 since we have more examples of privileged positive class in our
 training dataset.
 
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-lr_cm-gen'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['GTN', 'GFP', 'GFN', 'GTP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-lr_cm-gen.png]]
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-lr_cm-gen-rate'
-  metrics = data[data['model'] == 'logisticregression']
-  cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-lr_cm-gen-rate.png]]
-
-The generalised variant of the confusion matrices are similar to that
-observed for the sex attribute.
-
 *** model: decisiontreeclassifier
 
 #+begin_src python :results file
@@ -1368,60 +1208,10 @@ observed for the sex attribute.
 #+RESULTS:
 [[file:adult_heatmap_prot-race_mod-dt_cm-rate.png]]
 
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-dt_cm-gen'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['GTN', 'GFP', 'GFN', 'GTP']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt="",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-dt_cm-gen.png]]
-
 Both models are able to detect the negative class better than the
 positive class. There is a slight performance decrease in the
 decisiontreeclassifier compared to the logisticregression, however
 keep in mind that we did not tune the model.
-
-#+begin_src python :results file
-  name = 'adult_heatmap_prot-race_mod-dt_cm-gen-rate'
-  metrics = data[data['model'] == 'decisiontreeclassifier']
-  cols = ['GTNR', 'GFPR', 'GFNR', 'GTPR']
-  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-
-  for idx, privileged in enumerate(['None', 'True', 'False']):
-      cm = metrics[metrics['privileged'] == privileged]
-      cm = cm[cols].values.reshape(2,2)
-      sns.heatmap(data=cm,
-		  annot=cm,
-		  fmt=".3f",
-		  cbar=False,
-		  cmap='Blues',
-		  ax=axs[idx])
-      axs[idx].set_xlabel("y_pred")
-      axs[idx].set_ylabel("y_true")
-      axs[idx].set_title(privileged)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:adult_heatmap_prot-race_mod-dt_cm-gen-rate.png]]
 
 ** Analysis of =base_rate=
 
