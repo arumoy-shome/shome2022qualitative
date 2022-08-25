@@ -603,10 +603,16 @@ the dataset.
 #+RESULTS:
 [[file:compas_barplot_prot-sex_mod-all_disparate-impact.png]]
 
-The =disparate_impact= is below 1 which indicates that there is higher
-benefit for the privileged group. Although, in this particular
-dataset, a positive class means that the individual will recommit
-crime.
+The =disparate_impact= in all subsets are close to 1. This means that
+both privileged & unprivileged groups benefit (almost) equally.
+
+Compared to the adult dataset, the =disparate_impact= is significantly
+higher. And this is reflected in the data as we have more examples of
+the unprivileged group here.
+
+The =disparate_impact= of the models is similar to the data-centric
+value with decisiontreeclassifier being more fair compared to
+logisticregression.
 
 *** Analysis of =statistical_parity_difference=
 #+begin_src python :results file
@@ -646,6 +652,15 @@ crime.
 
 #+RESULTS:
 [[file:compas_barplot_prot-sex_mod-all_stat-par-diff.png]]
+
+The =statistical_parity_difference= across all subsets is close to 0
+and lower than what we saw in the adult dataset. This is because we
+have more examples of the unprivileged group here.
+
+It is interesting to observe that even though we have more examples of
+the unprivileged group in the dataset, the privileged group still
+benefits slightly more. And this is in line with what we observe in
+the real-world.
 
 ** Analysis of performance metrics
 *** model: logisticregression
@@ -700,6 +715,17 @@ crime.
 #+RESULTS:
 [[file:compas_heatmap_prot-sex_mod-lr_cm-rate.png]]
 
+The logisticregression model is able to identify the positive class
+better than the negative class. This makes sense since we have more
+number of positive examples in the dataset.
+
+The model is poor in identifying the negative privileged examples but
+does better when identify the unprivileged negative examples. This
+again is explainable from the distribution of examples in the dataset.
+The data contains lesser examples of the privileged group vs.
+unprivileged group. Within the privileged group, the number of
+negative examples is significantly lower than the positive examples.
+
 #+begin_src python :results file
   name = 'compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1'
   metrics = data[data['model'] == 'logisticregression']
@@ -745,6 +771,17 @@ crime.
 
 #+RESULTS:
 [[file:compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+
+The =accuracy= of the model is ~65% due to the high false positive
+predictions (which again can be tracked back to the imbalance in the
+dataset).
+
+The =precision= of the model is ~66%. Although the model does well in
+predicting the positive class, the false positives bring the score
+down.
+
+The =recall= of the model is higher than the precision since the model
+does not have that many false negatives.
 
 *** model: decisiontreeclassifier
 
@@ -798,6 +835,9 @@ crime.
 #+RESULTS:
 [[file:compas_heatmap_prot-sex_mod-dt_cm-rate.png]]
 
+Results are similar to that of logisticregression, although the
+decisiontreeclassifier seems to have slightly higher false negatives.
+
 #+begin_src python :results file
   name = 'compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1'
   metrics = data[data['model'] == 'decisiontreeclassifier']
@@ -844,6 +884,8 @@ crime.
 #+RESULTS:
 [[file:compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
 
+Similar results as logisticregression.
+
 * Analysis of protected attribute =race=
 In this section we expand & compare the metrics for the race
 attribute.
@@ -889,36 +931,11 @@ attribute.
 #+RESULTS:
 [[file:compas_barplot_prot-race_subset-all_num-pos-neg.png]]
 
-#+begin_src python :results file
-  name = 'compas_barplot_prot-race_subset-test_num-pos-neg'
+The privileged group in this protected attribute is Caucasian/White.
 
-  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_positives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[0])
-
-  for container in axs[0].containers:
-      axs[0].bar_label(container)
-
-  sns.barplot(data=data[data['subset'] == 'test'],
-	      y='num_negatives',
-	      x='subset',
-	      hue='privileged',
-	      hue_order=['None', 'True', 'False'],
-	      ax=axs[1])
-
-  for container in axs[1].containers:
-      axs[1].bar_label(container)
-
-  utils.savefig(fig, name)
-#+end_src
-
-#+RESULTS:
-[[file:compas_barplot_prot-race_subset-test_num-pos-neg.png]]
+Similar biases in the dataset as observed in sex protected attribute
+ie. more number of positive vs. negative examples & more number of
+unprivileged vs. privileged group.
 
 *** Analysis of =base_rate=
 
@@ -943,6 +960,8 @@ attribute.
 
 #+RESULTS:
 [[file:compas_barplot_prot-race_base-rate.png]]
+
+Similar results as seen in analysis of sex protected attribute.
 
 *** Analysis of =disparate_impact=
 
@@ -984,6 +1003,8 @@ attribute.
 #+RESULTS:
 [[file:compas_barplot_prot-race_mod-all_disparate-impact.png]]
 
+Similar results as seen in analysis of sex protected attribute.
+
 *** Analysis of =statistical_parity_difference=
 #+begin_src python :results file
   name = 'compas_barplot_prot-race_mod-none_stat-par-diff'
@@ -1022,6 +1043,8 @@ attribute.
 
 #+RESULTS:
 [[file:compas_barplot_prot-race_mod-all_stat-par-diff.png]]
+
+Similar results as seen in analysis of sex protected attribute.
 
 ** Analysis of performance metrics
 *** model: logisticregression
@@ -1122,6 +1145,8 @@ attribute.
 #+RESULTS:
 [[file:compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.png]]
 
+Similar results as seen in analysis of sex protected attribute.
+
 *** model: decisiontreeclassifier
 
 #+begin_src python :results file
@@ -1219,3 +1244,5 @@ attribute.
 
 #+RESULTS:
 [[file:compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.png]]
+
+Similar results as seen in analysis of sex protected attribute.
