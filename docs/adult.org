@@ -534,21 +534,36 @@ Here, we note that the =base_rate= is similar across the subsets and
 the conditions. This makes sense since we used random sampling to
 generate the train & test subsets.
 
-The unconditioned =base_rate= is ~25% and this makes sense since we
-have more examples of the negative class. The conditioned =base_rate=
-for the privileged group is higher than the unprivileged group (~30%
-vs. ~11%). This makes sense as well since we have more examples of the
-privileged group.
+Analysing this plot can be tricky if not careful about the comparisons
+we are making. Since =base_rate= is derived using probability &
+conditional probability, we must compare the bars of same colors
+across the two plots (and not bars of different colors within the same
+plot).
 
-Note that the =base_rate= can be derived mathematically using
-=num_{positives,negatives}= and conditional probability.
+The unconditioned =base_rate= is ~25% meaning there is a 25% chance
+that a random individual drawn from this dataset belongs to the
+positive class. This is correct since we have ~2500 positive examples
+which is approximately 1/4 of the ~8500 negative examples in the
+dataset.
+
+The conditioned =base_rate= for the privileged group is ~30%. This
+means that given an individual is privileged (or Male in this case),
+there is a 30% chance that they belong to the positive class. Again,
+this is corroborated by the absolute numbers. We have ~2300
+privileged, positive examples vs. ~5200 privileged negative examples.
+
+The conditioned =base_rate= for the unprivileged group is ~12% because
+we have more unprivileged, negative examples in the dataset.
 
 *** Analysis of =disparate_impact=
-These metrics exist both for the data & the model so we should compare
-them and see how they differ. For each metric, we create two plots:
-First, we observe the distribution of the metric across the subsets.
-And second we compare the distribution of the metric when calculated
-with & without a model.
+The followng metrics exist both for the data & the model thus we
+should compare them and see how they differ. For each metric, we
+create two plots: First, we observe the distribution of the metric
+across the subsets. And second we compare the distribution of the
+metric when calculated with & without a model for the test subset.
+
+I derived the interpretation of the metrics from [[https://aif360.mybluemix.net/][the demo]] presented on
+the AIF360 website.
 
 =disparate_impact= when calculated without a model, is expressed
 mathematically as follows:
@@ -558,12 +573,11 @@ mathematically as follows:
 \text{privileged})}
 \end{equation}
 
-So intuitively, if we have more examples of positive class with the
-privileged group (sex is 'Male'), the metric will approach 0. Ideally,
-we want the metric to be high with a maximum value of 1 which
-indicates that we have equal number of positive examples for both
-privileged & unprivileged groups. A value higher than 1 indicates that
-we have more examples of unprivileged positive class in our dataset.
+The idea value for this metric is 1 which indicates that privileged &
+unprivileged groups benefit equally. A value <1 indicates the
+privileged group benefits more while a value >1 indicates the
+unprivileged goup benefits more. A value between $[0.8, 1.25]$ is
+considered fair.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-none_disparate-impact'
@@ -584,12 +598,9 @@ we have more examples of unprivileged positive class in our dataset.
 #+RESULTS:
 [[file:adult_barplot_prot-sex_mod-none_disparate-impact.png]]
 
-The =disparate_impact= across the various subsets is low. And this
-makes sense since we do not have that many examples of positive class
-for the unprivileged group in our dataset.
-
-*Note* that we can calculate the disparate impact using the
- probabilities obtained from the =base_rate= figure.
+The =disparate_impact= across the various subsets is <1 indicating the
+privileged group benefit more. This makes sense since we have more
+examples of the privileged group in our dataset.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-all_disparate-impact'
@@ -619,14 +630,15 @@ changes to the following.
 \text{privileged})}
 \end{equation}
 
-The =disparate_impact= in the model is similar to what we see in the
+The =disparate_impact= in the models is similar to what we see in the
 dataset. This makes sense since the model merely reflects the
 statistics of the dataset.
 
 The =disparate_impact= in the decisiontreeclassifier is slightly
 higher than the rest. This indicates that the model is "learning"
-something different & is able to account for the bias in the dataset.
-Perhaps with more tuning this score can be improved?
+something different and is able to account for the bias in the
+dataset. In other words, the decisiontreeclassifier is more fair
+compared to logisticregression.
 
 *** Analysis of =statistical_parity_difference=
 The =statistical_parity_difference= is expressed mathematically as
@@ -693,9 +705,7 @@ expected since the models introduce non-linearity into the mix.
 
 Thus, we can use the data-centric metrics to give us an indication of
 what the model-centric metrics may look like. But we need to train,
-test & analyse the model predictions to be sure. This is the first
-point of divergence where we can no longer explain the model metrics
-using the data metrics.
+test & analyse the model predictions to be sure.
 
 ** Analysis of performance metrics
 The wikipedia page on [[https://en.wikipedia.org/wiki/Binary_classification][binary classification]] was very helpful to make
@@ -919,8 +929,7 @@ class.
 
 Compared to logisticregression, the decisiontreeclassifier performs
 slightly worse. However, we must account for the fact that the model
-is not tuned. The performance many increase with some effort invested
-in model tuning.
+is not tuned. The performance many increase with model tuning.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1'
