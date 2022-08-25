@@ -648,12 +648,9 @@ follows.
 Pr(Y=1 | D = \text{unprivileged}) - Pr(Y=1 | D = \text{privileged})
 \end{equation}
 
-Intuitively, the value for this metric falls within the range of $[-1,
-1]$. A value of 0 indicates that the dataset contains equal number of
-positive examples for both privileged & unprivileged groups. A value
-of -1 is not ideal since it indicates that the dataset contains
-significantly more examples of the positive class with the privileged
-group. The idea value for this metric thus lies between $[0, 1]$.
+The value for this metric falls within the range of $[-1, 1]$. A value
+of 0 indicates that both privileged & unprivileged groups benefit
+equally. A value <0 indicates that the privileged group benefits more.
 
 #+begin_src python :results file
   name = 'adult_barplot_prot-sex_mod-none_stat-par-diff'
