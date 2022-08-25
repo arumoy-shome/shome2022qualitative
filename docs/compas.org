@@ -38,7 +38,7 @@ In this section we load the necessary modules & the dataset.
   compas = compas[compas['dataset'] == 'compas']
 #+end_src
 
-* Priliminary analysis
+* Priliminary analysis                                             :noexport:
 In this section we conduct some priliminary analysis of the dataset.
 
 #+begin_src python
@@ -352,7 +352,7 @@ max      0.385911   0.693950   0.0   1.0   0.0
 #+RESULTS:
 | 15 | 33 |
 
-#+begin_src python
+#+begin_src python :exports none
   data
 #+end_src
 
@@ -482,9 +482,15 @@ only using the dataset.
 #+RESULTS:
 [[file:compas_barplot_prot-sex_subset-all_num-pos-neg.png]]
 
+In this dataset, positive class means that the individual recommitted
+crime. Under the sex attribute, female is the privileged group.
+
 The dataset is mostly balanced with slightly more number of examples
 from the positive class. However the data does contain more examples
-of the unprivileged group than the privileged group.
+of the unprivileged group (male) than the privileged group (female).
+
+- [ ] however, if we have more examples of the unprivileged group in
+  the dataset, then doesn't it become the privileged group?
 
 *** Analysis of =base_rate=
 
@@ -511,16 +517,14 @@ of the unprivileged group than the privileged group.
 [[file:compas_barplot_prot-sex_base-rate.png]]
 
 The unconditioned =base_rate= is ~55% and this makes sense since we
-have slightly more number of examples for the positive class.
+have slightly more number of examples for the positive class vs.
+negative class.
 
 The =base_rate= across the various subsets is similar since we derived
 the training & testing sets via random sampling.
 
-The =base_rate= for the privileged group is higher compared to the
-unprivileged group. This may seem counter-intuitive given that we have
-more examples of the unprivileged group in the dataset. However the
-maths is sound, as shown below. I derive the =base_rate= for the test
-subset manually, as shown below.
+Following is the mathematical derivation of the =base_rate= for the
+test subset.
 
 \begin{equation}
 \text{positive class examples} = 843 \\
@@ -552,6 +556,12 @@ P(Y=1 | D=\text{unprivileged}) = \frac{P(Y=1 \cap D=\text{unprivileged})}{P(D=\t
 
 Note that values obtained for $P(Y=1)$, $P(Y=1 | D=\text{privileged})$
 & $P(Y=1 | D=\text{unprivileged})$ match what we see in the figure.
+
+The =base_rate= for the privileged group is 67% whic means that given
+an individual is privileged, there is a 67% chance that they belong to
+the positive class. This is corroborated by the data since we have
+more privileged positive examples vs. privileged negative examples in
+the dataset.
 
 *** Analysis of =disparate_impact=
 
@@ -592,6 +602,11 @@ Note that values obtained for $P(Y=1)$, $P(Y=1 | D=\text{privileged})$
 
 #+RESULTS:
 [[file:compas_barplot_prot-sex_mod-all_disparate-impact.png]]
+
+The =disparate_impact= is below 1 which indicates that there is higher
+benefit for the privileged group. Although, in this particular
+dataset, a positive class means that the individual will recommit
+crime.
 
 *** Analysis of =statistical_parity_difference=
 #+begin_src python :results file
