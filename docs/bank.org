@@ -1,0 +1,513 @@
+#+title: Bank
+#+author: Arumoy Shome
+#+date: [2022-08-26 Fri]
+#+property: header-args:python :python python3 :session *sh21qual-bank* :exports both :eval never-export
+
+In this document we analyse the results for the bank dataset. The
+dataset contains 1 protected attribute: age.
+
+The data analysed here is generated using the =bin/data.py= script.
+
+* Init
+In this section we load the necessary modules & dataset.
+
+#+begin_src python :results silent
+  import pandas as pd
+  import numpy as np
+  pd.set_option('display.max_columns', None)
+  pd.set_option('display.max_colwidth', None)
+  pd.set_option('display.max_rows', None)
+
+  import matplotlib
+  matplotlib.use('Agg')           # non-interactive backend
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  import os
+  import sys
+  ROOTDIR = os.path.abspath(os.path.join(os.getcwd(), '..'))
+  DATADIR = os.path.join(ROOTDIR, 'data')
+
+  sys.path.insert(0, ROOTDIR)
+  from src import utils
+#+end_src
+
+#+begin_src python :results silent
+  bank = pd.read_csv(os.path.join(DATADIR, 'data.csv'))
+  bank = bank[bank['dataset'] == 'bank']
+#+end_src
+
+* Analysis of protected attribute =age=
+
+#+begin_src python
+  data = bank[bank['protected'] == 'age']
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 15 | 22 |
+
+#+begin_src python :exports none
+  data
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   privileged     TP  theil_index        f1       FPR                   model  \
+60       None    NaN          NaN       NaN       NaN                    None   
+61       True    NaN          NaN       NaN       NaN                    None   
+62      False    NaN          NaN       NaN       NaN                    None   
+63       None    NaN          NaN       NaN       NaN                    None   
+64       True    NaN          NaN       NaN       NaN                    None   
+65      False    NaN          NaN       NaN       NaN                    None   
+66       None    NaN          NaN       NaN       NaN                    None   
+67       True    NaN          NaN       NaN       NaN                    None   
+68      False    NaN          NaN       NaN       NaN                    None   
+69       None  408.0     0.088312  0.505263  0.036063      logisticregression   
+70       True  377.0          NaN  0.498348  0.034663      logisticregression   
+71      False   31.0          NaN  0.607843  0.091463      logisticregression   
+72       None  503.0     0.086186  0.508081  0.076634  decisiontreeclassifier   
+73       True  469.0          NaN  0.502949  0.074719  decisiontreeclassifier   
+74      False   34.0          NaN  0.591304  0.152439  decisiontreeclassifier   
+
+         TNR  num_negatives subset     FN protected       FNR  \
+60       NaN        26629.0   full    NaN       age       NaN   
+61       NaN        25964.0   full    NaN       age       NaN   
+62       NaN          665.0   full    NaN       age       NaN   
+63       NaN        19974.0  train    NaN       age       NaN   
+64       NaN        19473.0  train    NaN       age       NaN   
+65       NaN          501.0  train    NaN       age       NaN   
+66       NaN         6655.0   test    NaN       age       NaN   
+67       NaN         6491.0   test    NaN       age       NaN   
+68       NaN          164.0   test    NaN       age       NaN   
+69  0.963937            NaN   test  559.0       age  0.578077   
+70  0.965337            NaN   test  534.0       age  0.586169   
+71  0.908537            NaN   test   25.0       age  0.446429   
+72  0.923366            NaN   test  464.0       age  0.479835   
+73  0.925281            NaN   test  442.0       age  0.485181   
+74  0.847561            NaN   test   22.0       age  0.392857   
+
+    disparate_impact  num_positives  statistical_parity_difference     FP  \
+60          1.864241         3859.0                       0.106776    NaN   
+61               NaN         3660.0                            NaN    NaN   
+62               NaN          199.0                            NaN    NaN   
+63          1.794976         2892.0                       0.098343    NaN   
+64               NaN         2749.0                            NaN    NaN   
+65               NaN          143.0                            NaN    NaN   
+66          2.068217          967.0                       0.131471    NaN   
+67               NaN          911.0                            NaN    NaN   
+68               NaN           56.0                            NaN    NaN   
+69          2.570915            NaN                       0.127762  240.0   
+70               NaN            NaN                            NaN  225.0   
+71               NaN            NaN                            NaN   15.0   
+72          2.080799            NaN                       0.139298  510.0   
+73               NaN            NaN                            NaN  485.0   
+74               NaN            NaN                            NaN   25.0   
+
+         TPR dataset  base_rate  accuracy      TN       PPV  
+60       NaN    bank   0.126574       NaN     NaN       NaN  
+61       NaN    bank   0.123548       NaN     NaN       NaN  
+62       NaN    bank   0.230324       NaN     NaN       NaN  
+63       NaN    bank   0.126476       NaN     NaN       NaN  
+64       NaN    bank   0.123706       NaN     NaN       NaN  
+65       NaN    bank   0.222050       NaN     NaN       NaN  
+66       NaN    bank   0.126870       NaN     NaN       NaN  
+67       NaN    bank   0.123075       NaN     NaN       NaN  
+68       NaN    bank   0.254545       NaN     NaN       NaN  
+69  0.421923    bank        NaN  0.895172  6415.0  0.629630  
+70  0.413831    bank        NaN  0.897460  6266.0  0.626246  
+71  0.553571    bank        NaN  0.818182   149.0  0.673913  
+72  0.520165    bank        NaN  0.872212  6145.0  0.496545  
+73  0.514819    bank        NaN  0.874764  6006.0  0.491614  
+74  0.607143    bank        NaN  0.786364   139.0  0.576271  
+#+end_example
+
+** Analysis of fairness metrics
+We start with the =num_positives=, =num_negatives= which are computed
+only using the dataset.
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_subset-all_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data,
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  sns.barplot(data=data,
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  # label the bars with the value, taken from
+  # <https://stackoverflow.com/a/68323374>
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_subset-all_num-pos-neg.png]]
+
+Individuals above or equal to the age of 25 are considered privileged.
+
+The dataset contains significantly more number of negative examples.
+There dataset contains significantly more number of privileged
+examples vs. unprivileged examples.
+
+*** Analysis of =base_rate=
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_base-rate'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data,
+	      y='base_rate',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_base-rate.png]]
+
+The =base_rate= is low since we have a significantly high number of
+negative examples.
+
+The conditioned =base_rate= for the privileged group is also low for
+the same reason.
+
+The conditioned =base_rate= for the unprivileged group is higher since
+the difference between positive & negative examples for the
+unprivileged group is not as drastic as for the privileged group. In
+this case, the high imbalance in the privileged group examples
+(specifically the high number of privileged negative examples) is
+working in favour of the unprivileged group.
+
+- [ ] does this actually affect the model's performance?
+
+*** Analysis of =disparate_impact=
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_mod-none_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='disparate_impact',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_mod-none_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_mod-all_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='disparate_impact',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_mod-all_disparate-impact.png]]
+
+The =disparate_impact= impact is >1 which means that the unprivileged
+group is at an advantage.
+
+The =disparate_impact= for the logisticregression is higher than the
+rest. This is different from the prior datasets where the
+logisticregression always performs worse than the other models. This
+is because the logisticregression is worse in identifying the positive
+class examples compared to the decisiontreeclassifier. Since the
+predictions of the logisticregression contains a high number of true
+negative & false negative examples, the =disparate_impact= is higher.
+
+*** Analysis of =statistical_parity_difference=
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_mod-none_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='statistical_parity_difference',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_mod-none_stat-par-diff.png]]
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_mod-all_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='statistical_parity_difference',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_mod-all_stat-par-diff.png]]
+
+=statistical_parity_difference= is positive indicating that the
+unprivileged group is in favour. Similar reasoning as
+=disparate_impact=.
+** Analysis of performance metrics
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'bank_heatmap_prot-age_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_heatmap_prot-age_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'bank_heatmap_prot-age_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_heatmap_prot-age_mod-lr_cm-rate.png]]
+
+The model is really good at detecting the negative examples which is
+expected given the high number of negative examples in the dataset.
+The model has a high number of false negatives again due to the same
+reason.
+
+The model makes similar mistakes in its predictions across the
+privileged & unprivileged groups because we have the same imbalance
+between the positive & negative examples within the groups as well.
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_mod-lr_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'logisticregression']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.png]]
+
+The =accuracy= is high but thats because the model is being trained &
+tested with imbalanced data.
+
+The =precision= is higher than the =recall= since the number of false
+positives is much lower than the false negatives.
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'bank_heatmap_prot-age_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_heatmap_prot-age_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'bank_heatmap_prot-age_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_heatmap_prot-age_mod-dt_cm-rate.png]]
+
+#+begin_src python :results file
+  name = 'bank_barplot_prot-age_mod-dt_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.png]]
+
+Similar results as logisticregression.

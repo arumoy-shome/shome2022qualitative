@@ -3,7 +3,7 @@
 #+date: [2022-08-21 Sun]
 #+property: header-args:python :session *sh21qual-compas* :exports both :eval never-export
 
-In this file we analyse the results for the compas dataset. The
+In this document we analyse the results for the compas dataset. The
 dataset contains two protected attributes: sex & race. We consider
 both protected attributes individually in our analysis.
 

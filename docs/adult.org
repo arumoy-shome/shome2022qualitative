@@ -3,9 +3,9 @@
 #+date: [2022-07-25 Mon]
 #+property: header-args:python :python python3 :session *sh21qual-adult* :exports both :eval never-export
 
-In this file we analyse the results for the adult dataset. The dataset
-contains two protected attributes: sex & race. We consider both
-protected attributes individually in our analysis.
+In this document we analyse the results for the adult dataset. The
+dataset contains two protected attributes: sex & race. We consider
+both protected attributes individually in our analysis.
 
 The data analysed here is generated using =bin/data.py=.
 
