@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-08-26 Fri 14:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bank</title>
+<meta name="author" content="Arumoy Shome" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Bank</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1d6569d">1. Init</a></li>
+<li><a href="#org29415b2">2. Analysis of protected attribute <code>age</code></a>
+<ul>
+<li><a href="#org817bcea">2.1. Analysis of fairness metrics</a>
+<ul>
+<li><a href="#org75e2ad7">2.1.1. Analysis of <code>base_rate</code></a></li>
+<li><a href="#org2a7d7f3">2.1.2. Analysis of <code>disparate_impact</code></a></li>
+<li><a href="#orgfac85e2">2.1.3. Analysis of <code>statistical_parity_difference</code></a></li>
+</ul>
+</li>
+<li><a href="#org1af6d19">2.2. Analysis of performance metrics</a>
+<ul>
+<li><a href="#orgbde255a">2.2.1. model: logisticregression</a></li>
+<li><a href="#org4dfa774">2.2.2. model: decisiontreeclassifier</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+In this document we analyse the results for the bank dataset. The
+dataset contains 1 protected attribute: age.
+</p>
+
+<p>
+The data analysed here is generated using the <code>bin/data.py</code> script.
+</p>
+
+<div id="outline-container-org1d6569d" class="outline-2">
+<h2 id="org1d6569d"><span class="section-number-2">1.</span> Init</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In this section we load the necessary modules &amp; dataset.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">import pandas as pd
+import numpy as np
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_colwidth', None)
+pd.set_option('display.max_rows', None)
+
+import matplotlib
+matplotlib.use('Agg')           # non-interactive backend
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import os
+import sys
+ROOTDIR = os.path.abspath(os.path.join(os.getcwd(), '..'))
+DATADIR = os.path.join(ROOTDIR, 'data')
+
+sys.path.insert(0, ROOTDIR)
+from src import utils
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">bank = pd.read_csv(os.path.join(DATADIR, 'data.csv'))
+bank = bank[bank['dataset'] == 'bank']
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org29415b2" class="outline-2">
+<h2 id="org29415b2"><span class="section-number-2">2.</span> Analysis of protected attribute <code>age</code></h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-python">data = bank[bank['protected'] == 'age']
+data.shape
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">15</td>
+<td class="org-right">22</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="outline-container-org817bcea" class="outline-3">
+<h3 id="org817bcea"><span class="section-number-3">2.1.</span> Analysis of fairness metrics</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+We start with the <code>num_positives</code>, <code>num_negatives</code> which are computed
+only using the dataset.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_subset-all_num-pos-neg'
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+sns.barplot(data=data,
+	    y='num_positives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[0])
+
+sns.barplot(data=data,
+	    y='num_negatives',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=axs[1])
+
+# label the bars with the value, taken from
+# &lt;https://stackoverflow.com/a/68323374&gt;
+for container in axs[0].containers:
+    axs[0].bar_label(container)
+
+for container in axs[1].containers:
+    axs[1].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org6ac415a" class="figure">
+<p><img src="bank_barplot_prot-age_subset-all_num-pos-neg.png" alt="bank_barplot_prot-age_subset-all_num-pos-neg.png" />
+</p>
+</div>
+
+<p>
+Individuals above or equal to the age of 25 are considered privileged.
+</p>
+
+<p>
+The dataset contains significantly more number of negative examples.
+There dataset contains significantly more number of privileged
+examples vs. unprivileged examples.
+</p>
+</div>
+
+<div id="outline-container-org75e2ad7" class="outline-4">
+<h4 id="org75e2ad7"><span class="section-number-4">2.1.1.</span> Analysis of <code>base_rate</code></h4>
+<div class="outline-text-4" id="text-2-1-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_base-rate'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data,
+	    y='base_rate',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=['None', 'True', 'False'],
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+
+</pre>
+</div>
+
+
+<div id="orgc46959d" class="figure">
+<p><img src="bank_barplot_prot-age_base-rate.png" alt="bank_barplot_prot-age_base-rate.png" />
+</p>
+</div>
+
+<p>
+The <code>base_rate</code> is low since we have a significantly high number of
+negative examples.
+</p>
+
+<p>
+The conditioned <code>base_rate</code> for the privileged group is also low for
+the same reason.
+</p>
+
+<p>
+The conditioned <code>base_rate</code> for the unprivileged group is higher since
+the difference between positive &amp; negative examples for the
+unprivileged group is not as drastic as for the privileged group. In
+this case, the high imbalance in the privileged group examples
+(specifically the high number of privileged negative examples) is
+working in favour of the unprivileged group.
+</p>
+
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> does this actually affect the model's performance?</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2a7d7f3" class="outline-4">
+<h4 id="org2a7d7f3"><span class="section-number-4">2.1.2.</span> Analysis of <code>disparate_impact</code></h4>
+<div class="outline-text-4" id="text-2-1-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_mod-none_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='disparate_impact',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org788ff4b" class="figure">
+<p><img src="bank_barplot_prot-age_mod-none_disparate-impact.png" alt="bank_barplot_prot-age_mod-none_disparate-impact.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_mod-all_disparate-impact'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='disparate_impact',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org3e18dc9" class="figure">
+<p><img src="bank_barplot_prot-age_mod-all_disparate-impact.png" alt="bank_barplot_prot-age_mod-all_disparate-impact.png" />
+</p>
+</div>
+
+<p>
+The <code>disparate_impact</code> impact is &gt;1 which means that the unprivileged
+group is at an advantage.
+</p>
+
+<p>
+The <code>disparate_impact</code> for the logisticregression is higher than the
+rest. This is different from the prior datasets where the
+logisticregression always performs worse than the other models. This
+is because the logisticregression is worse in identifying the positive
+class examples compared to the decisiontreeclassifier. Since the
+predictions of the logisticregression contains a high number of true
+negative &amp; false negative examples, the <code>disparate_impact</code> is higher.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfac85e2" class="outline-4">
+<h4 id="orgfac85e2"><span class="section-number-4">2.1.3.</span> Analysis of <code>statistical_parity_difference</code></h4>
+<div class="outline-text-4" id="text-2-1-3">
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_mod-none_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['model'] == 'None'],
+	    y='statistical_parity_difference',
+	    x='subset',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgd17ad49" class="figure">
+<p><img src="bank_barplot_prot-age_mod-none_stat-par-diff.png" alt="bank_barplot_prot-age_mod-none_stat-par-diff.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_mod-all_stat-par-diff'
+
+fig, ax = plt.subplots()
+
+sns.barplot(data=data[data['subset'] == 'test'],
+	    y='statistical_parity_difference',
+	    x='model',
+	    ax=ax)
+
+for container in ax.containers:
+    ax.bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org87cba80" class="figure">
+<p><img src="bank_barplot_prot-age_mod-all_stat-par-diff.png" alt="bank_barplot_prot-age_mod-all_stat-par-diff.png" />
+</p>
+</div>
+
+<p>
+<code>statistical_parity_difference</code> is positive indicating that the
+unprivileged group is in favour. Similar reasoning as
+<code>disparate_impact</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1af6d19" class="outline-3">
+<h3 id="org1af6d19"><span class="section-number-3">2.2.</span> Analysis of performance metrics</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-orgbde255a" class="outline-4">
+<h4 id="orgbde255a"><span class="section-number-4">2.2.1.</span> model: logisticregression</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_heatmap_prot-age_mod-lr_cm'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgcd53a9a" class="figure">
+<p><img src="bank_heatmap_prot-age_mod-lr_cm.png" alt="bank_heatmap_prot-age_mod-lr_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_heatmap_prot-age_mod-lr_cm-rate'
+metrics = data[data['model'] == 'logisticregression']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orge56d3b9" class="figure">
+<p><img src="bank_heatmap_prot-age_mod-lr_cm-rate.png" alt="bank_heatmap_prot-age_mod-lr_cm-rate.png" />
+</p>
+</div>
+
+<p>
+The model is really good at detecting the negative examples which is
+expected given the high number of negative examples in the dataset.
+The model has a high number of false negatives again due to the same
+reason.
+</p>
+
+<p>
+The model makes similar mistakes in its predictions across the
+privileged &amp; unprivileged groups because we have the same imbalance
+between the positive &amp; negative examples within the groups as well.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_mod-lr_acc-pre-rec-f1'
+metrics = data[data['model'] == 'logisticregression']
+hue_order = ['None', 'True', 'False']
+
+fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+sns.barplot(data=metrics,
+	    y='accuracy',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[0])
+
+sns.barplot(data=metrics,
+	    y='PPV',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[1])
+axs[1].set_ylabel('precision')
+
+sns.barplot(data=metrics,
+	    y='TPR',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[2])
+axs[2].set_ylabel('recall')
+
+sns.barplot(data=metrics,
+	    y='f1',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[3])
+
+for idx in range(4):
+    for container in axs[idx].containers: axs[idx].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgff0d170" class="figure">
+<p><img src="bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.png" alt="bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.png" />
+</p>
+</div>
+
+<p>
+The <code>accuracy</code> is high but thats because the model is being trained &amp;
+tested with imbalanced data.
+</p>
+
+<p>
+The <code>precision</code> is higher than the <code>recall</code> since the number of false
+positives is much lower than the false negatives.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4dfa774" class="outline-4">
+<h4 id="org4dfa774"><span class="section-number-4">2.2.2.</span> model: decisiontreeclassifier</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_heatmap_prot-age_mod-dt_cm'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TN', 'FP', 'FN', 'TP']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt="",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org7ae1621" class="figure">
+<p><img src="bank_heatmap_prot-age_mod-dt_cm.png" alt="bank_heatmap_prot-age_mod-dt_cm.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_heatmap_prot-age_mod-dt_cm-rate'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+cols = ['TNR', 'FPR', 'FNR', 'TPR']
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for idx, privileged in enumerate(['None', 'True', 'False']):
+    cm = metrics[metrics['privileged'] == privileged]
+    cm = cm[cols].values.reshape(2,2)
+    sns.heatmap(data=cm,
+		annot=cm,
+		fmt=".3f",
+		cbar=False,
+		cmap='Blues',
+		ax=axs[idx])
+    axs[idx].set_xlabel("y_pred")
+    axs[idx].set_ylabel("y_true")
+    axs[idx].set_title(privileged)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="orgde7614f" class="figure">
+<p><img src="bank_heatmap_prot-age_mod-dt_cm-rate.png" alt="bank_heatmap_prot-age_mod-dt_cm-rate.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">name = 'bank_barplot_prot-age_mod-dt_acc-pre-rec-f1'
+metrics = data[data['model'] == 'decisiontreeclassifier']
+hue_order = ['None', 'True', 'False']
+
+fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+sns.barplot(data=metrics,
+	    y='accuracy',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[0])
+
+sns.barplot(data=metrics,
+	    y='PPV',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[1])
+axs[1].set_ylabel('precision')
+
+sns.barplot(data=metrics,
+	    y='TPR',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[2])
+axs[2].set_ylabel('recall')
+
+sns.barplot(data=metrics,
+	    y='f1',
+	    x='subset',
+	    hue='privileged',
+	    hue_order=hue_order,
+	    ax=axs[3])
+
+for idx in range(4):
+    for container in axs[idx].containers: axs[idx].bar_label(container)
+
+utils.savefig(fig, name)
+</pre>
+</div>
+
+
+<div id="org59670b1" class="figure">
+<p><img src="bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.png" alt="bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.png" />
+</p>
+</div>
+
+<p>
+Similar results as logisticregression.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2022-08-26 Fri 00:00</p>
+<p class="author">Author: Arumoy Shome</p>
+<p class="date">Created: 2022-08-26 Fri 14:23</p>
+</div>
+</body>
+</html>
