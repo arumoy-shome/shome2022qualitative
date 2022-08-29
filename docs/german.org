@@ -1,0 +1,929 @@
+#+title: German
+#+author: Arumoy Shome
+#+date: [2022-08-26 Fri]
+#+property: header-args:python :python python3 :session *sh21qual-german* :exports both :eval never-export
+
+In this document we analyse the results for the german dataset. The
+dataset contains 2 protected attributes: sex & age.
+
+* Init
+In this section we load the necessary modules & dataset.
+
+#+begin_src python :results silent
+  import pandas as pd
+  import numpy as np
+  pd.set_option('display.max_columns', None)
+  pd.set_option('display.max_colwidth', None)
+  pd.set_option('display.max_rows', None)
+
+  import matplotlib
+  matplotlib.use('Agg')           # non-interactive backend
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  import os
+  import sys
+  ROOTDIR = os.path.abspath(os.path.join(os.getcwd(), '..'))
+  DATADIR = os.path.join(ROOTDIR, 'data')
+
+  sys.path.insert(0, ROOTDIR)
+  from src import utils
+#+end_src
+
+#+begin_src python :results silent
+  german = pd.read_csv(os.path.join(DATADIR, 'data.csv'))
+  german = german[german['dataset'] == 'german']
+#+end_src
+
+* Analysis of protected attribute =sex=
+
+Males are considered privileged in this protected attribute.
+
+#+begin_src python
+  data = german[german['protected'] == 'sex']
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 15 | 22 |
+
+#+begin_src python :exports none
+  data
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       TN       FPR        f1 dataset  disparate_impact       FNR       PPV  \
+75    NaN       NaN       NaN  german          0.896567       NaN       NaN   
+76    NaN       NaN       NaN  german               NaN       NaN       NaN   
+77    NaN       NaN       NaN  german               NaN       NaN       NaN   
+81    NaN       NaN       NaN  german          0.865281       NaN       NaN   
+82    NaN       NaN       NaN  german               NaN       NaN       NaN   
+83    NaN       NaN       NaN  german               NaN       NaN       NaN   
+87    NaN       NaN       NaN  german          0.984127       NaN       NaN   
+88    NaN       NaN       NaN  german               NaN       NaN       NaN   
+89    NaN       NaN       NaN  german               NaN       NaN       NaN   
+93   37.0  0.513158  0.813370  german          0.791667  0.160920  0.789189   
+94   17.0  0.645833  0.808333  german               NaN  0.133929  0.757812   
+95   20.0  0.285714  0.823529  german               NaN  0.209677  0.859649   
+99   40.0  0.473684  0.796562  german          1.000000  0.201149  0.794286   
+100  25.0  0.479167  0.794643  german               NaN  0.205357  0.794643   
+101  15.0  0.464286  0.800000  german               NaN  0.193548  0.793651   
+
+    privileged  accuracy       TPR  base_rate  num_positives    FP     TP  \
+75        None       NaN       NaN   0.700000          700.0   NaN    NaN   
+76        True       NaN       NaN   0.723188          499.0   NaN    NaN   
+77       False       NaN       NaN   0.648387          201.0   NaN    NaN   
+81        None       NaN       NaN   0.701333          526.0   NaN    NaN   
+82        True       NaN       NaN   0.730189          387.0   NaN    NaN   
+83       False       NaN       NaN   0.631818          139.0   NaN    NaN   
+87        None       NaN       NaN   0.696000          174.0   NaN    NaN   
+88        True       NaN       NaN   0.700000          112.0   NaN    NaN   
+89       False       NaN       NaN   0.688889           62.0   NaN    NaN   
+93        None  0.732000  0.839080        NaN            NaN  39.0  146.0   
+94        True  0.712500  0.866071        NaN            NaN  31.0   97.0   
+95       False  0.766667  0.790323        NaN            NaN   8.0   49.0   
+99        None  0.716000  0.798851        NaN            NaN  36.0  139.0   
+100       True  0.712500  0.794643        NaN            NaN  23.0   89.0   
+101      False  0.722222  0.806452        NaN            NaN  13.0   50.0   
+
+    subset protected  statistical_parity_difference  num_negatives  \
+75    full       sex                      -0.074801          300.0   
+76    full       sex                            NaN          191.0   
+77    full       sex                            NaN          109.0   
+81   train       sex                      -0.098370          224.0   
+82   train       sex                            NaN          143.0   
+83   train       sex                            NaN           81.0   
+87    test       sex                      -0.011111           76.0   
+88    test       sex                            NaN           48.0   
+89    test       sex                            NaN           28.0   
+93    test       sex                      -0.166667            NaN   
+94    test       sex                            NaN            NaN   
+95    test       sex                            NaN            NaN   
+99    test       sex                       0.000000            NaN   
+100   test       sex                            NaN            NaN   
+101   test       sex                            NaN            NaN   
+
+                      model       TNR    FN  theil_index  
+75                     None       NaN   NaN          NaN  
+76                     None       NaN   NaN          NaN  
+77                     None       NaN   NaN          NaN  
+81                     None       NaN   NaN          NaN  
+82                     None       NaN   NaN          NaN  
+83                     None       NaN   NaN          NaN  
+87                     None       NaN   NaN          NaN  
+88                     None       NaN   NaN          NaN  
+89                     None       NaN   NaN          NaN  
+93       logisticregression  0.486842  28.0     0.164088  
+94       logisticregression  0.354167  15.0          NaN  
+95       logisticregression  0.714286  13.0          NaN  
+99   decisiontreeclassifier  0.526316  35.0     0.194839  
+100  decisiontreeclassifier  0.520833  23.0          NaN  
+101  decisiontreeclassifier  0.535714  12.0          NaN  
+#+end_example
+
+** Analysis of fairness metrics
+We start with =num_positives= & =num_negatives= which are computed
+only using the dataset.
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_subset-all_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data,
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  sns.barplot(data=data,
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  # label the bars with the value, taken from
+  # <https://stackoverflow.com/a/68323374>
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_subset-all_num-pos-neg.png]]
+
+The dataset contains more number of positive examples than negative
+examples. The dataset contains more number of privileged examples than
+unprivileged examples.
+
+*** Analysis of =base_rate=
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_base-rate'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data,
+	      y='base_rate',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_base-rate.png]]
+
+The =base_rate= is high since we have more positive examples.
+
+The conditioned =base_rate= for the privileged group is higher than
+the unprivileged group since we have more examples of the privileged
+group. The difference is negligible in the test subset due to the low
+number of examples.
+
+*** Analysis of =disparate_impact=
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_mod-none_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='disparate_impact',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_mod-none_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_mod-all_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='disparate_impact',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_mod-all_disparate-impact.png]]
+
+The =disparate_impact= is close to 1 indicating that neither groups
+are at a benefit.
+
+The =disparate_impact= for the decisiontreeclassifier is exactly 1
+indicating that its predictions for the given dataset is fair.
+
+*** Analysis of =statistical_parity_difference=
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_mod-none_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='statistical_parity_difference',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_mod-none_stat-par-diff.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_mod-all_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='statistical_parity_difference',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_mod-all_stat-par-diff.png]]
+
+The =statistical_parity_difference= is close to 0 indicating neither
+groups are at a benefit here.
+
+The =statistical_parity_difference= for the decisiontreeclassifier is
+exactly 0 indicating that its predictions for the given test set is
+fair.
+
+** Analysis of performance metrics
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-sex_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-sex_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-sex_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-sex_mod-lr_cm-rate.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_mod-lr_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'logisticregression']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+
+The model is good at identifying the positive class which is expected
+given the bias in the training dataset. Due to the same bias, the
+model has a lot of false positive predictions.
+
+This problem is however not present in the unprivileged group where
+the model is able to identify the positive & negative examples with
+the same accuracy.
+
+- [ ] is this because of the small number of unprivileged examples?
+
+The =accuracy= of the model is ~70% however the model is biased & the
+test subset also contains the same bias so we should rely on the
+=precision= & =recall= instead.
+
+The =precision= is lower than the =recall= since we have higher number
+of false positives.
+
+- [ ] The results are reversed in the unprivileged group (=recall=
+  higher than =precision=), can this be explained by the numbers as well?
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-sex_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-sex_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-sex_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-sex_mod-dt_cm-rate.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-sex_mod-dt_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+
+
+* Analysis of protected attribute =age=
+
+#+begin_src python
+  data = german[german['protected'] == 'age']
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 15 | 22 |
+
+#+begin_src python :exports none
+  data
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       TN       FPR        f1 dataset  disparate_impact       FNR       PPV  \
+78    NaN       NaN       NaN  german          0.794826       NaN       NaN   
+79    NaN       NaN       NaN  german               NaN       NaN       NaN   
+80    NaN       NaN       NaN  german               NaN       NaN       NaN   
+84    NaN       NaN       NaN  german          0.807230       NaN       NaN   
+85    NaN       NaN       NaN  german               NaN       NaN       NaN   
+86    NaN       NaN       NaN  german               NaN       NaN       NaN   
+90    NaN       NaN       NaN  german          0.761538       NaN       NaN   
+91    NaN       NaN       NaN  german               NaN       NaN       NaN   
+92    NaN       NaN       NaN  german               NaN       NaN       NaN   
+96   37.0  0.513158  0.813370  german          0.857361  0.160920  0.789189   
+97   25.0  0.528302  0.831081  german               NaN  0.151724  0.814570   
+98   12.0  0.478261  0.730159  german               NaN  0.206897  0.676471   
+102  40.0  0.473684  0.796562  german          0.884886  0.201149  0.794286   
+103  29.0  0.452830  0.822300  german               NaN  0.186207  0.830986   
+104  11.0  0.521739  0.677419  german               NaN  0.275862  0.636364   
+
+    privileged  accuracy       TPR  base_rate  num_positives    FP     TP  \
+78        None       NaN       NaN   0.700000          700.0   NaN    NaN   
+79        True       NaN       NaN   0.728395          590.0   NaN    NaN   
+80       False       NaN       NaN   0.578947          110.0   NaN    NaN   
+84        None       NaN       NaN   0.701333          526.0   NaN    NaN   
+85        True       NaN       NaN   0.727124          445.0   NaN    NaN   
+86       False       NaN       NaN   0.586957           81.0   NaN    NaN   
+90        None       NaN       NaN   0.696000          174.0   NaN    NaN   
+91        True       NaN       NaN   0.732323          145.0   NaN    NaN   
+92       False       NaN       NaN   0.557692           29.0   NaN    NaN   
+96        None  0.732000  0.839080        NaN            NaN  39.0  146.0   
+97        True  0.747475  0.848276        NaN            NaN  28.0  123.0   
+98       False  0.673077  0.793103        NaN            NaN  11.0   23.0   
+102       None  0.716000  0.798851        NaN            NaN  36.0  139.0   
+103       True  0.742424  0.813793        NaN            NaN  24.0  118.0   
+104      False  0.615385  0.724138        NaN            NaN  12.0   21.0   
+
+    subset protected  statistical_parity_difference  num_negatives  \
+78    full       age                      -0.149448          300.0   
+79    full       age                            NaN          220.0   
+80    full       age                            NaN           80.0   
+84   train       age                      -0.140168          224.0   
+85   train       age                            NaN          167.0   
+86   train       age                            NaN           57.0   
+90    test       age                      -0.174631           76.0   
+91    test       age                            NaN           53.0   
+92    test       age                            NaN           23.0   
+96    test       age                      -0.108780            NaN   
+97    test       age                            NaN            NaN   
+98    test       age                            NaN            NaN   
+102   test       age                      -0.082556            NaN   
+103   test       age                            NaN            NaN   
+104   test       age                            NaN            NaN   
+
+                      model       TNR    FN  theil_index  
+78                     None       NaN   NaN          NaN  
+79                     None       NaN   NaN          NaN  
+80                     None       NaN   NaN          NaN  
+84                     None       NaN   NaN          NaN  
+85                     None       NaN   NaN          NaN  
+86                     None       NaN   NaN          NaN  
+90                     None       NaN   NaN          NaN  
+91                     None       NaN   NaN          NaN  
+92                     None       NaN   NaN          NaN  
+96       logisticregression  0.486842  28.0     0.164088  
+97       logisticregression  0.471698  22.0          NaN  
+98       logisticregression  0.521739   6.0          NaN  
+102  decisiontreeclassifier  0.526316  35.0     0.194839  
+103  decisiontreeclassifier  0.547170  27.0          NaN  
+104  decisiontreeclassifier  0.478261   8.0          NaN  
+#+end_example
+
+** Analysis of fairness metrics
+We start with the =num_positives=, =num_negatives= which are computed
+only using the dataset.
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_subset-all_num-pos-neg'
+
+  fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+
+  sns.barplot(data=data,
+	      y='num_positives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[0])
+
+  sns.barplot(data=data,
+	      y='num_negatives',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=axs[1])
+
+  # label the bars with the value, taken from
+  # <https://stackoverflow.com/a/68323374>
+  for container in axs[0].containers:
+      axs[0].bar_label(container)
+
+  for container in axs[1].containers:
+      axs[1].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_subset-all_num-pos-neg.png]]
+
+*** Analysis of =base_rate=
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_base-rate'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data,
+	      y='base_rate',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=['None', 'True', 'False'],
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_base-rate.png]]
+
+*** Analysis of =disparate_impact=
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_mod-none_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='disparate_impact',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_mod-none_disparate-impact.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_mod-all_disparate-impact'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='disparate_impact',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_mod-all_disparate-impact.png]]
+
+*** Analysis of =statistical_parity_difference=
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_mod-none_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['model'] == 'None'],
+	      y='statistical_parity_difference',
+	      x='subset',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_mod-none_stat-par-diff.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_mod-all_stat-par-diff'
+
+  fig, ax = plt.subplots()
+
+  sns.barplot(data=data[data['subset'] == 'test'],
+	      y='statistical_parity_difference',
+	      x='model',
+	      ax=ax)
+
+  for container in ax.containers:
+      ax.bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_mod-all_stat-par-diff.png]]
+
+** Analysis of performance metrics
+*** model: logisticregression
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-age_mod-lr_cm'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-age_mod-lr_cm.png]]
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-age_mod-lr_cm-rate'
+  metrics = data[data['model'] == 'logisticregression']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-age_mod-lr_cm-rate.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_mod-lr_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'logisticregression']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_mod-lr_acc-pre-rec-f1.png]]
+
+*** model: decisiontreeclassifier
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-age_mod-dt_cm'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TN', 'FP', 'FN', 'TP']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt="",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-age_mod-dt_cm.png]]
+
+#+begin_src python :results file
+  name = 'german_heatmap_prot-age_mod-dt_cm-rate'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  cols = ['TNR', 'FPR', 'FNR', 'TPR']
+  fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+  for idx, privileged in enumerate(['None', 'True', 'False']):
+      cm = metrics[metrics['privileged'] == privileged]
+      cm = cm[cols].values.reshape(2,2)
+      sns.heatmap(data=cm,
+		  annot=cm,
+		  fmt=".3f",
+		  cbar=False,
+		  cmap='Blues',
+		  ax=axs[idx])
+      axs[idx].set_xlabel("y_pred")
+      axs[idx].set_ylabel("y_true")
+      axs[idx].set_title(privileged)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_heatmap_prot-age_mod-dt_cm-rate.png]]
+
+#+begin_src python :results file
+  name = 'german_barplot_prot-age_mod-dt_acc-pre-rec-f1'
+  metrics = data[data['model'] == 'decisiontreeclassifier']
+  hue_order = ['None', 'True', 'False']
+
+  fig, axs = plt.subplots(1, 4, sharey=True, figsize=(20, 5))
+
+  sns.barplot(data=metrics,
+	      y='accuracy',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[0])
+
+  sns.barplot(data=metrics,
+	      y='PPV',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[1])
+  axs[1].set_ylabel('precision')
+
+  sns.barplot(data=metrics,
+	      y='TPR',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[2])
+  axs[2].set_ylabel('recall')
+
+  sns.barplot(data=metrics,
+	      y='f1',
+	      x='subset',
+	      hue='privileged',
+	      hue_order=hue_order,
+	      ax=axs[3])
+
+  for idx in range(4):
+      for container in axs[idx].containers: axs[idx].bar_label(container)
+
+  utils.savefig(fig, name)
+#+end_src
+
+#+RESULTS:
+[[file:german_barplot_prot-age_mod-dt_acc-pre-rec-f1.png]]

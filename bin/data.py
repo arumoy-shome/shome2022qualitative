@@ -13,7 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from aif360.datasets import AdultDataset, CompasDataset, BankDataset
+from aif360.datasets import AdultDataset, CompasDataset, BankDataset, GermanDataset
 from aif360.metrics import BinaryLabelDatasetMetric
 from aif360.metrics import ClassificationMetric
 import csv
@@ -200,6 +200,7 @@ if __name__ == "__main__":
         ("adult", AdultDataset, ["sex", "race"]),
         ("compas", CompasDataset, ["sex", "race"]),
         ("bank", BankDataset, ["age"]),
+        ("german", GermanDataset, ["sex", "age"])
     ]
 
     for dataset_label, dataset, protected in datasets:
