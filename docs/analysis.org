@@ -169,10 +169,6 @@ group.
 
 ** Do the data-centric metrics explain unfairness?
 
-#+caption: Disparate Impact for data
-#+name: fig-adult-sex-data-disparate-impact
-[[file:adult_barplot_prot-sex_mod-all_disparate-impact.png]]
-
 From Figure [[fig-adult-sex-data-disparate-impact]], the disparate impact
 across all subsets of the data is $<1$ which indicates that the
 unprivileged group is at a disadvantage.
