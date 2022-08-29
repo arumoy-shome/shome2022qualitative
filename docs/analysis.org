@@ -48,4 +48,161 @@ this study.
 | gpa     | race                | dt    |    |    |    |
 |---------+---------------------+-------+----+----+----|
 
+* DONE adult-sex-lr
+:PROPERTIES:
+:CUSTOM_ID: sec-adult-sex-lr
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2022-08-29 Mon 15:33]
+:END:
+** Is the model unfair?
 
+#+caption: CM for logisticregression
+#+name: fig-adult-sex-lr-cm-rate
+#+attr_html: :width 100%
+[[file:adult_heatmap_prot-sex_mod-lr_cm-rate.png]]
+
+As seen from Figure [[fig-adult-sex-lr-cm-rate]], the FNs for the
+unprivileged group is higher than the FNs for the privileged group.
+This indicates that the model is unfair towards the unprivileged
+group. Given an example from the unprivileged group, the model is more
+likely to incorrectly classify it as a negative example.
+
+** Do the model-centric metrics indicate unfairness?
+
+#+caption: Disparate Impact for models
+#+name: fig-adult-sex-mod-disparate-impact
+[[file:adult_barplot_prot-sex_mod-all_disparate-impact.png]]
+
+#+caption: Precision-recall for logisticregression
+#+name: fig-adult-sex-lr-pre-rec
+#+attr_html: :width 100%
+[[file:adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+
+From Figure [[fig-adult-sex-mod-disparate-impact]], the disparate impact
+for the logisticregression model is $<1$ which indicates that the
+unprivileged group is at a disadvantage.
+
+From Figure [[fig-adult-sex-lr-pre-rec]], the recall for the unprivileged
+group is lower than that of the privileged group. This indicates that
+when identifying positive examples, the model performs worse for the
+unprivileged group.
+
+** Do the data-centric metrics explain unfairness?
+
+#+caption: Disparate Impact for data
+#+name: fig-adult-sex-data-disparate-impact
+[[file:adult_barplot_prot-sex_mod-all_disparate-impact.png]]
+
+From Figure [[fig-adult-sex-data-disparate-impact]], the disparate impact
+across all subsets of the data is $<1$ which indicates that the
+unprivileged group is at a disadvantage.
+
+#+caption: Base rate
+#+name: fig-adult-sex-base-rate
+[[file:adult_barplot_prot-sex_base-rate.png]]
+
+From Figure [[fig-adult-sex-base-rate]]:
+
+#+name: eq-base-rate-unpriv
+\begin{equation}
+\text{base rate for unprivileged group} = P(Y=1 | D=\text{unprivileged}) = 0.120 \\
+\implies P(Y=0 | D=\text{unprivileged}) = 1 - P(Y=1 | D=\text{unprivileged}) = 0.88
+\end{equation}
+
+Similarly,
+
+#+name: eq-base-rate-priv
+\begin{equation}
+\text{base rate for privileged group} = P(Y=1 | D=\text{privileged}) = 0.310 \\
+\implies P(Y=0 | D=\text{privileged}) = 1 - P(Y=1 | D=\text{privileged}) = 0.69
+\end{equation}
+
+Consider that we pick a random example from the dataset each from the
+privileged & unprivileged group. From Equations [[eq-base-rate-unpriv]] &
+[[eq-base-rate-priv]], it is more likely that the example from the
+unprivileged group is negative compared to the privileged group.
+
+Thus for the unprivileged group, the model is more biased towards the
+negative class compared to the privileged group, which examples why
+the recall for the unprivileged group is lower than that of the
+privileged group.
+
+* DONE adult-sex-dt
+:PROPERTIES:
+:CUSTOM_ID: sec-adult-sex-dt
+:END:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2022-08-29 Mon 15:49]
+:END:
+** Is the model unfair?
+
+#+caption: CM for logisticregression
+#+name: fig-adult-sex-dt-cm-rate
+#+attr_html: :width 100%
+[[file:adult_heatmap_prot-sex_mod-dt_cm-rate.png]]
+
+As seen from Figure [[fig-adult-sex-dt-cm-rate]], the FNs for the
+unprivileged group is higher than the FNs for the privileged group.
+This indicates that the model is unfair towards the unprivileged
+group. Similar bias as seen in Section [[#sec-adult-sex-lr]].
+
+** Do the model-centric metrics indicate unfairness?
+
+#+caption: Precision-recall for decisiontreeclassifier
+#+name: fig-adult-sex-dt-pre-rec
+#+attr_html: :width 100%
+[[file:adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+
+From Figure [[fig-adult-sex-mod-disparate-impact]], the disparate impact
+for the decisiontreeclassifier model is $<1$ which indicates that the
+unprivileged group is at a disadvantage.
+
+From Figure [[fig-adult-sex-dt-pre-rec]], both the precision & recall for
+the unprivileged group is lower than that of the privileged group.
+This indicates that when identifying positive examples, the model
+performs worse for the unprivileged group. This is corroborated by
+Figure [[fig-adult-sex-dt-cm-rate]] where the model does not identify the
+TPs for the unprivileged group as well as the privileged group. The
+model also has higher FNs for the unprivileged group vs. privileged
+group.
+
+** Do the data-centric metrics explain unfairness?
+
+#+caption: Disparate Impact for data
+#+name: fig-adult-sex-data-disparate-impact
+[[file:adult_barplot_prot-sex_mod-all_disparate-impact.png]]
+
+From Figure [[fig-adult-sex-data-disparate-impact]], the disparate impact
+across all subsets of the data is $<1$ which indicates that the
+unprivileged group is at a disadvantage.
+
+Similar explaination for precision-recall as Section [[#sec-adult-sex-lr]].
+
+* TODO adult-race-lr
+
+* TODO adult-race-dt
+
+* TODO compas-sex-lr
+
+* TODO compas-sex-dt
+
+* TODO compas-race-lr
+
+* TODO compas-race-dt
+
+* TODO bank-age-lr
+
+* TODO bank-age-dt
+
+* TODO german-sex-lr
+
+* TODO german-sex-dt
+
+* TODO german-age-lr
+
+* TODO german-age-dt
+
+* TODO gpa-race-lr
+
+* TODO gpa-race-dt
