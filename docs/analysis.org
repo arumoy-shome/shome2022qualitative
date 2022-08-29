@@ -1,0 +1,51 @@
+#+title: Analysis
+#+author: Arumoy Shome
+#+date: [2022-08-29 Mon]
+#+options: toc:t
+#+toc: tables
+
+In this document we present the analysis of the results collected in
+this study.
+
+We consider each protected attribute for each dataset as a separate
+analysis. For each analysis, we wish to answer the following
+questions:
+
+1. Is the model making unfair predictions?
+2. If so, do the model-centric fairness metrics *indicate* this unfair
+   behaviour?
+3. If so, do the data-centric fairness metrics *explain* this unfair
+   behaviour?
+
+* Summary of results
+Following table presents a concise summary of the results obtained in
+this study.
+
+#+caption: Summary of Results
+#+name: tab-summary-results
+|---------+---------------------+-------+----+----+----|
+| dataset | protected attribute | model | Q1 | Q2 | Q3 |
+|---------+---------------------+-------+----+----+----|
+| adult   | sex                 | lr    | Y  | Y  | Y  |
+| adult   | sex                 | dt    | Y  | Y  | Y  |
+| adult   | race                | lr    |    |    |    |
+| adult   | race                | dt    |    |    |    |
+|---------+---------------------+-------+----+----+----|
+| compas  | sex                 | lr    |    |    |    |
+| compas  | sex                 | dt    |    |    |    |
+| compas  | race                | lr    |    |    |    |
+| compas  | race                | dt    |    |    |    |
+|---------+---------------------+-------+----+----+----|
+| bank    | age                 | lr    |    |    |    |
+| bank    | age                 | dt    |    |    |    |
+|---------+---------------------+-------+----+----+----|
+| german  | sex                 | lr    |    |    |    |
+| german  | sex                 | dt    |    |    |    |
+| german  | age                 | lr    |    |    |    |
+| german  | age                 | dt    |    |    |    |
+|---------+---------------------+-------+----+----+----|
+| gpa     | race                | lr    |    |    |    |
+| gpa     | race                | dt    |    |    |    |
+|---------+---------------------+-------+----+----+----|
+
+
