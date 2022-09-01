@@ -34,7 +34,7 @@ this study.
 | adult   | race                | dt    | Y  | Y  | N  |
 |---------+---------------------+-------+----+----+----|
 | compas  | sex                 | lr    | Y  | Y  | Y  |
-| compas  | sex                 | dt    |    |    |    |
+| compas  | sex                 | dt    | Y  | Y  | Y  |
 | compas  | race                | lr    |    |    |    |
 | compas  | race                | dt    |    |    |    |
 |---------+---------------------+-------+----+----+----|
@@ -317,8 +317,47 @@ unprivileged group is at a disadvantage.
 Similar explaination for precision-recall as Section
 [[#sec-adult-sex-lr]].
 
+* DONE compas-sex-dt
+:PROPERTIES:
+:CUSTOM_ID: sec-compas-sex-dt
+:END:
 
-* TODO compas-sex-dt
+** Is the model unfair?
+
+#+caption: CM for decisiontreeclassifier
+#+name: fig-compas-sex-dt-cm-rate
+[[file:compas_heatmap_prot-sex_mod-dt_cm-rate.png]]
+
+From Figure [[fig-compas-sex-dt-cm-rate]], the model is biased to the
+positive class as the FPR is high. The FPR for the privileged group is
+higher than the unprivileged group albeit this bias is lesser compared
+to the logisticregression model seen in Section [[#sec-compas-sex-lr]].
+
+While the model is clearly biased to the positive class for privileged
+group, it seems to struggle identifying both the positive & negative
+classes in the unprivileged group (the FPR & FNR are similar).
+
+** Do the model-centric metrics indicate unfairness?
+
+#+caption: Precision-recall for decisiontreeclassifier
+#+name: fig-compas-sex-dt-pre-rec
+[[file:compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+
+From Figure [[fig-compas-sex-mod-disparate-impact]], the disparate impact
+for the decisiontreeclassifier model is $<1$ but higher than
+logisticregression. This indicates that the unprivileged group is at a
+disadvantage but the decisiontreeclassifier is fairer than
+logisticregression.
+
+From Figure [[fig-compas-sex-dt-pre-rec]], the precision & recall for the
+unprivileged group is lower than that of the privileged group. This
+indicates that when identifying positive examples, the model performs
+worse for the unprivileged group.
+
+** Do the data-centric metrics explain unfairness?
+
+Similar explaination as Section [[#sec-compas-sex-lr]].
+
 
 * TODO compas-race-lr
 
