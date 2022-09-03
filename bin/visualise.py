@@ -186,29 +186,21 @@ def num_pos_neg(dataset, protected, data):
     for attr in protected:
         df = data[data["protected"] == attr]
         name = "{}_barplot_prot-{}_subset-all_num-pos-neg".format(dataset, attr)
-        fig, axs = plt.subplots(1, 2, sharey=True, figsize=(10, 5))
+        cols = ["num_positives", "num_negatives"]
+        fig, axs = plt.subplots(1, len(cols), sharey=True, figsize=(10, 5))
 
-        sns.barplot(
-            data=df,
-            y="num_positives",
-            x="subset",
-            hue="privileged",
-            hue_order=PRIVILEGED,
-            ax=axs[0],
-            ci=None,
-        )
+        for idx, col in enumerate(cols):
+            sns.barplot(
+                data=df,
+                y=col,
+                x="subset",
+                hue="privileged",
+                hue_order=PRIVILEGED,
+                ax=axs[idx],
+                ci=None,
+            )
 
-        sns.barplot(
-            data=df,
-            y="num_negatives",
-            x="subset",
-            hue="privileged",
-            hue_order=PRIVILEGED,
-            ax=axs[1],
-            ci=None,
-        )
-
-        for idx in range(2):
+        for idx in range(len(cols)):
             for container in axs[idx].containers:
                 axs[idx].bar_label(container)
 
