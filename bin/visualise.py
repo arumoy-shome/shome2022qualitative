@@ -50,7 +50,7 @@ def precision_recall(dataset, protected, data):
                 sns.barplot(
                     data=metrics,
                     y=col,
-                    x='subset',
+                    x="subset",
                     hue="privileged",
                     hue_order=PRIVILEGED,
                     ax=axs[idx],
@@ -216,7 +216,12 @@ def num_pos_neg(dataset, protected, data):
 
 
 if __name__ == "__main__":
-    datasets = [("adult", ["sex", "race"])]
+    datasets = [
+        ("adult", ["sex", "race"]),
+        ("compas", ["sex", "race"]),
+        ("bank", ["age"]),
+        ("german", ["sex", "age"]),
+    ]
     df = pd.read_csv(os.path.join(DATADIR, "data.csv"))
 
     for dataset, protected in datasets:
