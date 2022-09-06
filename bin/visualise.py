@@ -16,11 +16,26 @@ ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATADIR = os.path.join(ROOTDIR, "data")
 DOCDIR = os.path.join(ROOTDIR, "docs")
 
-sys.path.insert(0, ROOTDIR)
-from src import utils
-
 PRIVILEGED = ["None", "True", "False"]
 MODELS = [("logisticregression", "lr"), ("decisiontreeclassifier", "dt")]
+
+
+def savefig(fig, name):
+    """Save a matplotlib figure in pdf & png format. This function
+    also calls the tight_layout function prior to saving.
+
+    Args:
+        fig: matplotlib.fig.Figure object
+        name: str, name of figure without extension
+
+    Returns:
+        None
+
+    """
+    fig.tight_layout()
+    # fig.savefig(name + ".png", format="png")
+    # fig.savefig(name + ".pdf", format="pdf")
+    fig.savefig(name + ".svg", format="svg")
 
 
 def precision_recall(dataset, protected, data):
@@ -62,7 +77,7 @@ def precision_recall(dataset, protected, data):
                 for container in axs[idx].containers:
                     axs[idx].bar_label(container)
 
-            utils.savefig(fig, os.path.join(DOCDIR, name))
+            savefig(fig, os.path.join(DOCDIR, name))
 
 
 def confusion_matrix(dataset, protected, data, rate):
@@ -104,7 +119,7 @@ def confusion_matrix(dataset, protected, data, rate):
                 axs[idx].set_ylabel("y_true")
                 axs[idx].set_title(privileged)
 
-            utils.savefig(fig, os.path.join(DOCDIR, name))
+            savefig(fig, os.path.join(DOCDIR, name))
 
 
 def disparate_impact(dataset, protected, data, model):
@@ -137,7 +152,7 @@ def disparate_impact(dataset, protected, data, model):
         for container in ax.containers:
             ax.bar_label(container)
 
-        utils.savefig(fig, os.path.join(DOCDIR, name))
+        savefig(fig, os.path.join(DOCDIR, name))
 
 
 def base_rate(dataset, protected, data):
@@ -169,7 +184,7 @@ def base_rate(dataset, protected, data):
         for container in ax.containers:
             ax.bar_label(container)
 
-        utils.savefig(fig, os.path.join(DOCDIR, name))
+        savefig(fig, os.path.join(DOCDIR, name))
 
 
 def num_pos_neg(dataset, protected, data):
@@ -204,7 +219,7 @@ def num_pos_neg(dataset, protected, data):
             for container in axs[idx].containers:
                 axs[idx].bar_label(container)
 
-        utils.savefig(fig, os.path.join(DOCDIR, name))
+        savefig(fig, os.path.join(DOCDIR, name))
 
 
 if __name__ == "__main__":
@@ -213,6 +228,7 @@ if __name__ == "__main__":
         ("compas", ["sex", "race"]),
         ("bank", ["age"]),
         ("german", ["sex", "age"]),
+        ("meps", ["race"])
     ]
     df = pd.read_csv(os.path.join(DATADIR, "data.csv"))
 
