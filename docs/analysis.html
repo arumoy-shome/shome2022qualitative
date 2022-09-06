@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-03 Sat 16:50 -->
+<!-- 2022-09-06 Tue 16:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Analysis</title>
@@ -223,107 +223,119 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org748e784">1. Summary of results</a></li>
+<li><a href="#org411c641">1. Summary of results</a></li>
 <li><a href="#sec-adult-sex-lr">2. <span class="done DONE">DONE</span> adult-sex-lr</a>
 <ul>
-<li><a href="#org48e757d">2.1. Is the model unfair?</a></li>
-<li><a href="#orgfb436b7">2.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgf1805ef">2.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#orgc543ce0">2.1. Is the model unfair?</a></li>
+<li><a href="#orgd68eb1f">2.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org34a0b3a">2.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-adult-sex-dt">3. <span class="done DONE">DONE</span> adult-sex-dt</a>
 <ul>
-<li><a href="#orge7c1c19">3.1. Is the model unfair?</a></li>
-<li><a href="#org0ccc0b9">3.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#org99acc7e">3.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#orgb4eae1b">3.1. Is the model unfair?</a></li>
+<li><a href="#orgeb1879f">3.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#orgb5690a2">3.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-adult-race-lr">4. <span class="done DONE">DONE</span> adult-race-lr</a>
 <ul>
-<li><a href="#orgb51e024">4.1. Is the model unfair?</a></li>
-<li><a href="#org7970e78">4.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orga9362a8">4.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#orgc29aa01">4.1. Is the model unfair?</a></li>
+<li><a href="#org29dbab3">4.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org6aa0cca">4.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-adult-race-dt">5. <span class="done DONE">DONE</span> adult-race-dt</a>
 <ul>
-<li><a href="#orge9419ae">5.1. Is the model unfair?</a></li>
-<li><a href="#org112e7fd">5.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#org8acdf66">5.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org7a3ffa0">5.1. Is the model unfair?</a></li>
+<li><a href="#org68bb0cc">5.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org9b83c72">5.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-compas-sex-lr">6. <span class="done DONE">DONE</span> compas-sex-lr</a>
 <ul>
-<li><a href="#org61d8333">6.1. Is the model unfair?</a></li>
-<li><a href="#org58d506c">6.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#org578f2fb">6.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org01805c2">6.1. Is the model unfair?</a></li>
+<li><a href="#org6f83201">6.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#orga658d1d">6.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-compas-sex-dt">7. <span class="done DONE">DONE</span> compas-sex-dt</a>
 <ul>
-<li><a href="#orgc8ade9c">7.1. Is the model unfair?</a></li>
-<li><a href="#orgb47e8ac">7.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#org15a81c0">7.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org16d56f8">7.1. Is the model unfair?</a></li>
+<li><a href="#orge31581f">7.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org329adf1">7.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-compas-race-lr">8. <span class="done DONE">DONE</span> compas-race-lr</a>
 <ul>
-<li><a href="#org9825a34">8.1. Is the model unfair?</a></li>
-<li><a href="#org526cca3">8.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgdfefec3">8.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org0bbe53f">8.1. Is the model unfair?</a></li>
+<li><a href="#org06f0a8f">8.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org33eeb3b">8.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-compas-race-dt">9. <span class="done DONE">DONE</span> compas-race-dt</a>
 <ul>
-<li><a href="#org30fe191">9.1. Is the model unfair?</a></li>
-<li><a href="#orgc7ecbe8">9.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgd0e0d50">9.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org097ada1">9.1. Is the model unfair?</a></li>
+<li><a href="#org1bc7ada">9.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#orgfce7b9e">9.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-bank-age-lr">10. <span class="done DONE">DONE</span> bank-age-lr</a>
 <ul>
-<li><a href="#org221c41e">10.1. Is the model unfair?</a></li>
-<li><a href="#org898ca4d">10.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgc6ac0d4">10.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#orgf3368cc">10.1. Is the model unfair?</a></li>
+<li><a href="#orgd5a75e1">10.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org4d80c01">10.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-bank-age-dt">11. <span class="done DONE">DONE</span> bank-age-dt</a>
 <ul>
-<li><a href="#orgcd4019f">11.1. Is the model unfair?</a></li>
-<li><a href="#orgb04bab1">11.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#org28e92c7">11.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org9565cf7">11.1. Is the model unfair?</a></li>
+<li><a href="#orgfd66bc5">11.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#orgd678324">11.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-german-sex-lr">12. <span class="done DONE">DONE</span> german-sex-lr</a>
 <ul>
-<li><a href="#orgbfaa11a">12.1. Is the model unfair?</a></li>
-<li><a href="#org1aff627">12.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgc28115b">12.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org76bafa7">12.1. Is the model unfair?</a></li>
+<li><a href="#org469bcfe">12.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org588d050">12.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-german-sex-dt">13. <span class="done DONE">DONE</span> german-sex-dt</a>
 <ul>
-<li><a href="#orgca28c11">13.1. Is the model unfair?</a></li>
-<li><a href="#orgd0c6ba2">13.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#org7eef552">13.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org6b462de">13.1. Is the model unfair?</a></li>
+<li><a href="#org5792608">13.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org47ddc1d">13.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-german-age-lr">14. <span class="done DONE">DONE</span> german-age-lr</a>
 <ul>
-<li><a href="#orgd5df5bf">14.1. Is the model unfair?</a></li>
-<li><a href="#org77c76c6">14.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgd604e19">14.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org189045c">14.1. Is the model unfair?</a></li>
+<li><a href="#org23a3029">14.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org88d11e0">14.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
 <li><a href="#sec-german-age-dt">15. <span class="done DONE">DONE</span> german-age-dt</a>
 <ul>
-<li><a href="#org0f7e3e5">15.1. Is the model unfair?</a></li>
-<li><a href="#org208e199">15.2. Do the model-centric metrics indicate unfairness?</a></li>
-<li><a href="#orgeadc8a8">15.3. Do the data-centric metrics explain unfairness?</a></li>
+<li><a href="#org02368f1">15.1. Is the model unfair?</a></li>
+<li><a href="#org88b0094">15.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org028b637">15.3. Do the data-centric metrics explain unfairness?</a></li>
 </ul>
 </li>
-<li><a href="#org70956bf">16. <span class="todo TODO">TODO</span> gpa-race-lr</a></li>
-<li><a href="#orgbd474d8">17. <span class="todo TODO">TODO</span> gpa-race-dt</a></li>
+<li><a href="#sec-meps-race-lr">16. <span class="done DONE">DONE</span> meps-race-lr</a>
+<ul>
+<li><a href="#org686fc6d">16.1. Is the model unfair?</a></li>
+<li><a href="#org9bdcf74">16.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#orgf0d7e53">16.3. Do the data-centric metrics explain unfairness?</a></li>
+</ul>
+</li>
+<li><a href="#sec-meps-race-dt">17. <span class="done DONE">DONE</span> meps-race-dt</a>
+<ul>
+<li><a href="#orgf0009bd">17.1. Is the model unfair?</a></li>
+<li><a href="#org74bd972">17.2. Do the model-centric metrics indicate unfairness?</a></li>
+<li><a href="#org8dc96e0">17.3. Do the data-centric metrics explain unfairness?</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -331,7 +343,7 @@
 <h2>List of Tables</h2>
 <div id="text-list-of-tables">
 <ul>
-<li><a href="#org7b3ad44"><span class="table-number">Table 1:</span> Summary of Results</a></li>
+<li><a href="#orgc16be6a"><span class="table-number">Table 1:</span> Summary of Results</a></li>
 </ul>
 </div>
 </div>
@@ -348,21 +360,21 @@ questions:
 
 <ol class="org-ol">
 <li>Is the model making unfair predictions?</li>
-<li>If so, do the model-centric fairness metrics <b>indicate</b> this unfair
-behaviour?</li>
-<li>If so, do the data-centric fairness metrics <b>explain</b> this unfair
-behaviour?</li>
+<li>Are the model-centric fairness metrics consistent with the
+predictions of the model?</li>
+<li>Are the data-centric fairness metrics consistent with the
+model-centric fairness metrics?</li>
 </ol>
 
-<div id="outline-container-org748e784" class="outline-2">
-<h2 id="org748e784"><span class="section-number-2">1.</span> Summary of results</h2>
+<div id="outline-container-org411c641" class="outline-2">
+<h2 id="org411c641"><span class="section-number-2">1.</span> Summary of results</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Following table presents a concise summary of the results obtained in
 this study.
 </p>
 
-<table id="org7b3ad44" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="orgc16be6a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 1:</span> Summary of Results</caption>
 
 <colgroup>
@@ -520,21 +532,21 @@ this study.
 </tbody>
 <tbody>
 <tr>
-<td class="org-left">gpa</td>
+<td class="org-left">meps</td>
 <td class="org-left">race</td>
 <td class="org-left">lr</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
 </tr>
 
 <tr>
-<td class="org-left">gpa</td>
+<td class="org-left">meps</td>
 <td class="org-left">race</td>
 <td class="org-left">dt</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
+<td class="org-left">Y</td>
 </tr>
 </tbody>
 </table>
@@ -545,18 +557,18 @@ this study.
 <h2 id="sec-adult-sex-lr"><span class="section-number-2">2.</span> <span class="done DONE">DONE</span> adult-sex-lr</h2>
 <div class="outline-text-2" id="text-sec-adult-sex-lr">
 </div>
-<div id="outline-container-org48e757d" class="outline-3">
-<h3 id="org48e757d"><span class="section-number-3">2.1.</span> Is the model unfair?</h3>
+<div id="outline-container-orgc543ce0" class="outline-3">
+<h3 id="orgc543ce0"><span class="section-number-3">2.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-2-1">
 
-<div id="org0ce1852" class="figure">
-<p><img src="adult_heatmap_prot-sex_mod-lr_cm-rate.png" alt="adult_heatmap_prot-sex_mod-lr_cm-rate.png" />
+<div id="org58b6bdb" class="figure">
+<p><img src="adult_heatmap_prot-sex_mod-lr_cm-rate.svg" alt="adult_heatmap_prot-sex_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 1: </span>CM for logisticregression</p>
 </div>
 
 <p>
-As seen from Figure <a href="#org0ce1852">1</a>, the FNs for the
+As seen from Figure <a href="#org58b6bdb">1</a>, the FNs for the
 unprivileged group is higher than the FNs for the privileged group.
 This indicates that the model is unfair towards the unprivileged
 group. Given an example from the unprivileged group, the model is more
@@ -565,31 +577,31 @@ likely to incorrectly classify it as a negative example.
 </div>
 </div>
 
-<div id="outline-container-orgfb436b7" class="outline-3">
-<h3 id="orgfb436b7"><span class="section-number-3">2.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-orgd68eb1f" class="outline-3">
+<h3 id="orgd68eb1f"><span class="section-number-3">2.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-2-2">
 
-<div id="org357f605" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-all_disparate-impact.png" alt="adult_barplot_prot-sex_mod-all_disparate-impact.png" />
+<div id="orgd7d5a54" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-all_disparate-impact.svg" alt="adult_barplot_prot-sex_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Disparate Impact for models</p>
 </div>
 
 
-<div id="org940ad39" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" />
+<div id="orgea946c8" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg" alt="adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org357f605">2</a>, the disparate impact
+From Figure <a href="#orgd7d5a54">2</a>, the disparate impact
 for the logisticregression model is \(<1\) which indicates that the
 unprivileged group is at a disadvantage.
 </p>
 
 <p>
-From Figure <a href="#org940ad39">3</a>, the recall for the unprivileged
+From Figure <a href="#orgea946c8">3</a>, the recall for the unprivileged
 group is lower than that of the privileged group. This indicates that
 when identifying positive examples, the model performs worse for the
 unprivileged group.
@@ -597,35 +609,35 @@ unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-orgf1805ef" class="outline-3">
-<h3 id="orgf1805ef"><span class="section-number-3">2.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org34a0b3a" class="outline-3">
+<h3 id="org34a0b3a"><span class="section-number-3">2.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-2-3">
 
-<div id="org9f5f438" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-none_disparate-impact.png" alt="adult_barplot_prot-sex_mod-none_disparate-impact.png" />
+<div id="org06e15fb" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-none_disparate-impact.svg" alt="adult_barplot_prot-sex_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Disparate Impact for data</p>
 </div>
 
 <p>
-From Figure <a href="#org9f5f438">4</a>, the disparate impact
+From Figure <a href="#org06e15fb">4</a>, the disparate impact
 across all subsets of the data is \(<1\) which indicates that the
 unprivileged group is at a disadvantage.
 </p>
 
 
-<div id="org920708a" class="figure">
-<p><img src="adult_barplot_prot-sex_base-rate.png" alt="adult_barplot_prot-sex_base-rate.png" />
+<div id="orgd8423e2" class="figure">
+<p><img src="adult_barplot_prot-sex_base-rate.svg" alt="adult_barplot_prot-sex_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Base rate</p>
 </div>
 
 <p>
-From Figure <a href="#orgc1c6fc3">12</a>:
+From Figure <a href="#orgaff9b38">12</a>:
 </p>
 
 \begin{equation}
-\label{org9bf9f52}
+\label{org5115469}
 \text{base rate for unprivileged group} = P(Y=1 | D=\text{unprivileged}) = 0.120 \\
 \implies P(Y=0 | D=\text{unprivileged}) = 1 - P(Y=1 | D=\text{unprivileged}) = 0.88
 \end{equation}
@@ -635,15 +647,15 @@ Similarly,
 </p>
 
 \begin{equation}
-\label{org831538e}
+\label{org5f39aff}
 \text{base rate for privileged group} = P(Y=1 | D=\text{privileged}) = 0.310 \\
 \implies P(Y=0 | D=\text{privileged}) = 1 - P(Y=1 | D=\text{privileged}) = 0.69
 \end{equation}
 
 <p>
 Consider that we pick a random example from the dataset each from the
-privileged &amp; unprivileged group. From Equations \eqref{org9bf9f52} &amp;
-\eqref{org831538e}, it is more likely that the example from the
+privileged &amp; unprivileged group. From Equations \eqref{org5115469} &amp;
+\eqref{org5f39aff}, it is more likely that the example from the
 unprivileged group is negative compared to the privileged group.
 </p>
 
@@ -661,18 +673,18 @@ privileged group.
 <h2 id="sec-adult-sex-dt"><span class="section-number-2">3.</span> <span class="done DONE">DONE</span> adult-sex-dt</h2>
 <div class="outline-text-2" id="text-sec-adult-sex-dt">
 </div>
-<div id="outline-container-orge7c1c19" class="outline-3">
-<h3 id="orge7c1c19"><span class="section-number-3">3.1.</span> Is the model unfair?</h3>
+<div id="outline-container-orgb4eae1b" class="outline-3">
+<h3 id="orgb4eae1b"><span class="section-number-3">3.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-3-1">
 
-<div id="org2a78204" class="figure">
-<p><img src="adult_heatmap_prot-sex_mod-dt_cm-rate.png" alt="adult_heatmap_prot-sex_mod-dt_cm-rate.png" />
+<div id="org5268983" class="figure">
+<p><img src="adult_heatmap_prot-sex_mod-dt_cm-rate.svg" alt="adult_heatmap_prot-sex_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 6: </span>CM for decisiontreeclassifier</p>
 </div>
 
 <p>
-As seen from Figure <a href="#org2a78204">6</a>, the FNs for the
+As seen from Figure <a href="#org5268983">6</a>, the FNs for the
 unprivileged group is higher than the FNs for the privileged group.
 This indicates that the model is unfair towards the unprivileged
 group. Similar bias as seen in Section <a href="#sec-adult-sex-lr">2</a>.
@@ -680,28 +692,28 @@ group. Similar bias as seen in Section <a href="#sec-adult-sex-lr">2</a>.
 </div>
 </div>
 
-<div id="outline-container-org0ccc0b9" class="outline-3">
-<h3 id="org0ccc0b9"><span class="section-number-3">3.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-orgeb1879f" class="outline-3">
+<h3 id="orgeb1879f"><span class="section-number-3">3.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-3-2">
 
-<div id="org719f66f" class="figure">
-<p><img src="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" />
+<div id="org835452d" class="figure">
+<p><img src="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg" alt="adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#org357f605">2</a>, the disparate impact
+From Figure <a href="#orgd7d5a54">2</a>, the disparate impact
 for the decisiontreeclassifier model is \(<1\) which indicates that the
 unprivileged group is at a disadvantage.
 </p>
 
 <p>
-From Figure <a href="#org719f66f">7</a>, both the precision &amp; recall for
+From Figure <a href="#org835452d">7</a>, both the precision &amp; recall for
 the unprivileged group is lower than that of the privileged group.
 This indicates that when identifying positive examples, the model
 performs worse for the unprivileged group. This is corroborated by
-Figure <a href="#org2a78204">6</a> where the model does not identify the
+Figure <a href="#org5268983">6</a> where the model does not identify the
 TPs for the unprivileged group as well as the privileged group. The
 model also has higher FNs for the unprivileged group vs. privileged
 group.
@@ -709,11 +721,11 @@ group.
 </div>
 </div>
 
-<div id="outline-container-org99acc7e" class="outline-3">
-<h3 id="org99acc7e"><span class="section-number-3">3.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-orgb5690a2" class="outline-3">
+<h3 id="orgb5690a2"><span class="section-number-3">3.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-From Figure <a href="#org9f5f438">4</a>, the disparate impact
+From Figure <a href="#org06e15fb">4</a>, the disparate impact
 across all subsets of the data is \(<1\) which indicates that the
 unprivileged group is at a disadvantage.
 </p>
@@ -730,18 +742,18 @@ Similar explaination for precision-recall as Section <a href="#sec-adult-sex-lr"
 <div class="outline-text-2" id="text-sec-adult-race-lr">
 </div>
 
-<div id="outline-container-orgb51e024" class="outline-3">
-<h3 id="orgb51e024"><span class="section-number-3">4.1.</span> Is the model unfair?</h3>
+<div id="outline-container-orgc29aa01" class="outline-3">
+<h3 id="orgc29aa01"><span class="section-number-3">4.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-4-1">
 
-<div id="orgb15de34" class="figure">
-<p><img src="adult_heatmap_prot-race_mod-lr_cm-rate.png" alt="adult_heatmap_prot-race_mod-lr_cm-rate.png" />
+<div id="orgcc48296" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-lr_cm-rate.svg" alt="adult_heatmap_prot-race_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 8: </span>CM for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#orgb15de34">8</a>, the model is biased to the
+From Figure <a href="#orgcc48296">8</a>, the model is biased to the
 negative class. This bias is more in the case of unprivileged group
 vs. privileged group, similar to what we see in Section
 <a href="#sec-adult-sex-lr">2</a>.
@@ -749,55 +761,55 @@ vs. privileged group, similar to what we see in Section
 </div>
 </div>
 
-<div id="outline-container-org7970e78" class="outline-3">
-<h3 id="org7970e78"><span class="section-number-3">4.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org29dbab3" class="outline-3">
+<h3 id="org29dbab3"><span class="section-number-3">4.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-4-2">
 
-<div id="org8232124" class="figure">
-<p><img src="adult_barplot_prot-race_mod-all_disparate-impact.png" alt="adult_barplot_prot-race_mod-all_disparate-impact.png" />
+<div id="org2802721" class="figure">
+<p><img src="adult_barplot_prot-race_mod-all_disparate-impact.svg" alt="adult_barplot_prot-race_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Disparate Impact for models</p>
 </div>
 
 <p>
-From Figure <a href="#org8232124">9</a>, the disparate impact
+From Figure <a href="#org2802721">9</a>, the disparate impact
 is \(<1\) indicating the unprivileged group is at a disadvantage.
 </p>
 
 
-<div id="org75e0c74" class="figure">
-<p><img src="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" />
+<div id="org5a80925" class="figure">
+<p><img src="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg" alt="adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 10: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From figure <a href="#org75e0c74">10</a>, the precision and recall for
+From figure <a href="#org5a80925">10</a>, the precision and recall for
 the unprivileged group is lower than the privileged group. This is
 explainable using the same logic seen in Section <a href="#sec-adult-sex-lr">2</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orga9362a8" class="outline-3">
-<h3 id="orga9362a8"><span class="section-number-3">4.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org6aa0cca" class="outline-3">
+<h3 id="org6aa0cca"><span class="section-number-3">4.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-4-3">
 
-<div id="orgf2e6983" class="figure">
-<p><img src="adult_barplot_prot-race_mod-none_disparate-impact.png" alt="adult_barplot_prot-race_mod-none_disparate-impact.png" />
+<div id="org1646816" class="figure">
+<p><img src="adult_barplot_prot-race_mod-none_disparate-impact.svg" alt="adult_barplot_prot-race_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 11: </span>Disparate Impact for data</p>
 </div>
 
 <p>
-From Figure <a href="#orgf2e6983">11</a>, the disparate impact
+From Figure <a href="#org1646816">11</a>, the disparate impact
 across all subsets is \(<1\) indicating that the unprivileged group is
 at a disadvantage.
 </p>
 
 
-<div id="orgc1c6fc3" class="figure">
-<p><img src="adult_barplot_prot-race_base-rate.png" alt="adult_barplot_prot-race_base-rate.png" />
+<div id="orgaff9b38" class="figure">
+<p><img src="adult_barplot_prot-race_base-rate.svg" alt="adult_barplot_prot-race_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 12: </span>Base rate</p>
 </div>
@@ -814,12 +826,12 @@ Similar explaination for precision-recall as <a href="#sec-adult-sex-lr">2</a>
 <div class="outline-text-2" id="text-sec-adult-race-dt">
 </div>
 
-<div id="outline-container-orge9419ae" class="outline-3">
-<h3 id="orge9419ae"><span class="section-number-3">5.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org7a3ffa0" class="outline-3">
+<h3 id="org7a3ffa0"><span class="section-number-3">5.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-5-1">
 
-<div id="org1a68ddb" class="figure">
-<p><img src="adult_heatmap_prot-race_mod-dt_cm-rate.png" alt="adult_heatmap_prot-race_mod-dt_cm-rate.png" />
+<div id="org9a4f64b" class="figure">
+<p><img src="adult_heatmap_prot-race_mod-dt_cm-rate.svg" alt="adult_heatmap_prot-race_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 13: </span>CM for decisiontreeclassifier</p>
 </div>
@@ -831,20 +843,20 @@ for both privileged &amp; unprivileged groups.
 </div>
 </div>
 
-<div id="outline-container-org112e7fd" class="outline-3">
-<h3 id="org112e7fd"><span class="section-number-3">5.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org68bb0cc" class="outline-3">
+<h3 id="org68bb0cc"><span class="section-number-3">5.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
-From Figure <a href="#org8232124">9</a>, the disparate impact
+From Figure <a href="#org2802721">9</a>, the disparate impact
 is \(<1\) but higher than the logisticregression model. This indicates
 that the decisiontreeclassifier is fairer compared to the
 logisticregression. This is corroborated by the confusion matrix as
-seen in Figure <a href="#org1a68ddb">13</a>.
+seen in Figure <a href="#org9a4f64b">13</a>.
 </p>
 
 
-<div id="org7321b6b" class="figure">
-<p><img src="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" alt="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" />
+<div id="org094dc0e" class="figure">
+<p><img src="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg" alt="adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 14: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
@@ -862,8 +874,8 @@ groups so precision should be similar as well?</li>
 </div>
 </div>
 
-<div id="outline-container-org8acdf66" class="outline-3">
-<h3 id="org8acdf66"><span class="section-number-3">5.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org9b83c72" class="outline-3">
+<h3 id="org9b83c72"><span class="section-number-3">5.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 In this case, the data metrics indicate that the unprivileged group
@@ -879,18 +891,18 @@ this bias.
 <div class="outline-text-2" id="text-sec-compas-sex-lr">
 </div>
 
-<div id="outline-container-org61d8333" class="outline-3">
-<h3 id="org61d8333"><span class="section-number-3">6.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org01805c2" class="outline-3">
+<h3 id="org01805c2"><span class="section-number-3">6.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-6-1">
 
-<div id="org1738465" class="figure">
-<p><img src="compas_heatmap_prot-sex_mod-lr_cm-rate.png" alt="compas_heatmap_prot-sex_mod-lr_cm-rate.png" />
+<div id="org593702e" class="figure">
+<p><img src="compas_heatmap_prot-sex_mod-lr_cm-rate.svg" alt="compas_heatmap_prot-sex_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 15: </span>CM for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org1738465">15</a>, the model is biased to the
+From Figure <a href="#org593702e">15</a>, the model is biased to the
 positive class as the FPR is high. The FPR for the privileged group is
 higher than the unprivileged group. This means that the privileged
 group is at an advantage as the model is more likely to classify an
@@ -899,31 +911,31 @@ example from the privileged group as positive.
 </div>
 </div>
 
-<div id="outline-container-org58d506c" class="outline-3">
-<h3 id="org58d506c"><span class="section-number-3">6.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org6f83201" class="outline-3">
+<h3 id="org6f83201"><span class="section-number-3">6.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-6-2">
 
-<div id="orgd2de56e" class="figure">
-<p><img src="compas_barplot_prot-sex_mod-all_disparate-impact.png" alt="compas_barplot_prot-sex_mod-all_disparate-impact.png" />
+<div id="org996de08" class="figure">
+<p><img src="compas_barplot_prot-sex_mod-all_disparate-impact.svg" alt="compas_barplot_prot-sex_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 16: </span>Disparate Impact for models</p>
 </div>
 
 
-<div id="org45a0af2" class="figure">
-<p><img src="compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" alt="compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" />
+<div id="orgc3d7a63" class="figure">
+<p><img src="compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg" alt="compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 17: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#orgd2de56e">16</a>, the disparate impact
+From Figure <a href="#org996de08">16</a>, the disparate impact
 for the logisticregression model is \(<1\) which indicates that the
 unprivileged group is at a disadvantage.
 </p>
 
 <p>
-From Figure <a href="#org45a0af2">17</a>, the precision &amp; recall for the
+From Figure <a href="#orgc3d7a63">17</a>, the precision &amp; recall for the
 unprivileged group is lower than that of the privileged group. This
 indicates that when identifying positive examples, the model performs
 worse for the unprivileged group.
@@ -931,18 +943,18 @@ worse for the unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-org578f2fb" class="outline-3">
-<h3 id="org578f2fb"><span class="section-number-3">6.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-orga658d1d" class="outline-3">
+<h3 id="orga658d1d"><span class="section-number-3">6.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-6-3">
 
-<div id="org6002217" class="figure">
-<p><img src="compas_barplot_prot-sex_mod-none_disparate-impact.png" alt="compas_barplot_prot-sex_mod-none_disparate-impact.png" />
+<div id="orgecf34a3" class="figure">
+<p><img src="compas_barplot_prot-sex_mod-none_disparate-impact.svg" alt="compas_barplot_prot-sex_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 18: </span>Disparate Impact for data</p>
 </div>
 
 <p>
-From Figure <a href="#org6002217">18</a>, the disparate impact
+From Figure <a href="#orgecf34a3">18</a>, the disparate impact
 across all subsets of the data is \(<1\) which indicates that the
 unprivileged group is at a disadvantage.
 </p>
@@ -953,8 +965,8 @@ unprivileged group is at a disadvantage.
 </ul>
 
 
-<div id="org5808a0d" class="figure">
-<p><img src="compas_barplot_prot-sex_base-rate.png" alt="compas_barplot_prot-sex_base-rate.png" />
+<div id="org3954cc2" class="figure">
+<p><img src="compas_barplot_prot-sex_base-rate.svg" alt="compas_barplot_prot-sex_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 19: </span>Base rate</p>
 </div>
@@ -972,18 +984,18 @@ Similar explaination for precision-recall as Section
 <div class="outline-text-2" id="text-sec-compas-sex-dt">
 </div>
 
-<div id="outline-container-orgc8ade9c" class="outline-3">
-<h3 id="orgc8ade9c"><span class="section-number-3">7.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org16d56f8" class="outline-3">
+<h3 id="org16d56f8"><span class="section-number-3">7.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-7-1">
 
-<div id="org2e5c31c" class="figure">
-<p><img src="compas_heatmap_prot-sex_mod-dt_cm-rate.png" alt="compas_heatmap_prot-sex_mod-dt_cm-rate.png" />
+<div id="orgd99c167" class="figure">
+<p><img src="compas_heatmap_prot-sex_mod-dt_cm-rate.svg" alt="compas_heatmap_prot-sex_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 20: </span>CM for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#org2e5c31c">20</a>, the model is biased to the
+From Figure <a href="#orgd99c167">20</a>, the model is biased to the
 positive class as the FPR is high. The FPR for the privileged group is
 higher than the unprivileged group albeit this bias is lesser compared
 to the logisticregression model seen in Section <a href="#sec-compas-sex-lr">6</a>.
@@ -997,18 +1009,18 @@ classes in the unprivileged group (the FPR &amp; FNR are similar).
 </div>
 </div>
 
-<div id="outline-container-orgb47e8ac" class="outline-3">
-<h3 id="orgb47e8ac"><span class="section-number-3">7.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-orge31581f" class="outline-3">
+<h3 id="orge31581f"><span class="section-number-3">7.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-7-2">
 
-<div id="org23f6bdd" class="figure">
-<p><img src="compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" alt="compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" />
+<div id="orgc374c3e" class="figure">
+<p><img src="compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg" alt="compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 21: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#orgd2de56e">16</a>, the disparate impact
+From Figure <a href="#org996de08">16</a>, the disparate impact
 for the decisiontreeclassifier model is \(<1\) but higher than
 logisticregression. This indicates that the unprivileged group is at a
 disadvantage but the decisiontreeclassifier is fairer than
@@ -1016,7 +1028,7 @@ logisticregression.
 </p>
 
 <p>
-From Figure <a href="#org23f6bdd">21</a>, the precision &amp; recall for the
+From Figure <a href="#orgc374c3e">21</a>, the precision &amp; recall for the
 unprivileged group is lower than that of the privileged group. This
 indicates that when identifying positive examples, the model performs
 worse for the unprivileged group.
@@ -1024,8 +1036,8 @@ worse for the unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-org15a81c0" class="outline-3">
-<h3 id="org15a81c0"><span class="section-number-3">7.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org329adf1" class="outline-3">
+<h3 id="org329adf1"><span class="section-number-3">7.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-7-3">
 <p>
 Similar explaination as Section <a href="#sec-compas-sex-lr">6</a>.
@@ -1039,12 +1051,12 @@ Similar explaination as Section <a href="#sec-compas-sex-lr">6</a>.
 <div class="outline-text-2" id="text-sec-compas-race-lr">
 </div>
 
-<div id="outline-container-org9825a34" class="outline-3">
-<h3 id="org9825a34"><span class="section-number-3">8.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org0bbe53f" class="outline-3">
+<h3 id="org0bbe53f"><span class="section-number-3">8.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-8-1">
 
-<div id="org09c2cbe" class="figure">
-<p><img src="compas_heatmap_prot-race_mod-lr_cm-rate.png" alt="compas_heatmap_prot-race_mod-lr_cm-rate.png" />
+<div id="orgfa2b8f8" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-lr_cm-rate.svg" alt="compas_heatmap_prot-race_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 22: </span>CM for logisticregression</p>
 </div>
@@ -1055,31 +1067,31 @@ Similar bias as seen in Section <a href="#sec-compas-sex-lr">6</a>.
 </div>
 </div>
 
-<div id="outline-container-org526cca3" class="outline-3">
-<h3 id="org526cca3"><span class="section-number-3">8.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org06f0a8f" class="outline-3">
+<h3 id="org06f0a8f"><span class="section-number-3">8.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-8-2">
 
-<div id="orgc9d541f" class="figure">
-<p><img src="compas_barplot_prot-race_mod-all_disparate-impact.png" alt="compas_barplot_prot-race_mod-all_disparate-impact.png" />
+<div id="orgda0159b" class="figure">
+<p><img src="compas_barplot_prot-race_mod-all_disparate-impact.svg" alt="compas_barplot_prot-race_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 23: </span>Disparate Impact for models</p>
 </div>
 
 
-<div id="org3f17d26" class="figure">
-<p><img src="compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" alt="compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.png" />
+<div id="orge52d9ef" class="figure">
+<p><img src="compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg" alt="compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 24: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#orgc9d541f">23</a>, the disparate impact
+From Figure <a href="#orgda0159b">23</a>, the disparate impact
 for the model is \(<1\) which indicates that the unprivileged group is
 at a disadvantage.
 </p>
 
 <p>
-From Figure <a href="#org3f17d26">24</a>, the precision &amp; recall for the
+From Figure <a href="#orge52d9ef">24</a>, the precision &amp; recall for the
 unprivileged group is lower than the privileged group. This indicates
 that the model cannot identify the positive class for the unprivileged
 group as well as the privileged group.
@@ -1087,12 +1099,12 @@ group as well as the privileged group.
 </div>
 </div>
 
-<div id="outline-container-orgdfefec3" class="outline-3">
-<h3 id="orgdfefec3"><span class="section-number-3">8.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org33eeb3b" class="outline-3">
+<h3 id="org33eeb3b"><span class="section-number-3">8.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-8-3">
 
-<div id="org71567ea" class="figure">
-<p><img src="compas_barplot_prot-race_mod-none_disparate-impact.png" alt="compas_barplot_prot-race_mod-none_disparate-impact.png" />
+<div id="org0b01789" class="figure">
+<p><img src="compas_barplot_prot-race_mod-none_disparate-impact.svg" alt="compas_barplot_prot-race_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 25: </span>Disparate Impact for data</p>
 </div>
@@ -1103,8 +1115,8 @@ the acceptable range of \([0.8, 1.1]\).
 </p>
 
 
-<div id="org3492aca" class="figure">
-<p><img src="compas_barplot_prot-race_base-rate.png" alt="compas_barplot_prot-race_base-rate.png" />
+<div id="org5c404b8" class="figure">
+<p><img src="compas_barplot_prot-race_base-rate.svg" alt="compas_barplot_prot-race_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 26: </span>Base rate</p>
 </div>
@@ -1122,18 +1134,18 @@ Similar explaination for precision-recall as Section
 <div class="outline-text-2" id="text-sec-compas-race-dt">
 </div>
 
-<div id="outline-container-org30fe191" class="outline-3">
-<h3 id="org30fe191"><span class="section-number-3">9.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org097ada1" class="outline-3">
+<h3 id="org097ada1"><span class="section-number-3">9.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-9-1">
 
-<div id="orgef0b0c7" class="figure">
-<p><img src="compas_heatmap_prot-race_mod-dt_cm-rate.png" alt="compas_heatmap_prot-race_mod-dt_cm-rate.png" />
+<div id="orgc6ae6a5" class="figure">
+<p><img src="compas_heatmap_prot-race_mod-dt_cm-rate.svg" alt="compas_heatmap_prot-race_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 27: </span>CM for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#orgef0b0c7">27</a>, the model as similar bias
+From Figure <a href="#orgc6ae6a5">27</a>, the model as similar bias
 towards the positive class as we have seen so far for this dataset.
 Similar to what we saw in Section <a href="#sec-compas-sex-dt">7</a>, the
 decisiontreeclassifier struggles to identify both the positive &amp;
@@ -1142,18 +1154,18 @@ negative class for the unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-orgc7ecbe8" class="outline-3">
-<h3 id="orgc7ecbe8"><span class="section-number-3">9.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org1bc7ada" class="outline-3">
+<h3 id="org1bc7ada"><span class="section-number-3">9.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-9-2">
 
-<div id="org6baf01d" class="figure">
-<p><img src="compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" alt="compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.png" />
+<div id="org65bf281" class="figure">
+<p><img src="compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg" alt="compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 28: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#orgc9d541f">23</a>, the disparate impact
+From Figure <a href="#orgda0159b">23</a>, the disparate impact
 for the decisiontreeclassifier model is \(<1\) but higher than
 logisticregression (and within the acceptable range). This indicates
 that the unprivileged group is at a disadvantage but the
@@ -1161,7 +1173,7 @@ decisiontreeclassifier is fairer than logisticregression.
 </p>
 
 <p>
-From Figure <a href="#org6baf01d">28</a>, the precision &amp; recall for the
+From Figure <a href="#org65bf281">28</a>, the precision &amp; recall for the
 unprivileged group is lower than that of the privileged group. This
 indicates that when identifying positive examples, the model performs
 worse for the unprivileged group.
@@ -1169,8 +1181,8 @@ worse for the unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-orgd0e0d50" class="outline-3">
-<h3 id="orgd0e0d50"><span class="section-number-3">9.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-orgfce7b9e" class="outline-3">
+<h3 id="orgfce7b9e"><span class="section-number-3">9.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-9-3">
 <p>
 Similar explaination as Section <a href="#sec-compas-race-lr">8</a>.
@@ -1184,18 +1196,18 @@ Similar explaination as Section <a href="#sec-compas-race-lr">8</a>.
 <div class="outline-text-2" id="text-sec-bank-age-lr">
 </div>
 
-<div id="outline-container-org221c41e" class="outline-3">
-<h3 id="org221c41e"><span class="section-number-3">10.1.</span> Is the model unfair?</h3>
+<div id="outline-container-orgf3368cc" class="outline-3">
+<h3 id="orgf3368cc"><span class="section-number-3">10.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-10-1">
 
-<div id="org35a7496" class="figure">
-<p><img src="bank_heatmap_prot-age_mod-lr_cm-rate.png" alt="bank_heatmap_prot-age_mod-lr_cm-rate.png" />
+<div id="org11cef8e" class="figure">
+<p><img src="bank_heatmap_prot-age_mod-lr_cm-rate.svg" alt="bank_heatmap_prot-age_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 29: </span>CM for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org35a7496">29</a>, the model is biased to the
+From Figure <a href="#org11cef8e">29</a>, the model is biased to the
 negative class. The model is more biased to the negative class for the
 privileged group as the FNR for the privileged group is higher than
 the unprivileged group.
@@ -1203,30 +1215,30 @@ the unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-org898ca4d" class="outline-3">
-<h3 id="org898ca4d"><span class="section-number-3">10.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-orgd5a75e1" class="outline-3">
+<h3 id="orgd5a75e1"><span class="section-number-3">10.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-10-2">
 
-<div id="org83beb2f" class="figure">
-<p><img src="bank_barplot_prot-age_mod-all_disparate-impact.png" alt="bank_barplot_prot-age_mod-all_disparate-impact.png" />
+<div id="orgbbd0c45" class="figure">
+<p><img src="bank_barplot_prot-age_mod-all_disparate-impact.svg" alt="bank_barplot_prot-age_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 30: </span>Disparate Impact for models</p>
 </div>
 
 <p>
-From Figure <a href="#org83beb2f">30</a> is \(>1\) indicating that
+From Figure <a href="#orgbbd0c45">30</a> is \(>1\) indicating that
 the unprivileged group are at an advantage.
 </p>
 
 
-<div id="orgc043889" class="figure">
-<p><img src="bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.png" alt="bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.png" />
+<div id="orge484cde" class="figure">
+<p><img src="bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.svg" alt="bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 31: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#orgc043889">31</a>, the precision &amp; recall for the
+From Figure <a href="#orge484cde">31</a>, the precision &amp; recall for the
 unprivileged group is higher than the privileged group indicating that
 the model is better at predicting the positive class for the
 unprivileged group vs. the privileged group.
@@ -1234,31 +1246,31 @@ unprivileged group vs. the privileged group.
 </div>
 </div>
 
-<div id="outline-container-orgc6ac0d4" class="outline-3">
-<h3 id="orgc6ac0d4"><span class="section-number-3">10.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org4d80c01" class="outline-3">
+<h3 id="org4d80c01"><span class="section-number-3">10.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-10-3">
 
-<div id="org75c0c62" class="figure">
-<p><img src="bank_barplot_prot-age_mod-none_disparate-impact.png" alt="bank_barplot_prot-age_mod-none_disparate-impact.png" />
+<div id="orgd8eb86c" class="figure">
+<p><img src="bank_barplot_prot-age_mod-none_disparate-impact.svg" alt="bank_barplot_prot-age_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 32: </span>Disparate Impact for data</p>
 </div>
 
 <p>
-From Figure <a href="#org75c0c62">32</a>, the disparate impact
+From Figure <a href="#orgd8eb86c">32</a>, the disparate impact
 across the subsets is \(>1\) indicating that the unprivileged group are
 at an advantage.
 </p>
 
 
-<div id="orga29eea2" class="figure">
-<p><img src="bank_barplot_prot-age_base-rate.png" alt="bank_barplot_prot-age_base-rate.png" />
+<div id="org100a10f" class="figure">
+<p><img src="bank_barplot_prot-age_base-rate.svg" alt="bank_barplot_prot-age_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 33: </span>Base rate</p>
 </div>
 
 <p>
-From <a href="#orga29eea2">33</a>, the base rate for the unprivileged group
+From <a href="#org100a10f">33</a>, the base rate for the unprivileged group
 is higher than the privileged group.
 </p>
 
@@ -1276,12 +1288,12 @@ positive vs. the privileged example.
 <div class="outline-text-2" id="text-sec-bank-age-dt">
 </div>
 
-<div id="outline-container-orgcd4019f" class="outline-3">
-<h3 id="orgcd4019f"><span class="section-number-3">11.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org9565cf7" class="outline-3">
+<h3 id="org9565cf7"><span class="section-number-3">11.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-11-1">
 
-<div id="org4510802" class="figure">
-<p><img src="bank_heatmap_prot-age_mod-dt_cm-rate.png" alt="bank_heatmap_prot-age_mod-dt_cm-rate.png" />
+<div id="orge000e30" class="figure">
+<p><img src="bank_heatmap_prot-age_mod-dt_cm-rate.svg" alt="bank_heatmap_prot-age_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 34: </span>CM for decisiontreeclassifier</p>
 </div>
@@ -1292,18 +1304,18 @@ Similar bias as seen in Section <a href="#sec-bank-age-lr">10</a>.
 </div>
 </div>
 
-<div id="outline-container-orgb04bab1" class="outline-3">
-<h3 id="orgb04bab1"><span class="section-number-3">11.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-orgfd66bc5" class="outline-3">
+<h3 id="orgfd66bc5"><span class="section-number-3">11.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-11-2">
 
-<div id="org839323d" class="figure">
-<p><img src="bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.png" alt="bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.png" />
+<div id="org1be8f64" class="figure">
+<p><img src="bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.svg" alt="bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 35: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#org83beb2f">30</a>, the disparate impact
+From Figure <a href="#orgbbd0c45">30</a>, the disparate impact
 for the decisiontreeclassifier is \(>1\) indicating that the
 unprivileged group is at an advantage.
 </p>
@@ -1316,7 +1328,7 @@ logisticregression.
 </p>
 
 <p>
-From Figure <a href="#org839323d">35</a>, the precision &amp; recall for the
+From Figure <a href="#org1be8f64">35</a>, the precision &amp; recall for the
 unprivileged group is higher than the privileged group. This indicates
 that the model is better at identifying the unprivileged prositive
 examples.
@@ -1324,8 +1336,8 @@ examples.
 </div>
 </div>
 
-<div id="outline-container-org28e92c7" class="outline-3">
-<h3 id="org28e92c7"><span class="section-number-3">11.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-orgd678324" class="outline-3">
+<h3 id="orgd678324"><span class="section-number-3">11.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-11-3">
 <p>
 Similar explaination as Section <a href="#sec-bank-age-lr">10</a>.
@@ -1339,18 +1351,18 @@ Similar explaination as Section <a href="#sec-bank-age-lr">10</a>.
 <div class="outline-text-2" id="text-sec-german-sex-lr">
 </div>
 
-<div id="outline-container-orgbfaa11a" class="outline-3">
-<h3 id="orgbfaa11a"><span class="section-number-3">12.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org76bafa7" class="outline-3">
+<h3 id="org76bafa7"><span class="section-number-3">12.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-12-1">
 
-<div id="org4f41d43" class="figure">
-<p><img src="german_heatmap_prot-sex_mod-lr_cm-rate.png" alt="german_heatmap_prot-sex_mod-lr_cm-rate.png" />
+<div id="org13a88e0" class="figure">
+<p><img src="german_heatmap_prot-sex_mod-lr_cm-rate.svg" alt="german_heatmap_prot-sex_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 36: </span>CM for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org4f41d43">36</a>, the model is biased to the
+From Figure <a href="#org13a88e0">36</a>, the model is biased to the
 positive class. The FPR for the privileged group is higher than that
 of the unprivileged group. This means that given an example from the
 privileged group, the model is more likely to classify it as
@@ -1359,31 +1371,31 @@ positive.
 </div>
 </div>
 
-<div id="outline-container-org1aff627" class="outline-3">
-<h3 id="org1aff627"><span class="section-number-3">12.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org469bcfe" class="outline-3">
+<h3 id="org469bcfe"><span class="section-number-3">12.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-12-2">
 
-<div id="org1c899c4" class="figure">
-<p><img src="german_barplot_prot-sex_mod-all_disparate-impact.png" alt="german_barplot_prot-sex_mod-all_disparate-impact.png" />
+<div id="orgd405198" class="figure">
+<p><img src="german_barplot_prot-sex_mod-all_disparate-impact.svg" alt="german_barplot_prot-sex_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 37: </span>Disparate Impact for models</p>
 </div>
 
 <p>
-From Figure <a href="#org1c899c4">37</a>, the disparate impact
+From Figure <a href="#orgd405198">37</a>, the disparate impact
 for the model is \(<1\) indicating that the unprivileged group is at a
 disadvantage.
 </p>
 
 
-<div id="org953bd4e" class="figure">
-<p><img src="german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" alt="german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png" />
+<div id="org790936f" class="figure">
+<p><img src="german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg" alt="german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 38: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org953bd4e">38</a>, the recall for the privileged
+From Figure <a href="#org790936f">38</a>, the recall for the privileged
 group is higher than the unprivileged group. This indicates that the
 model is better at identifying the privileged positive examples.
 </p>
@@ -1397,32 +1409,32 @@ FPs vs. unprivileged group.
 </div>
 </div>
 
-<div id="outline-container-orgc28115b" class="outline-3">
-<h3 id="orgc28115b"><span class="section-number-3">12.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org588d050" class="outline-3">
+<h3 id="org588d050"><span class="section-number-3">12.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-12-3">
 
-<div id="org63d18dc" class="figure">
-<p><img src="german_barplot_prot-sex_mod-none_disparate-impact.png" alt="german_barplot_prot-sex_mod-none_disparate-impact.png" />
+<div id="org978213b" class="figure">
+<p><img src="german_barplot_prot-sex_mod-none_disparate-impact.svg" alt="german_barplot_prot-sex_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 39: </span>Disparate Impact for data</p>
 </div>
 
 <p>
-From Figure <a href="#org63d18dc">39</a>, the disparate impact
+From Figure <a href="#org978213b">39</a>, the disparate impact
 across the subsets is very close to 1 indicating that the dataset does
 not contain any fairness issues. This is not in line with our
 observations so far.
 </p>
 
 
-<div id="orgc7d25b2" class="figure">
-<p><img src="german_barplot_prot-sex_base-rate.png" alt="german_barplot_prot-sex_base-rate.png" />
+<div id="org93eabf4" class="figure">
+<p><img src="german_barplot_prot-sex_base-rate.svg" alt="german_barplot_prot-sex_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 40: </span>Base rate</p>
 </div>
 
 <p>
-From Figure <a href="#orgc7d25b2">40</a>, the base rate for the privileged
+From Figure <a href="#org93eabf4">40</a>, the base rate for the privileged
 &amp; unprivileged groups are similar. Again, this does not explain our
 observations from the model metrics.
 </p>
@@ -1435,18 +1447,18 @@ observations from the model metrics.
 <div class="outline-text-2" id="text-sec-german-sex-dt">
 </div>
 
-<div id="outline-container-orgca28c11" class="outline-3">
-<h3 id="orgca28c11"><span class="section-number-3">13.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org6b462de" class="outline-3">
+<h3 id="org6b462de"><span class="section-number-3">13.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-13-1">
 
-<div id="orgc7e5715" class="figure">
-<p><img src="german_heatmap_prot-sex_mod-dt_cm-rate.png" alt="german_heatmap_prot-sex_mod-dt_cm-rate.png" />
+<div id="org3e4837c" class="figure">
+<p><img src="german_heatmap_prot-sex_mod-dt_cm-rate.svg" alt="german_heatmap_prot-sex_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 41: </span>CM for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#orgc7e5715">41</a>, the model is biased to the
+From Figure <a href="#org3e4837c">41</a>, the model is biased to the
 positive class however there is no discernable bias fairness issue.
 The bias towards the positive class is the same in both privileged &amp;
 unprivileged groups.
@@ -1454,38 +1466,38 @@ unprivileged groups.
 </div>
 </div>
 
-<div id="outline-container-orgd0c6ba2" class="outline-3">
-<h3 id="orgd0c6ba2"><span class="section-number-3">13.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org5792608" class="outline-3">
+<h3 id="org5792608"><span class="section-number-3">13.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-13-2">
 
-<div id="org4eb07d6" class="figure">
-<p><img src="german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" alt="german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png" />
+<div id="orgc109720" class="figure">
+<p><img src="german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg" alt="german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 42: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#org1c899c4">37</a>, the disparate impact
+From Figure <a href="#orgd405198">37</a>, the disparate impact
 for the logisticregression is 1 which indicates that the model is fair.
 </p>
 
 <p>
-From Figure <a href="#org4eb07d6">42</a>, the precision &amp; recall for the
+From Figure <a href="#orgc109720">42</a>, the precision &amp; recall for the
 privileged &amp; unprivileged groups are similar.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org7eef552" class="outline-3">
-<h3 id="org7eef552"><span class="section-number-3">13.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org47ddc1d" class="outline-3">
+<h3 id="org47ddc1d"><span class="section-number-3">13.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-13-3">
 <p>
-From Figure <a href="#org63d18dc">39</a>, the disparate impact
+From Figure <a href="#org978213b">39</a>, the disparate impact
 across subsets is close to 1.
 </p>
 
 <p>
-From Figure <a href="#orgc7d25b2">40</a>, the base rate for the privileged
+From Figure <a href="#org93eabf4">40</a>, the base rate for the privileged
 &amp; unprivileged groups are similar.
 </p>
 </div>
@@ -1497,78 +1509,78 @@ From Figure <a href="#orgc7d25b2">40</a>, the base rate for the privileged
 <div class="outline-text-2" id="text-sec-german-age-lr">
 </div>
 
-<div id="outline-container-orgd5df5bf" class="outline-3">
-<h3 id="orgd5df5bf"><span class="section-number-3">14.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org189045c" class="outline-3">
+<h3 id="org189045c"><span class="section-number-3">14.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-14-1">
 
-<div id="org35d9808" class="figure">
-<p><img src="german_heatmap_prot-age_mod-lr_cm-rate.png" alt="german_heatmap_prot-age_mod-lr_cm-rate.png" />
+<div id="orgf07079e" class="figure">
+<p><img src="german_heatmap_prot-age_mod-lr_cm-rate.svg" alt="german_heatmap_prot-age_mod-lr_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 43: </span>CM for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org35d9808">43</a>, the model is more biased to the
+From Figure <a href="#orgf07079e">43</a>, the model is more biased to the
 positive class for the privileged vs. unprivileged group. The bias is
 not as obvious as observed in Section <a href="#sec-german-sex-lr">12</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org77c76c6" class="outline-3">
-<h3 id="org77c76c6"><span class="section-number-3">14.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org23a3029" class="outline-3">
+<h3 id="org23a3029"><span class="section-number-3">14.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-14-2">
 
-<div id="orgfd9a39a" class="figure">
-<p><img src="german_barplot_prot-age_mod-all_disparate-impact.png" alt="german_barplot_prot-age_mod-all_disparate-impact.png" />
+<div id="org212af49" class="figure">
+<p><img src="german_barplot_prot-age_mod-all_disparate-impact.svg" alt="german_barplot_prot-age_mod-all_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 44: </span>Disparate Impact for models</p>
 </div>
 
 <p>
-From Figure <a href="#orgfd9a39a">44</a>, the disparate impact
+From Figure <a href="#org212af49">44</a>, the disparate impact
 is \(<1\) indicating the unprivileged group is at a disadvantage.
 </p>
 
 
-<div id="org3b206c7" class="figure">
-<p><img src="german_barplot_prot-age_mod-lr_acc-pre-rec-f1.png" alt="german_barplot_prot-age_mod-lr_acc-pre-rec-f1.png" />
+<div id="org5d73270" class="figure">
+<p><img src="german_barplot_prot-age_mod-lr_acc-pre-rec-f1.svg" alt="german_barplot_prot-age_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 45: </span>Precision-recall for logisticregression</p>
 </div>
 
 <p>
-From Figure <a href="#org3b206c7">45</a>, the precision &amp; recall for the
+From Figure <a href="#org5d73270">45</a>, the precision &amp; recall for the
 unprivileged group is lower than the privileged group indicating the
 model is better at identifying privileged positive examples.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgd604e19" class="outline-3">
-<h3 id="orgd604e19"><span class="section-number-3">14.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org88d11e0" class="outline-3">
+<h3 id="org88d11e0"><span class="section-number-3">14.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-14-3">
 
-<div id="org30b8c7f" class="figure">
-<p><img src="german_barplot_prot-age_mod-none_disparate-impact.png" alt="german_barplot_prot-age_mod-none_disparate-impact.png" />
+<div id="org8c6e66a" class="figure">
+<p><img src="german_barplot_prot-age_mod-none_disparate-impact.svg" alt="german_barplot_prot-age_mod-none_disparate-impact.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 46: </span>Disparate Impact for data</p>
 </div>
 
 <p>
-From Figure <a href="#org30b8c7f">46</a>, the disparate impact
+From Figure <a href="#org8c6e66a">46</a>, the disparate impact
 is \(<1\) indicating the unprivileged group is at a disadvantage.
 </p>
 
 
-<div id="orgbb04047" class="figure">
-<p><img src="german_barplot_prot-age_base-rate.png" alt="german_barplot_prot-age_base-rate.png" />
+<div id="org372f3f2" class="figure">
+<p><img src="german_barplot_prot-age_base-rate.svg" alt="german_barplot_prot-age_base-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 47: </span>Base rate</p>
 </div>
 
 <p>
-From <a href="#orgbb04047">47</a>, the base rate for the privileged group
+From <a href="#org372f3f2">47</a>, the base rate for the privileged group
 is higher than the unprivileged group.
 </p>
 
@@ -1586,18 +1598,18 @@ positive vs. the unprivileged example.
 <div class="outline-text-2" id="text-sec-german-age-dt">
 </div>
 
-<div id="outline-container-org0f7e3e5" class="outline-3">
-<h3 id="org0f7e3e5"><span class="section-number-3">15.1.</span> Is the model unfair?</h3>
+<div id="outline-container-org02368f1" class="outline-3">
+<h3 id="org02368f1"><span class="section-number-3">15.1.</span> Is the model unfair?</h3>
 <div class="outline-text-3" id="text-15-1">
 
-<div id="org757e7ff" class="figure">
-<p><img src="german_heatmap_prot-age_mod-dt_cm-rate.png" alt="german_heatmap_prot-age_mod-dt_cm-rate.png" />
+<div id="org6962c64" class="figure">
+<p><img src="german_heatmap_prot-age_mod-dt_cm-rate.svg" alt="german_heatmap_prot-age_mod-dt_cm-rate.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 48: </span>CM for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#org757e7ff">48</a>, the model has a higher FPR for
+From Figure <a href="#org6962c64">48</a>, the model has a higher FPR for
 the unprivileged vs. privileged group. Although the FNR for the
 unprivileged group is also higher vs. the privileged group.
 </p>
@@ -1609,24 +1621,24 @@ of fairness issue clearly</li>
 </div>
 </div>
 
-<div id="outline-container-org208e199" class="outline-3">
-<h3 id="org208e199"><span class="section-number-3">15.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div id="outline-container-org88b0094" class="outline-3">
+<h3 id="org88b0094"><span class="section-number-3">15.2.</span> Do the model-centric metrics indicate unfairness?</h3>
 <div class="outline-text-3" id="text-15-2">
 
-<div id="orgbf2c181" class="figure">
-<p><img src="german_barplot_prot-age_mod-dt_acc-pre-rec-f1.png" alt="german_barplot_prot-age_mod-dt_acc-pre-rec-f1.png" />
+<div id="org756bd59" class="figure">
+<p><img src="german_barplot_prot-age_mod-dt_acc-pre-rec-f1.svg" alt="german_barplot_prot-age_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 49: </span>Precision-recall for decisiontreeclassifier</p>
 </div>
 
 <p>
-From Figure <a href="#orgfd9a39a">44</a>, the disparate impact
+From Figure <a href="#org212af49">44</a>, the disparate impact
 for the decisiontreeclassifier is \(<1\) although within the acceptable
 range. It is also higher than that of the logisticregression.
 </p>
 
 <p>
-From Figure <a href="#orgbf2c181">49</a>, the precision &amp; recall for the
+From Figure <a href="#org756bd59">49</a>, the precision &amp; recall for the
 unprivileged group is lower than the privileged group. This indicates
 that the model is better at identifying the privileged positive
 examples.
@@ -1634,17 +1646,17 @@ examples.
 </div>
 </div>
 
-<div id="outline-container-orgeadc8a8" class="outline-3">
-<h3 id="orgeadc8a8"><span class="section-number-3">15.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div id="outline-container-org028b637" class="outline-3">
+<h3 id="org028b637"><span class="section-number-3">15.3.</span> Do the data-centric metrics explain unfairness?</h3>
 <div class="outline-text-3" id="text-15-3">
 <p>
-From Figure <a href="#org30b8c7f">46</a>, the disparate impact
+From Figure <a href="#org8c6e66a">46</a>, the disparate impact
 for all subsets is \(<1\) indicating the unprivileged group is at a
 disadvantage.
 </p>
 
 <p>
-From Figure <a href="#orgbb04047">47</a>, the base rate for the
+From Figure <a href="#org372f3f2">47</a>, the base rate for the
 unprivileged group is lower than the privileged group. Given that we
 pick an example at random both the privileged &amp; unprivileged group,
 the privileged example is more likely to be positive.
@@ -1652,19 +1664,159 @@ the privileged example is more likely to be positive.
 </div>
 </div>
 </div>
-<div id="outline-container-org70956bf" class="outline-2">
-<h2 id="org70956bf"><span class="section-number-2">16.</span> <span class="todo TODO">TODO</span> gpa-race-lr</h2>
+<div id="outline-container-sec-meps-race-lr" class="outline-2">
+<h2 id="sec-meps-race-lr"><span class="section-number-2">16.</span> <span class="done DONE">DONE</span> meps-race-lr</h2>
+<div class="outline-text-2" id="text-sec-meps-race-lr">
 </div>
 
-<div id="outline-container-orgbd474d8" class="outline-2">
-<h2 id="orgbd474d8"><span class="section-number-2">17.</span> <span class="todo TODO">TODO</span> gpa-race-dt</h2>
+<div id="outline-container-org686fc6d" class="outline-3">
+<h3 id="org686fc6d"><span class="section-number-3">16.1.</span> Is the model unfair?</h3>
+<div class="outline-text-3" id="text-16-1">
+
+<div id="orgd2cff86" class="figure">
+<p><img src="meps_heatmap_prot-race_mod-lr_cm-rate.svg" alt="meps_heatmap_prot-race_mod-lr_cm-rate.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 50: </span>CM for logisticregression</p>
+</div>
+
+<p>
+From Figure <a href="#orgd2cff86">50</a>, the model is biased to the
+negative class as it has a high FNR. The FNR for the unprivileged
+group is higher compared to the privileged group. This indicates that
+the model is unfair to the unprivileged group since an example from
+the unprivileged group is more likely to be classified as negative
+example.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9bdcf74" class="outline-3">
+<h3 id="org9bdcf74"><span class="section-number-3">16.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div class="outline-text-3" id="text-16-2">
+
+<div id="org5700c71" class="figure">
+<p><img src="meps_barplot_prot-race_mod-all_disparate-impact.svg" alt="meps_barplot_prot-race_mod-all_disparate-impact.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 51: </span>Disparate Impact for models</p>
+</div>
+
+<p>
+From Figure <a href="#org5700c71">51</a>, the disparate impact
+for the model is \(<1\) indicating that the unprivileged group is at a
+disadvantage.
+</p>
+
+
+<div id="org0c3b829" class="figure">
+<p><img src="meps_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg" alt="meps_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 52: </span>Precision-recall for logisticregression</p>
+</div>
+
+<p>
+From figure <a href="#org0c3b829">52</a>, the precision &amp; recall for the
+unprivileged group is lower than the privileged group. This indicates
+that the model is better at identifying positive examples from the
+privileged group.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf0d7e53" class="outline-3">
+<h3 id="orgf0d7e53"><span class="section-number-3">16.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div class="outline-text-3" id="text-16-3">
+
+<div id="org80cc729" class="figure">
+<p><img src="meps_barplot_prot-race_mod-none_disparate-impact.svg" alt="meps_barplot_prot-race_mod-none_disparate-impact.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 53: </span>Disparate Impact for data</p>
+</div>
+
+<p>
+From Figure <a href="#org80cc729">53</a>, the disparate impact
+across the subsets is \(<1\) which indicates that the unprivileged group
+is at a disadvantage.
+</p>
+
+
+<div id="org6af0324" class="figure">
+<p><img src="meps_barplot_prot-race_base-rate.svg" alt="meps_barplot_prot-race_base-rate.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 54: </span>Base rate</p>
+</div>
+
+<p>
+From Figure <a href="#org6af0324">54</a>, the base rate for the unprivileged
+group is lower than that of the privileged group. Given two examples
+(randomly picked from the dataset), one from from each group, the
+privileged example is more likely to be positive.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-meps-race-dt" class="outline-2">
+<h2 id="sec-meps-race-dt"><span class="section-number-2">17.</span> <span class="done DONE">DONE</span> meps-race-dt</h2>
+<div class="outline-text-2" id="text-sec-meps-race-dt">
+</div>
+
+<div id="outline-container-orgf0009bd" class="outline-3">
+<h3 id="orgf0009bd"><span class="section-number-3">17.1.</span> Is the model unfair?</h3>
+<div class="outline-text-3" id="text-17-1">
+
+<div id="orgddbea58" class="figure">
+<p><img src="meps_heatmap_prot-race_mod-dt_cm-rate.svg" alt="meps_heatmap_prot-race_mod-dt_cm-rate.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 55: </span>CM for decisiontreeclassifier</p>
+</div>
+
+<p>
+From Figure <a href="#orgddbea58">55</a>, the model is biased to the
+negative class due to high FNR. The FNR for the unprivileged group is
+higher than the privileged group indicating that the model is unfair
+towards the unprivileged group.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org74bd972" class="outline-3">
+<h3 id="org74bd972"><span class="section-number-3">17.2.</span> Do the model-centric metrics indicate unfairness?</h3>
+<div class="outline-text-3" id="text-17-2">
+<p>
+From Figure <a href="#org5700c71">51</a>, the disparate impact
+is \(<1\) indicating that the unprivileged group is at a disadvantage.
+</p>
+
+
+<div id="org9955b3e" class="figure">
+<p><img src="meps_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg" alt="meps_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 56: </span>Precision-recall for decisiontreeclassifier</p>
+</div>
+
+<p>
+From Figure <a href="#org9955b3e">56</a>, the precision &amp; recall for the
+unprivileged group is lower than the privileged group. This indicates
+that the model is better at identifying positive examples of the
+privileged group.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8dc96e0" class="outline-3">
+<h3 id="org8dc96e0"><span class="section-number-3">17.3.</span> Do the data-centric metrics explain unfairness?</h3>
+<div class="outline-text-3" id="text-17-3">
+<p>
+The data metrics indicate that the unprivileged group are at a disadvantage.
+</p>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2022-08-29 Mon 00:00</p>
 <p class="author">Author: Arumoy Shome</p>
-<p class="date">Created: 2022-09-03 Sat 16:50</p>
-<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2022-09-06 Tue 16:25</p>
 </div>
 </body>
 </html>

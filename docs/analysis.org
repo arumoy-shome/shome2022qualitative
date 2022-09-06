@@ -14,10 +14,10 @@ analysis. For each analysis, we wish to answer the following
 questions:
 
 1. Is the model making unfair predictions?
-2. If so, do the model-centric fairness metrics *indicate* this unfair
-   behaviour?
-3. If so, do the data-centric fairness metrics *explain* this unfair
-   behaviour?
+2. Are the model-centric fairness metrics consistent with the
+   predictions of the model?
+3. Are the data-centric fairness metrics consistent with the
+   model-centric fairness metrics?
 
 * Summary of results
 Following table presents a concise summary of the results obtained in
@@ -46,8 +46,8 @@ this study.
 | german  | age                 | lr    | Y  | Y  | Y  |
 | german  | age                 | dt    | ?  | ?  | Y  |
 |---------+---------------------+-------+----+----+----|
-| gpa     | race                | lr    |    |    |    |
-| gpa     | race                | dt    |    |    |    |
+| meps    | race                | lr    | Y  | Y  | Y  |
+| meps    | race                | dt    | Y  | Y  | Y  |
 |---------+---------------------+-------+----+----+----|
 
 * DONE adult-sex-lr
@@ -61,7 +61,7 @@ this study.
 
 #+caption: CM for logisticregression
 #+name: fig-adult-sex-lr-cm-rate
-[[file:adult_heatmap_prot-sex_mod-lr_cm-rate.png]]
+[[file:adult_heatmap_prot-sex_mod-lr_cm-rate.svg]]
 
 As seen from Figure [[fig-adult-sex-lr-cm-rate]], the FNs for the
 unprivileged group is higher than the FNs for the privileged group.
@@ -73,11 +73,11 @@ likely to incorrectly classify it as a negative example.
 
 #+caption: Disparate Impact for models
 #+name: fig-adult-sex-mod-disparate-impact
-[[file:adult_barplot_prot-sex_mod-all_disparate-impact.png]]
+[[file:adult_barplot_prot-sex_mod-all_disparate-impact.svg]]
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-adult-sex-lr-pre-rec
-[[file:adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+[[file:adult_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-adult-sex-mod-disparate-impact]], the disparate impact
 for the logisticregression model is $<1$ which indicates that the
@@ -92,7 +92,7 @@ unprivileged group.
 
 #+caption: Disparate Impact for data
 #+name: fig-adult-sex-data-disparate-impact
-[[file:adult_barplot_prot-sex_mod-none_disparate-impact.png]]
+[[file:adult_barplot_prot-sex_mod-none_disparate-impact.svg]]
 
 From Figure [[fig-adult-sex-data-disparate-impact]], the disparate impact
 across all subsets of the data is $<1$ which indicates that the
@@ -100,7 +100,7 @@ unprivileged group is at a disadvantage.
 
 #+caption: Base rate
 #+name: fig-adult-sex-base-rate
-[[file:adult_barplot_prot-sex_base-rate.png]]
+[[file:adult_barplot_prot-sex_base-rate.svg]]
 
 From Figure [[fig-adult-sex-base-rate]]:
 
@@ -139,7 +139,7 @@ privileged group.
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-adult-sex-dt-cm-rate
-[[file:adult_heatmap_prot-sex_mod-dt_cm-rate.png]]
+[[file:adult_heatmap_prot-sex_mod-dt_cm-rate.svg]]
 
 As seen from Figure [[fig-adult-sex-dt-cm-rate]], the FNs for the
 unprivileged group is higher than the FNs for the privileged group.
@@ -150,7 +150,7 @@ group. Similar bias as seen in Section [[#sec-adult-sex-lr]].
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-adult-sex-dt-pre-rec
-[[file:adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+[[file:adult_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-adult-sex-mod-disparate-impact]], the disparate impact
 for the decisiontreeclassifier model is $<1$ which indicates that the
@@ -182,7 +182,7 @@ Similar explaination for precision-recall as Section [[#sec-adult-sex-lr]].
 
 #+caption: CM for logisticregression
 #+name: fig-adult-race-lr-cm-rate
-[[file:adult_heatmap_prot-race_mod-lr_cm-rate.png]]
+[[file:adult_heatmap_prot-race_mod-lr_cm-rate.svg]]
 
 From Figure [[fig-adult-race-lr-cm-rate]], the model is biased to the
 negative class. This bias is more in the case of unprivileged group
@@ -193,14 +193,14 @@ vs. privileged group, similar to what we see in Section
 
 #+caption: Disparate Impact for models
 #+name: fig-adult-race-mod-disparate-impact
-[[file:adult_barplot_prot-race_mod-all_disparate-impact.png]]
+[[file:adult_barplot_prot-race_mod-all_disparate-impact.svg]]
 
 From Figure [[fig-adult-race-mod-disparate-impact]], the disparate impact
 is $<1$ indicating the unprivileged group is at a disadvantage.
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-adult-race-lr-pre-rec
-[[file:adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.png]]
+[[file:adult_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg]]
 
 From figure [[fig-adult-race-lr-pre-rec]], the precision and recall for
 the unprivileged group is lower than the privileged group. This is
@@ -210,7 +210,7 @@ explainable using the same logic seen in Section [[#sec-adult-sex-lr]].
 
 #+caption: Disparate Impact for data
 #+name: fig-adult-race-data-disparate-impact
-[[file:adult_barplot_prot-race_mod-none_disparate-impact.png]]
+[[file:adult_barplot_prot-race_mod-none_disparate-impact.svg]]
 
 From Figure [[fig-adult-race-data-disparate-impact]], the disparate impact
 across all subsets is $<1$ indicating that the unprivileged group is
@@ -218,7 +218,7 @@ at a disadvantage.
 
 #+caption: Base rate
 #+name: fig-adult-sex-base-rate
-[[file:adult_barplot_prot-race_base-rate.png]]
+[[file:adult_barplot_prot-race_base-rate.svg]]
 
 Similar explaination for precision-recall as [[#sec-adult-sex-lr]]
 
@@ -231,7 +231,7 @@ Similar explaination for precision-recall as [[#sec-adult-sex-lr]]
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-adult-race-dt-cm-rate
-[[file:adult_heatmap_prot-race_mod-dt_cm-rate.png]]
+[[file:adult_heatmap_prot-race_mod-dt_cm-rate.svg]]
 
 The model is biased to the negative class however the bias is similar
 for both privileged & unprivileged groups.
@@ -246,7 +246,7 @@ seen in Figure [[fig-adult-race-dt-cm-rate]].
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-adult-race-dt-pre-rec
-[[file:adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.png]]
+[[file:adult_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg]]
 
 The recall for the privileged & unprivileged group are similar
 indicating the model is not biased towards a particular group.
@@ -270,7 +270,7 @@ this bias.
 
 #+caption: CM for logisticregression
 #+name: fig-compas-sex-lr-cm-rate
-[[file:compas_heatmap_prot-sex_mod-lr_cm-rate.png]]
+[[file:compas_heatmap_prot-sex_mod-lr_cm-rate.svg]]
 
 From Figure [[fig-compas-sex-lr-cm-rate]], the model is biased to the
 positive class as the FPR is high. The FPR for the privileged group is
@@ -282,11 +282,11 @@ example from the privileged group as positive.
 
 #+caption: Disparate Impact for models
 #+name: fig-compas-sex-mod-disparate-impact
-[[file:compas_barplot_prot-sex_mod-all_disparate-impact.png]]
+[[file:compas_barplot_prot-sex_mod-all_disparate-impact.svg]]
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-compas-sex-lr-pre-rec
-[[file:compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+[[file:compas_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-compas-sex-mod-disparate-impact]], the disparate impact
 for the logisticregression model is $<1$ which indicates that the
@@ -301,7 +301,7 @@ worse for the unprivileged group.
 
 #+caption: Disparate Impact for data
 #+name: fig-compas-sex-data-disparate-impact
-[[file:compas_barplot_prot-sex_mod-none_disparate-impact.png]]
+[[file:compas_barplot_prot-sex_mod-none_disparate-impact.svg]]
 
 From Figure [[fig-compas-sex-data-disparate-impact]], the disparate impact
 across all subsets of the data is $<1$ which indicates that the
@@ -312,7 +312,7 @@ unprivileged group is at a disadvantage.
 
 #+caption: Base rate
 #+name: fig-compas-sex-base-rate
-[[file:compas_barplot_prot-sex_base-rate.png]]
+[[file:compas_barplot_prot-sex_base-rate.svg]]
 
 Similar explaination for precision-recall as Section
 [[#sec-adult-sex-lr]].
@@ -326,7 +326,7 @@ Similar explaination for precision-recall as Section
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-compas-sex-dt-cm-rate
-[[file:compas_heatmap_prot-sex_mod-dt_cm-rate.png]]
+[[file:compas_heatmap_prot-sex_mod-dt_cm-rate.svg]]
 
 From Figure [[fig-compas-sex-dt-cm-rate]], the model is biased to the
 positive class as the FPR is high. The FPR for the privileged group is
@@ -341,7 +341,7 @@ classes in the unprivileged group (the FPR & FNR are similar).
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-compas-sex-dt-pre-rec
-[[file:compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+[[file:compas_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-compas-sex-mod-disparate-impact]], the disparate impact
 for the decisiontreeclassifier model is $<1$ but higher than
@@ -367,7 +367,7 @@ Similar explaination as Section [[#sec-compas-sex-lr]].
 
 #+caption: CM for logisticregression
 #+name: fig-compas-race-lr-cm-rate
-[[file:compas_heatmap_prot-race_mod-lr_cm-rate.png]]
+[[file:compas_heatmap_prot-race_mod-lr_cm-rate.svg]]
 
 Similar bias as seen in Section [[#sec-compas-sex-lr]].
 
@@ -375,11 +375,11 @@ Similar bias as seen in Section [[#sec-compas-sex-lr]].
 
 #+caption: Disparate Impact for models
 #+name: fig-compas-race-mod-disparate-impact
-[[file:compas_barplot_prot-race_mod-all_disparate-impact.png]]
+[[file:compas_barplot_prot-race_mod-all_disparate-impact.svg]]
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-compas-race-lr-pre-rec
-[[file:compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.png]]
+[[file:compas_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-compas-race-mod-disparate-impact]], the disparate impact
 for the model is $<1$ which indicates that the unprivileged group is
@@ -394,14 +394,14 @@ group as well as the privileged group.
 
 #+caption: Disparate Impact for data
 #+name: fig-compas-race-data-disparate-impact
-[[file:compas_barplot_prot-race_mod-none_disparate-impact.png]]
+[[file:compas_barplot_prot-race_mod-none_disparate-impact.svg]]
 
 Although the disparate impact across the subsets is $<1$, its within
 the acceptable range of $[0.8, 1.1]$.
 
 #+caption: Base rate
 #+name: fig-compas-sex-base-rate
-[[file:compas_barplot_prot-race_base-rate.png]]
+[[file:compas_barplot_prot-race_base-rate.svg]]
 
 Similar explaination for precision-recall as Section
 [[#sec-adult-sex-lr]].
@@ -415,7 +415,7 @@ Similar explaination for precision-recall as Section
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-compas-race-dt-cm-rate
-[[file:compas_heatmap_prot-race_mod-dt_cm-rate.png]]
+[[file:compas_heatmap_prot-race_mod-dt_cm-rate.svg]]
 
 From Figure [[fig-compas-race-dt-cm-rate]], the model as similar bias
 towards the positive class as we have seen so far for this dataset.
@@ -427,7 +427,7 @@ negative class for the unprivileged group.
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-compas-race-dt-pre-rec
-[[file:compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.png]]
+[[file:compas_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-compas-race-mod-disparate-impact]], the disparate impact
 for the decisiontreeclassifier model is $<1$ but higher than
@@ -453,7 +453,7 @@ Similar explaination as Section [[#sec-compas-race-lr]].
 
 #+caption: CM for logisticregression
 #+name: fig-bank-age-lr-cm-rate
-[[file:bank_heatmap_prot-age_mod-lr_cm-rate.png]]
+[[file:bank_heatmap_prot-age_mod-lr_cm-rate.svg]]
 
 From Figure [[fig-bank-age-lr-cm-rate]], the model is biased to the
 negative class. The model is more biased to the negative class for the
@@ -464,14 +464,14 @@ the unprivileged group.
 
 #+caption: Disparate Impact for models
 #+name: fig-bank-age-mod-disparate-impact
-[[file:bank_barplot_prot-age_mod-all_disparate-impact.png]]
+[[file:bank_barplot_prot-age_mod-all_disparate-impact.svg]]
 
 From Figure [[fig-bank-age-mod-disparate-impact]] is $>1$ indicating that
 the unprivileged group are at an advantage.
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-bank-age-lr-pre-rec
-[[file:bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.png]]
+[[file:bank_barplot_prot-age_mod-lr_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-bank-age-lr-pre-rec]], the precision & recall for the
 unprivileged group is higher than the privileged group indicating that
@@ -482,7 +482,7 @@ unprivileged group vs. the privileged group.
 
 #+caption: Disparate Impact for data
 #+name: fig-bank-age-data-disparate-impact
-[[file:bank_barplot_prot-age_mod-none_disparate-impact.png]]
+[[file:bank_barplot_prot-age_mod-none_disparate-impact.svg]]
 
 From Figure [[fig-bank-age-data-disparate-impact]], the disparate impact
 across the subsets is $>1$ indicating that the unprivileged group are
@@ -490,7 +490,7 @@ at an advantage.
 
 #+caption: Base rate
 #+name: fig-bank-age-base-rate
-[[file:bank_barplot_prot-age_base-rate.png]]
+[[file:bank_barplot_prot-age_base-rate.svg]]
 
 From [[fig-bank-age-base-rate]], the base rate for the unprivileged group
 is higher than the privileged group.
@@ -508,7 +508,7 @@ positive vs. the privileged example.
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-bank-age-dt-cm-rate
-[[file:bank_heatmap_prot-age_mod-dt_cm-rate.png]]
+[[file:bank_heatmap_prot-age_mod-dt_cm-rate.svg]]
 
 Similar bias as seen in Section [[#sec-bank-age-lr]].
 
@@ -516,7 +516,7 @@ Similar bias as seen in Section [[#sec-bank-age-lr]].
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-bank-age-dt-pre-rec
-[[file:bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.png]]
+[[file:bank_barplot_prot-age_mod-dt_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-bank-age-mod-disparate-impact]], the disparate impact
 for the decisiontreeclassifier is $>1$ indicating that the
@@ -545,7 +545,7 @@ Similar explaination as Section [[#sec-bank-age-lr]].
 
 #+caption: CM for logisticregression
 #+name: fig-german-sex-lr-cm-rate
-[[file:german_heatmap_prot-sex_mod-lr_cm-rate.png]]
+[[file:german_heatmap_prot-sex_mod-lr_cm-rate.svg]]
 
 From Figure [[fig-german-sex-lr-cm-rate]], the model is biased to the
 positive class. The FPR for the privileged group is higher than that
@@ -557,7 +557,7 @@ positive.
 
 #+caption: Disparate Impact for models
 #+name: fig-german-sex-mod-disparate-impact
-[[file:german_barplot_prot-sex_mod-all_disparate-impact.png]]
+[[file:german_barplot_prot-sex_mod-all_disparate-impact.svg]]
 
 From Figure [[fig-german-sex-mod-disparate-impact]], the disparate impact
 for the model is $<1$ indicating that the unprivileged group is at a
@@ -565,7 +565,7 @@ disadvantage.
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-german-sex-lr-pre-rec
-[[file:german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.png]]
+[[file:german_barplot_prot-sex_mod-lr_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-german-sex-lr-pre-rec]], the recall for the privileged
 group is higher than the unprivileged group. This indicates that the
@@ -580,7 +580,7 @@ FPs vs. unprivileged group.
 
 #+caption: Disparate Impact for data
 #+name: fig-german-sex-data-disparate-impact
-[[file:german_barplot_prot-sex_mod-none_disparate-impact.png]]
+[[file:german_barplot_prot-sex_mod-none_disparate-impact.svg]]
 
 From Figure [[fig-german-sex-data-disparate-impact]], the disparate impact
 across the subsets is very close to 1 indicating that the dataset does
@@ -589,7 +589,7 @@ observations so far.
 
 #+caption: Base rate
 #+name: fig-german-sex-base-rate
-[[file:german_barplot_prot-sex_base-rate.png]]
+[[file:german_barplot_prot-sex_base-rate.svg]]
 
 From Figure [[fig-german-sex-base-rate]], the base rate for the privileged
 & unprivileged groups are similar. Again, this does not explain our
@@ -604,7 +604,7 @@ observations from the model metrics.
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-german-sex-dt-cm-rate
-[[file:german_heatmap_prot-sex_mod-dt_cm-rate.png]]
+[[file:german_heatmap_prot-sex_mod-dt_cm-rate.svg]]
 
 From Figure [[fig-german-sex-dt-cm-rate]], the model is biased to the
 positive class however there is no discernable bias fairness issue.
@@ -615,7 +615,7 @@ unprivileged groups.
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-german-sex-dt-pre-rec
-[[file:german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.png]]
+[[file:german_barplot_prot-sex_mod-dt_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-german-sex-mod-disparate-impact]], the disparate impact
 for the logisticregression is 1 which indicates that the model is fair.
@@ -640,7 +640,7 @@ From Figure [[fig-german-sex-base-rate]], the base rate for the privileged
 
 #+caption: CM for logisticregression
 #+name: fig-german-age-lr-cm-rate
-[[file:german_heatmap_prot-age_mod-lr_cm-rate.png]]
+[[file:german_heatmap_prot-age_mod-lr_cm-rate.svg]]
 
 From Figure [[fig-german-age-lr-cm-rate]], the model is more biased to the
 positive class for the privileged vs. unprivileged group. The bias is
@@ -650,14 +650,14 @@ not as obvious as observed in Section [[#sec-german-sex-lr]].
 
 #+caption: Disparate Impact for models
 #+name: fig-german-age-mod-disparate-impact
-[[file:german_barplot_prot-age_mod-all_disparate-impact.png]]
+[[file:german_barplot_prot-age_mod-all_disparate-impact.svg]]
 
 From Figure [[fig-german-age-mod-disparate-impact]], the disparate impact
 is $<1$ indicating the unprivileged group is at a disadvantage.
 
 #+caption: Precision-recall for logisticregression
 #+name: fig-german-age-lr-pre-rec
-[[file:german_barplot_prot-age_mod-lr_acc-pre-rec-f1.png]]
+[[file:german_barplot_prot-age_mod-lr_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-german-age-lr-pre-rec]], the precision & recall for the
 unprivileged group is lower than the privileged group indicating the
@@ -667,14 +667,14 @@ model is better at identifying privileged positive examples.
 
 #+caption: Disparate Impact for data
 #+name: fig-german-age-data-disparate-impact
-[[file:german_barplot_prot-age_mod-none_disparate-impact.png]]
+[[file:german_barplot_prot-age_mod-none_disparate-impact.svg]]
 
 From Figure [[fig-german-age-data-disparate-impact]], the disparate impact
 is $<1$ indicating the unprivileged group is at a disadvantage.
 
 #+caption: Base rate
 #+name: fig-german-age-base-rate
-[[file:german_barplot_prot-age_base-rate.png]]
+[[file:german_barplot_prot-age_base-rate.svg]]
 
 From [[fig-german-age-base-rate]], the base rate for the privileged group
 is higher than the unprivileged group.
@@ -692,7 +692,7 @@ positive vs. the unprivileged example.
 
 #+caption: CM for decisiontreeclassifier
 #+name: fig-german-age-dt-cm-rate
-[[file:german_heatmap_prot-age_mod-dt_cm-rate.png]]
+[[file:german_heatmap_prot-age_mod-dt_cm-rate.svg]]
 
 From Figure [[fig-german-age-dt-cm-rate]], the model has a higher FPR for
 the unprivileged vs. privileged group. Although the FNR for the
@@ -705,7 +705,7 @@ unprivileged group is also higher vs. the privileged group.
 
 #+caption: Precision-recall for decisiontreeclassifier
 #+name: fig-german-age-dt-pre-rec
-[[file:german_barplot_prot-age_mod-dt_acc-pre-rec-f1.png]]
+[[file:german_barplot_prot-age_mod-dt_acc-pre-rec-f1.svg]]
 
 From Figure [[fig-german-age-mod-disparate-impact]], the disparate impact
 for the decisiontreeclassifier is $<1$ although within the acceptable
@@ -726,6 +726,93 @@ From Figure [[fig-german-age-base-rate]], the base rate for the
 unprivileged group is lower than the privileged group. Given that we
 pick an example at random both the privileged & unprivileged group,
 the privileged example is more likely to be positive.
-* TODO gpa-race-lr
+* DONE meps-race-lr
+:PROPERTIES:
+:CUSTOM_ID: sec-meps-race-lr
+:END:
 
-* TODO gpa-race-dt
+** Is the model unfair?
+
+#+caption: CM for logisticregression
+#+name: fig-meps-race-lr-cm-rate
+[[file:meps_heatmap_prot-race_mod-lr_cm-rate.svg]]
+
+From Figure [[fig-meps-race-lr-cm-rate]], the model is biased to the
+negative class as it has a high FNR. The FNR for the unprivileged
+group is higher compared to the privileged group. This indicates that
+the model is unfair to the unprivileged group since an example from
+the unprivileged group is more likely to be classified as negative
+example.
+
+** Do the model-centric metrics indicate unfairness?
+
+#+caption: Disparate Impact for models
+#+name: fig-meps-race-mod-disparate-impact
+[[file:meps_barplot_prot-race_mod-all_disparate-impact.svg]]
+
+From Figure [[fig-meps-race-mod-disparate-impact]], the disparate impact
+for the model is $<1$ indicating that the unprivileged group is at a
+disadvantage.
+
+#+caption: Precision-recall for logisticregression
+#+name: fig-meps-race-lr-pre-rec
+[[file:meps_barplot_prot-race_mod-lr_acc-pre-rec-f1.svg]]
+
+From figure [[fig-meps-race-lr-pre-rec]], the precision & recall for the
+unprivileged group is lower than the privileged group. This indicates
+that the model is better at identifying positive examples from the
+privileged group.
+
+** Do the data-centric metrics explain unfairness?
+
+#+caption: Disparate Impact for data
+#+name: fig-meps-race-data-disparate-impact
+[[file:meps_barplot_prot-race_mod-none_disparate-impact.svg]]
+
+From Figure [[fig-meps-race-data-disparate-impact]], the disparate impact
+across the subsets is $<1$ which indicates that the unprivileged group
+is at a disadvantage.
+
+#+caption: Base rate
+#+name: fig-meps-race-base-rate
+[[file:meps_barplot_prot-race_base-rate.svg]]
+
+From Figure [[fig-meps-race-base-rate]], the base rate for the unprivileged
+group is lower than that of the privileged group. Given two examples
+(randomly picked from the dataset), one from from each group, the
+privileged example is more likely to be positive.
+
+* DONE meps-race-dt
+:PROPERTIES:
+:CUSTOM_ID: sec-meps-race-dt
+:END:
+
+** Is the model unfair?
+
+#+caption: CM for decisiontreeclassifier
+#+name: fig-meps-race-dt-cm-rate
+[[file:meps_heatmap_prot-race_mod-dt_cm-rate.svg]]
+
+From Figure [[fig-meps-race-dt-cm-rate]], the model is biased to the
+negative class due to high FNR. The FNR for the unprivileged group is
+higher than the privileged group indicating that the model is unfair
+towards the unprivileged group.
+
+** Do the model-centric metrics indicate unfairness?
+
+From Figure [[fig-meps-race-mod-disparate-impact]], the disparate impact
+is $<1$ indicating that the unprivileged group is at a disadvantage.
+
+#+caption: Precision-recall for decisiontreeclassifier
+#+name: fig-meps-race-dt-pre-rec
+[[file:meps_barplot_prot-race_mod-dt_acc-pre-rec-f1.svg]]
+
+From Figure [[fig-meps-race-dt-pre-rec]], the precision & recall for the
+unprivileged group is lower than the privileged group. This indicates
+that the model is better at identifying positive examples of the
+privileged group.
+
+** Do the data-centric metrics explain unfairness?
+
+The data metrics indicate that the unprivileged group are at a disadvantage.
+
