@@ -1,0 +1,3 @@
+[submodule "vendor/biswas2021fair"]
+	path = vendor/biswas2021fair
+	url = git@github.com:sumonbis/FairPreprocessing.git
