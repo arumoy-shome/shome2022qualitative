@@ -24,14 +24,11 @@ Following is an overview of the directory structure of this project
 along with a brief description of what they contain.
 
     .
-    ├── Makefile
-    ├── README.md
     ├── bin
+    │   └── __pycache__
     ├── data
+    ├── docs
     ├── report
-    ├── src
-    └── tags
-
-    4 directories, 3 files
+    └── vendor
 
 [aif360]: https://github.com/LINKME

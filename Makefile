@@ -1,19 +1,19 @@
-PYFILES:=$(shell find . -type f -name '*.py' -not -path '*venv*')
+PYFILES:=$(shell find . -type f -name '*.py' -path '*bin*')
 ORGFILES:=$(wildcard docs/*.org)
 HTMLFILES:=$(ORGFILES:.org=.html)
 IMGFILES:=$(shell find docs -type f -name '*.png' -or -name '*.pdf')
 
-ctags: $(PYFILES)
+ctags:
 	find . -type f -not -path "*git*" -exec ctags --tag-relative=yes --languages=-javascript,css,json {} +
 
-etags: $(PYFILES)
+etags:
 	find . -type f -not -path "*git*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
 
-fmt: $(PYFILES)
-	.venv/bin/black --quiet $<
+fmt:
+	find . -type f -name '*.py' -not -path '*venv*' -exec .venv/bin/black {} +
 
-lint: $(PYFILES)
-	.venv/bin/pyflakes $<
+lint:
+	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec .venv/bin/pyflakes {} +
 
 data/data.csv: bin/data.py
 	.venv/bin/python3 bin/data.py
