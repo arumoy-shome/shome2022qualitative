@@ -151,30 +151,23 @@ if __name__ == "__main__":
                     },
                 )
 
-                manager = Manager()
-                classified_datasets = manager.dict()
-                jobs = []
                 for model in MODELS:
-                    p = Process(
-                        target=fit_predict,
-                        args=(model, train, test, classified_datasets),
-                    )
-                    jobs.append(p)
-                    p.start()
+                    logging.info("computing metrics for model: {}".format(model))
+                    pipe = make_pipeline(StandardScaler(), model())
+                    pipe.fit(X=train.features, y=train.labels.ravel())
+                    y_pred = pipe.predict(test.features).reshape(-1, 1)
+                    classified = test.copy()
+                    classified.labels = y_pred
 
-                for job in jobs:
-                    job.join()
-
-                for model, classified_dataset in classified_datasets.items():
                     populate_model_metrics(
                         rows=rows,
                         dataset=test,
-                        classified_dataset=classified_dataset,
+                        classified_dataset=classified,
                         protected=protected,
                         kwargs={
                             "dataset_label": dataset_label,
                             "subset": "test",
-                            "model": model,
+                            "model": pipe.steps[-1][0],
                             "num_features": len(features_to_keep),
                         },
                     )
