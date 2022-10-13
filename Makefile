@@ -4,13 +4,13 @@ HTMLFILES:=$(ORGFILES:.org=.html)
 IMGFILES:=$(shell find docs -type f -name '*.png' -or -name '*.pdf')
 
 ctags:
-	find . -type f -not -path "*git*" -exec ctags --tag-relative=yes --languages=-javascript,css,json {} +
+	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags --tag-relative=yes --languages=-javascript,css,json {} +
 
 etags:
 	find . -type f -not -path "*git*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
 
 fmt:
-	find . -type f -name '*.py' -not -path '*venv*' -exec .venv/bin/black {} +
+	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec .venv/bin/black {} +
 
 lint:
 	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec .venv/bin/pyflakes {} +
