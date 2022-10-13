@@ -8,6 +8,7 @@ features (with a minimum of 3 features).
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from aif360.datasets import (
@@ -17,6 +18,7 @@ from aif360.datasets import (
     GermanDataset,
     MEPSDataset21,
 )
+from multiprocessing import Process, Manager
 import os
 import sys
 import json
@@ -30,7 +32,12 @@ from src.csv import write_csv
 
 ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATADIR = os.path.join(ROOTDIR, "data")
-MODELS = [LogisticRegression, DecisionTreeClassifier]
+MODELS = [
+    LogisticRegression,
+    DecisionTreeClassifier,
+    AdaBoostClassifier,
+    RandomForestClassifier,
+]
 MIN_FEATURES_TO_KEEP = 3
 PRIVILEGED_CLASSES_MAP = {
     "adult": {"sex": [["Male"]], "race": [["White"]]},
@@ -69,12 +76,35 @@ def generate_feature_sets(dataset, random=False):
     features = FEATURES[dataset].copy()
 
     # NOTE: we copy the list since python passes lists by reference (not value)!
+    # TODO: refactor this using lambda & map()
     while len(features) >= MIN_FEATURES_TO_KEEP:
         feature_sets.append(features.copy())
         # TODO: to randomise, pass random index to pop
         features.pop()
 
     return feature_sets
+
+
+def fit_predict(model, train, test, classified_datasets):
+    """Train & test a model with the given data.
+
+    Args:
+        model: Obj, an instance of a model from sklearn
+        train: Array like, the training data
+        test: Array like, the test data with actual labels (y)
+        classified_datasets: Dict, shared variable between multiple
+        processes used to collect the results of this function.
+
+    Returns: None
+    """
+
+    logging.info("computing metrics for model: {}".format(model))
+    pipe = make_pipeline(StandardScaler(), model())
+    pipe.fit(X=train.features, y=train.labels.ravel())
+    y_pred = pipe.predict(test.features).reshape(-1, 1)
+    classified = test.copy()
+    classified.labels = y_pred
+    classified_datasets[pipe.steps[-1][0]] = classified
 
 
 if __name__ == "__main__":
@@ -109,27 +139,6 @@ if __name__ == "__main__":
                 )
                 train, test = full.split([0.75], shuffle=True)
 
-                # rows = populate_data_metrics(
-                #     rows=rows,
-                #     dataset=full,
-                #     protected=protected,
-                #     kwargs={
-                #         "dataset_label":dataset_label,
-                #         "subset":"full",
-                #         "model":"None",
-                #         "num_features":len(features_to_keep)
-                #     }
-                # )
-
-                # rows = populate_data_metrics(
-                #     rows=rows,
-                #     dataset=train,
-                #     protected=protected,
-                #     dataset_label=dataset_label,
-                #     subset="train",
-                #     model="None",
-                # )
-
                 rows = populate_data_metrics(
                     rows=rows,
                     dataset=test,
@@ -142,23 +151,30 @@ if __name__ == "__main__":
                     },
                 )
 
+                manager = Manager()
+                classified_datasets = manager.dict()
+                jobs = []
                 for model in MODELS:
-                    logging.info("computing metrics for model: {}".format(model))
-                    pipe = make_pipeline(StandardScaler(), model())
-                    pipe.fit(X=train.features, y=train.labels.ravel())
-                    y_pred = pipe.predict(test.features).reshape(-1, 1)
-                    classified = test.copy()
-                    classified.labels = y_pred
+                    p = Process(
+                        target=fit_predict,
+                        args=(model, train, test, classified_datasets),
+                    )
+                    jobs.append(p)
+                    p.start()
 
+                for job in jobs:
+                    job.join()
+
+                for model, classified_dataset in classified_datasets.items():
                     rows = populate_model_metrics(
                         rows=rows,
                         dataset=test,
-                        classified_dataset=classified,
+                        classified_dataset=classified_dataset,
                         protected=protected,
                         kwargs={
                             "dataset_label": dataset_label,
                             "subset": "test",
-                            "model": pipe.steps[-1][0],
+                            "model": model,
                             "num_features": len(features_to_keep),
                         },
                     )
