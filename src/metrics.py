@@ -24,7 +24,7 @@ def populate_data_metrics(rows, dataset, protected, kwargs):
         kwargs: Dict, positional arguments for new_row
 
     Returns:
-        rows: List[Dict]
+        None
 
     """
 
@@ -48,13 +48,8 @@ def populate_data_metrics(rows, dataset, protected, kwargs):
             row[
                 "statistical_parity_difference"
             ] = metrics.statistical_parity_difference()
-            # NOTE there are other metrics as well which I did not investigate
-            # row['consistency'] = metrics.consistency()
-            # row['smoothed_empirical_differential_fairness'] = metrics.smoothed_empirical_differential_fairness()
 
         rows.append(row)
-
-    return rows
 
 
 def populate_model_metrics(rows, dataset, classified_dataset, protected, kwargs):
@@ -90,11 +85,6 @@ def populate_model_metrics(rows, dataset, classified_dataset, protected, kwargs)
         row["FP"] = metrics.num_false_positives(privileged=privileged)
         row["FN"] = metrics.num_false_negatives(privileged=privileged)
         row["TN"] = metrics.num_true_negatives(privileged=privileged)
-        # generalized binary confusion matrix
-        # row["GTP"] = metrics.num_generalized_true_positives(privileged=privileged)
-        # row["GFP"] = metrics.num_generalized_false_positives(privileged=privileged)
-        # row["GFN"] = metrics.num_generalized_false_negatives(privileged=privileged)
-        # row["GTN"] = metrics.num_generalized_true_negatives(privileged=privileged)
         # performance measures
         recall = metrics.true_positive_rate(privileged=privileged)  # alias recall
         precision = metrics.positive_predictive_value(
@@ -105,18 +95,11 @@ def populate_model_metrics(rows, dataset, classified_dataset, protected, kwargs)
         row["FNR"] = metrics.false_negative_rate(privileged=privileged)
         row["TNR"] = metrics.true_negative_rate(privileged=privileged)
         row["PPV"] = precision
-        # row["NPV"] = metrics.negative_predictive_value(privileged=privileged)
-        # row["FDR"] = metrics.false_discovery_rate(privileged=privileged)
-        # row["FOR"] = metrics.false_omission_rate(privileged=privileged)
         row["accuracy"] = metrics.accuracy(privileged=privileged)
         row["f1"] = (2 * precision * recall) / (
             precision + recall
         )  # harmonic mean of precision & recall
         # generalized performance measures
-        # row["GTPR"] = metrics.generalized_true_positive_rate(privileged=privileged)
-        # row["GFPR"] = metrics.generalized_false_positive_rate(privileged=privileged)
-        # row["GFNR"] = metrics.generalized_false_negative_rate(privileged=privileged)
-        # row["GTNR"] = metrics.generalized_true_negative_rate(privileged=privileged)
         if privileged is None:
             row["disparate_impact"] = metrics.disparate_impact()
             row[
@@ -131,5 +114,3 @@ def populate_model_metrics(rows, dataset, classified_dataset, protected, kwargs)
             )  # alias equal_opportunity_difference
 
         rows.append(row)
-
-    return rows

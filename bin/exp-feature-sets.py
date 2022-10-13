@@ -112,13 +112,13 @@ if __name__ == "__main__":
     rows = []
     datasets = [
         ("adult", AdultDataset, "sex"),
-        ("adult", AdultDataset, "race"),
-        ("compas", CompasDataset, "sex"),
-        ("compas", CompasDataset, "race"),
-        ("bank", BankDataset, "age"),
-        ("german", GermanDataset, "sex"),
-        ("german", GermanDataset, "age"),
-        ("meps", MEPSDataset21, "RACE"),
+        # ("adult", AdultDataset, "race"),
+        # ("compas", CompasDataset, "sex"),
+        # ("compas", CompasDataset, "race"),
+        # ("bank", BankDataset, "age"),
+        # ("german", GermanDataset, "sex"),
+        # ("german", GermanDataset, "age"),
+        # ("meps", MEPSDataset21, "RACE"),
     ]
 
     for iteration in range(0, int(iterations)):
@@ -139,7 +139,7 @@ if __name__ == "__main__":
                 )
                 train, test = full.split([0.75], shuffle=True)
 
-                rows = populate_data_metrics(
+                populate_data_metrics(
                     rows=rows,
                     dataset=test,
                     protected=protected,
@@ -166,7 +166,7 @@ if __name__ == "__main__":
                     job.join()
 
                 for model, classified_dataset in classified_datasets.items():
-                    rows = populate_model_metrics(
+                    populate_model_metrics(
                         rows=rows,
                         dataset=test,
                         classified_dataset=classified_dataset,
