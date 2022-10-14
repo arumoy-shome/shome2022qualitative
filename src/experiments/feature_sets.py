@@ -41,12 +41,18 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+DATADIR = os.path.join(ROOTDIR, "data")
+
+# NOTE: we need the following hack since we want to execute this file
+# as a script from the command line. Python by default, adds the
+# directory of the script being executed into sys.path so the
+# following imports don't work if we don't manipulate sys.path
+# ourselves.
+sys.path.insert(0, ROOTDIR)
 from src.metrics import populate_data_metrics, populate_model_metrics
 from src.csv import write_csv
 
-ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-DATADIR = os.path.join(ROOTDIR, "data")
 MODELS = [
     LogisticRegression,
     DecisionTreeClassifier,
@@ -208,7 +214,10 @@ if __name__ == "__main__":
 
     write_csv(
         filename=os.path.join(
-            DATADIR, "exp-feature-sets-{}-{}.csv".format(dataset_label, protected)
+            DATADIR,
+            "exp-feature-sets-{}-{}-{}.csv".format(
+                dataset_label, protected, args.iterations
+            ),
         ),
         rows=rows,
     )

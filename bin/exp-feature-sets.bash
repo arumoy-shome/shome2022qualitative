@@ -33,5 +33,5 @@ DATASETS=(
 )
 
 echo "${DATASETS[@]}" |
-    xargs -n 2 -P 0 .venv/bin/python3 bin/exp-feature-sets.py
+    xargs -n 2 -P 0 .venv/bin/python3 src/experiments/feature_sets.py
 
