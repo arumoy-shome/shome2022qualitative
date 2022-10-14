@@ -6,16 +6,15 @@ import os
 
 ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATADIR = os.path.join(ROOTDIR, "data")
-DATA = pd.read_csv(os.path.join(DATADIR, "exp-feature-sets.csv"))
 
 
 class TestAdultSexData(unittest.TestCase):
     """Tests results for the adult-sex dataset."""
 
     def setUp(self):
-        self.adult = DATA[
-            (DATA["dataset_label"] == "adult") & (DATA["protected"] == "sex")
-        ]
+        self.adult = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-adult-sex.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -85,16 +84,16 @@ class TestAdultSexData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.adult.shape[1], 4050)
+        self.assertEqual(self.adult.shape[0], 4050)
 
 
 class TestAdultRaceData(unittest.TestCase):
     """Tests results for the adult-race dataset."""
 
     def setUp(self):
-        self.adult = DATA[
-            (DATA["dataset_label"] == "adult") & (DATA["protected"] == "race")
-        ]
+        self.adult = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-adult-race.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -164,16 +163,16 @@ class TestAdultRaceData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.adult.shape[1], 4050)
+        self.assertEqual(self.adult.shape[0], 4050)
 
 
 class TestCompasSexData(unittest.TestCase):
     """Tests results for the compas-sex dataset."""
 
     def setUp(self):
-        self.compas = DATA[
-            (DATA["dataset_label"] == "compas") & (DATA["protected"] == "sex")
-        ]
+        self.compas = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-compas-sex.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -245,16 +244,16 @@ class TestCompasSexData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.compas.shape[1], 4050)
+        self.assertEqual(self.compas.shape[0], 4050)
 
 
 class TestCompasRaceData(unittest.TestCase):
     """Tests results for the compas-race dataset."""
 
     def setUp(self):
-        self.compas = DATA[
-            (DATA["dataset_label"] == "compas") & (DATA["protected"] == "race")
-        ]
+        self.compas = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-compas-race.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -326,16 +325,14 @@ class TestCompasRaceData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.compas.shape[1], 4050)
+        self.assertEqual(self.compas.shape[0], 4050)
 
 
 class TestBankAgeData(unittest.TestCase):
     """Tests results for the bank-age dataset."""
 
     def setUp(self):
-        self.bank = DATA[
-            (DATA["dataset_label"] == "bank") & (DATA["protected"] == "age")
-        ]
+        self.bank = pd.read_csv(os.path.join(DATADIR, "exp-feature-sets-bank-age.csv"))
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -403,16 +400,16 @@ class TestBankAgeData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.bank.shape[1], 4050)
+        self.assertEqual(self.bank.shape[0], 4050)
 
 
 class TestGermanSexData(unittest.TestCase):
     """Tests results for the german-sex dataset."""
 
     def setUp(self):
-        self.german = DATA[
-            (DATA["dataset_label"] == "german") & (DATA["protected"] == "sex")
-        ]
+        self.german = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-german-sex.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -484,16 +481,16 @@ class TestGermanSexData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.german.shape[1], 4050)
+        self.assertEqual(self.german.shape[0], 4050)
 
 
 class TestGermanAgeData(unittest.TestCase):
     """Tests results for the german-age dataset."""
 
     def setUp(self):
-        self.german = DATA[
-            (DATA["dataset_label"] == "german") & (DATA["protected"] == "age")
-        ]
+        self.german = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-german-age.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -565,16 +562,14 @@ class TestGermanAgeData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.german.shape[1], 4050)
+        self.assertEqual(self.german.shape[0], 4050)
 
 
 class TestMepsRaceData(unittest.TestCase):
     """Tests results for the meps-race dataset."""
 
     def setUp(self):
-        self.meps = DATA[
-            (DATA["dataset_label"] == "meps") & (DATA["protected"] == "RACE")
-        ]
+        self.meps = pd.read_csv(os.path.join(DATADIR, "exp-feature-sets-meps-race.csv"))
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -642,4 +637,4 @@ class TestMepsRaceData(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.meps.shape[1], 4050)
+        self.assertEqual(self.meps.shape[0], 4050)

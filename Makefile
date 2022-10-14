@@ -7,7 +7,7 @@ ctags:
 	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags --tag-relative=yes --languages=-javascript,css,json {} +
 
 etags:
-	find . -type f -not -path "*git*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
+	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
 
 fmt:
 	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec .venv/bin/black {} +

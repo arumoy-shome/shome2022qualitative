@@ -4,6 +4,21 @@ This script conducts experiments with the feature set of the data. For
 a given dataset, fairness metrics are calculated for varying size of
 features (with a minimum of 3 features).
 
+Usage:
+The script accepts two positional arguments:
+    1. name of dataset & protected attribute in data-pattr format
+    2. number of iterations
+
+E.g. the following command runs the experiment for adult-sex dataset
+for 5 iterations:
+
+    python3 bin/exp-features-sets.py adult-sex 5
+
+See python3 bin/exp-feature-sets.py --help for more details.
+
+Use the bin/exp-features-sets.bash script to execute this script for
+all datasets in parallel.
+
 """
 
 from sklearn.linear_model import LogisticRegression
@@ -18,10 +33,10 @@ from aif360.datasets import (
     GermanDataset,
     MEPSDataset21,
 )
-from multiprocessing import Process, Manager
 import os
 import sys
 import json
+import argparse
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -46,6 +61,14 @@ PRIVILEGED_CLASSES_MAP = {
     "german": {"sex": [["male"]], "age": [lambda x: x > 25]},
     "meps": {"RACE": [["White"]]},
 }
+DATASET_MAP = {
+    "adult": AdultDataset,
+    "compas": CompasDataset,
+    "bank": BankDataset,
+    "german": GermanDataset,
+    "meps": MEPSDataset21,
+}
+
 # NOTE: the following features are derived from the corresponding
 # class in the aif360.datasets module. The default set & order
 # provided by aif360 is used. The follow strategy is used to derive
@@ -85,91 +108,107 @@ def generate_feature_sets(dataset, random=False):
     return feature_sets
 
 
-def fit_predict(model, train, test, classified_datasets):
-    """Train & test a model with the given data.
+def parse_args():
+    """Parse command line arguments.
 
-    Args:
-        model: Obj, an instance of a model from sklearn
-        train: Array like, the training data
-        test: Array like, the test data with actual labels (y)
-        classified_datasets: Dict, shared variable between multiple
-        processes used to collect the results of this function.
+    In:
+        None
 
-    Returns: None
+    Returns:
+        args: argparse.ArgumentParser
     """
-
-    logging.info("computing metrics for model: {}".format(model))
-    pipe = make_pipeline(StandardScaler(), model())
-    pipe.fit(X=train.features, y=train.labels.ravel())
-    y_pred = pipe.predict(test.features).reshape(-1, 1)
-    classified = test.copy()
-    classified.labels = y_pred
-    classified_datasets[pipe.steps[-1][0]] = classified
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "dataset",
+        help="Dataset & protected attribute in <dataset-pattr> format",
+        choices=[
+            "adult-sex",
+            "adult-race",
+            "compas-sex",
+            "compas-race",
+            "bank-age",
+            "german-sex",
+            "german-age",
+            "meps-RACE",
+        ],
+    )
+    parser.add_argument(
+        "iterations",
+        help="Number of iterations. Default: 1",
+        type=int,
+        default=1,
+    )
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
-    iterations = sys.argv[1] if len(sys.argv) > 1 else 1
-    rows = []
-    datasets = [
-        ("adult", AdultDataset, "sex"),
-        # ("adult", AdultDataset, "race"),
-        # ("compas", CompasDataset, "sex"),
-        # ("compas", CompasDataset, "race"),
-        # ("bank", BankDataset, "age"),
-        # ("german", GermanDataset, "sex"),
-        # ("german", GermanDataset, "age"),
-        # ("meps", MEPSDataset21, "RACE"),
-    ]
 
-    for iteration in range(0, int(iterations)):
-        logging.info("iteration {}".format(iteration))
-        for dataset_label, dataset, protected in datasets:
+    args = parse_args()
+    rows = []
+
+    dataset_label, protected = args.dataset.split("-")
+    dataset = DATASET_MAP[dataset_label]
+    feature_sets = generate_feature_sets(dataset_label)
+
+    for iteration in range(0, args.iterations):
+        for features_to_keep in feature_sets:
+            full = dataset(
+                protected_attribute_names=[protected],
+                privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
+                features_to_keep=features_to_keep,
+            )
+            train, test = full.split([0.75], shuffle=True)
+
+            populate_data_metrics(
+                rows=rows,
+                dataset=test,
+                protected=protected,
+                kwargs={
+                    "dataset_label": dataset_label,
+                    "subset": "test",
+                    "model": "None",
+                    "num_features": len(features_to_keep),
+                },
+            )
             logging.info(
-                "computing metrics for dataset: {} protected: {}".format(
-                    dataset_label, protected
+                "iteration: {} dataset: {} protected: {} features: {} model: None".format(
+                    iteration, dataset_label, protected, len(features_to_keep)
                 )
             )
-            feature_sets = generate_feature_sets(dataset_label)
 
-            for features_to_keep in feature_sets:
-                full = dataset(
-                    protected_attribute_names=[protected],
-                    privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
-                    features_to_keep=features_to_keep,
-                )
-                train, test = full.split([0.75], shuffle=True)
+            for model in MODELS:
+                pipe = make_pipeline(StandardScaler(), model())
+                pipe.fit(X=train.features, y=train.labels.ravel())
+                y_pred = pipe.predict(test.features).reshape(-1, 1)
+                classified = test.copy()
+                classified.labels = y_pred
 
-                populate_data_metrics(
+                populate_model_metrics(
                     rows=rows,
                     dataset=test,
+                    classified_dataset=classified,
                     protected=protected,
                     kwargs={
                         "dataset_label": dataset_label,
                         "subset": "test",
-                        "model": "None",
+                        "model": pipe.steps[-1][0],
                         "num_features": len(features_to_keep),
                     },
                 )
 
-                for model in MODELS:
-                    logging.info("computing metrics for model: {}".format(model))
-                    pipe = make_pipeline(StandardScaler(), model())
-                    pipe.fit(X=train.features, y=train.labels.ravel())
-                    y_pred = pipe.predict(test.features).reshape(-1, 1)
-                    classified = test.copy()
-                    classified.labels = y_pred
-
-                    populate_model_metrics(
-                        rows=rows,
-                        dataset=test,
-                        classified_dataset=classified,
-                        protected=protected,
-                        kwargs={
-                            "dataset_label": dataset_label,
-                            "subset": "test",
-                            "model": pipe.steps[-1][0],
-                            "num_features": len(features_to_keep),
-                        },
+                logging.info(
+                    "iteration: {} dataset: {} protected: {} features: {} model: {}".format(
+                        iteration,
+                        dataset_label,
+                        protected,
+                        len(features_to_keep),
+                        pipe.steps[-1][0],
                     )
+                )
 
-    write_csv(filename=os.path.join(DATADIR, "exp-feature-sets.csv"), rows=rows)
+    write_csv(
+        filename=os.path.join(
+            DATADIR, "exp-feature-sets-{}-{}.csv".format(dataset_label, protected)
+        ),
+        rows=rows,
+    )
