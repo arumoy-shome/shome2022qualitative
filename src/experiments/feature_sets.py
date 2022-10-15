@@ -146,6 +146,16 @@ if __name__ == "__main__":
                         privileged=privileged,
                     )
                     rows.append(row)
+                    logging.info(
+                        "dataset: {} protected: {} features: {} model: {} privileged: {} iteration: {}".format(
+                            dataset_label,
+                            protected,
+                            len(features_to_keep),
+                            row["model"],
+                            row["privileged"],
+                            iteration,
+                        )
+                    )
 
     write_csv(
         filename=os.path.join(

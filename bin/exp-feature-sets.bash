@@ -14,9 +14,9 @@
 #    ./bin/exp-feature-sets.bash 5
 #
 
-# This script starts as many processes as possible by default. You can
-# adjust this number by changing the value passed to the -P flag
-# below. Consult the man pages for xargs for more information.
+# This script starts 8 processes by default. You can adjust this
+# number by changing the value passed to the -P flag below. Consult
+# the man pages for xargs for more information.
 
 ITERATIONS=1
 [[ "$1" ]] && ITERATIONS="$1"
@@ -33,5 +33,5 @@ DATASETS=(
 )
 
 echo "${DATASETS[@]}" |
-    xargs -n 2 -P 0 .venv/bin/python3 src/experiments/feature_sets.py
+    xargs -n 2 -P 8 .venv/bin/python3 src/experiments/feature_sets.py
 
