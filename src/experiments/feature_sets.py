@@ -24,15 +24,6 @@ all datasets in parallel.
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from aif360.datasets import (
-    AdultDataset,
-    CompasDataset,
-    BankDataset,
-    GermanDataset,
-    MEPSDataset21,
-)
 import os
 import sys
 import json
@@ -50,30 +41,18 @@ DATADIR = os.path.join(ROOTDIR, "data")
 # following imports don't work if we don't manipulate sys.path
 # ourselves.
 sys.path.insert(0, ROOTDIR)
-from src.metrics import populate_data_metrics, populate_model_metrics
+from src.metrics import compute_metrics
 from src.csv import write_csv
 
 MODELS = [
+    None,
     LogisticRegression,
     DecisionTreeClassifier,
     AdaBoostClassifier,
     RandomForestClassifier,
 ]
 MIN_FEATURES_TO_KEEP = 3
-PRIVILEGED_CLASSES_MAP = {
-    "adult": {"sex": [["Male"]], "race": [["White"]]},
-    "compas": {"sex": [["Female"]], "race": [["Caucasian"]]},
-    "bank": {"age": [lambda x: x > 25]},
-    "german": {"sex": [["male"]], "age": [lambda x: x > 25]},
-    "meps": {"RACE": [["White"]]},
-}
-DATASET_MAP = {
-    "adult": AdultDataset,
-    "compas": CompasDataset,
-    "bank": BankDataset,
-    "german": GermanDataset,
-    "meps": MEPSDataset21,
-}
+PRIVILEGED = [None, True, False]
 
 # NOTE: the following features are derived from the corresponding
 # class in the aif360.datasets module. The default set & order
@@ -88,11 +67,11 @@ with open(os.path.join(ROOTDIR, "bin", "features.json")) as f:
     FEATURES = json.load(f)
 
 
-def generate_feature_sets(dataset, random=False):
+def generate_feature_sets(dataset_label, random=False):
     """Map for generating feature sets based on dataset.
 
     Args:
-        dataset: Str, name of dataset
+        dataset_label: Str, name of dataset
         random: Bool, defaults to False. When True randomise feature
         order.
 
@@ -102,7 +81,7 @@ def generate_feature_sets(dataset, random=False):
     """
 
     feature_sets = []
-    features = FEATURES[dataset].copy()
+    features = FEATURES[dataset_label].copy()
 
     # NOTE: we copy the list since python passes lists by reference (not value)!
     # TODO: refactor this using lambda & map()
@@ -153,64 +132,20 @@ if __name__ == "__main__":
     rows = []
 
     dataset_label, protected = args.dataset.split("-")
-    dataset = DATASET_MAP[dataset_label]
     feature_sets = generate_feature_sets(dataset_label)
 
     for iteration in range(0, args.iterations):
         for features_to_keep in feature_sets:
-            full = dataset(
-                protected_attribute_names=[protected],
-                privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
-                features_to_keep=features_to_keep,
-            )
-            train, test = full.split([0.75], shuffle=True)
-
-            populate_data_metrics(
-                rows=rows,
-                dataset=test,
-                protected=protected,
-                kwargs={
-                    "dataset_label": dataset_label,
-                    "subset": "test",
-                    "model": "None",
-                    "num_features": len(features_to_keep),
-                },
-            )
-            logging.info(
-                "iteration: {} dataset: {} protected: {} features: {} model: None".format(
-                    iteration, dataset_label, protected, len(features_to_keep)
-                )
-            )
-
             for model in MODELS:
-                pipe = make_pipeline(StandardScaler(), model())
-                pipe.fit(X=train.features, y=train.labels.ravel())
-                y_pred = pipe.predict(test.features).reshape(-1, 1)
-                classified = test.copy()
-                classified.labels = y_pred
-
-                populate_model_metrics(
-                    rows=rows,
-                    dataset=test,
-                    classified_dataset=classified,
-                    protected=protected,
-                    kwargs={
-                        "dataset_label": dataset_label,
-                        "subset": "test",
-                        "model": pipe.steps[-1][0],
-                        "num_features": len(features_to_keep),
-                    },
-                )
-
-                logging.info(
-                    "iteration: {} dataset: {} protected: {} features: {} model: {}".format(
-                        iteration,
-                        dataset_label,
-                        protected,
-                        len(features_to_keep),
-                        pipe.steps[-1][0],
+                for privileged in PRIVILEGED:
+                    row = compute_metrics(
+                        dataset_label=dataset_label,
+                        model=model,
+                        features_to_keep=features_to_keep,
+                        protected=protected,
+                        privileged=privileged,
                     )
-                )
+                    rows.append(row)
 
     write_csv(
         filename=os.path.join(
