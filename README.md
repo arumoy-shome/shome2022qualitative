@@ -12,25 +12,15 @@ The datasets used for the analysis in this project can be downloaded
 from [google drive]. Download the zip file & place it in the root
 project directory (where this readme file is located).
 
-The analytical work was done using Python 3.9, consider creating
-a virtualenv prior to running the code.
+The results generated from the experiments are stored in csv files
+within the `data` directory. Create this directory within the root
+directory of this project if it does not yet exist.
 
-    python3 -m venv .venv # assuming python3 points to python3.9
+	mkdir -p data
 
-To activate the virtualenv run the following command. This makes sure
-that the unversioned python & pip binaries point to the appropriate
-versions.
-
-    source .venv/bin/activate
-
-The python dependencies are listed in requirements.txt. You can
-install all dependencies with pip.
-
-    pip install -r requirements.txt
-
-Alternatively, you can also use the provided Dockerfile to build a
-docker image & run your commands within a docker container. To build
-an image tagged `shome22qual` run the following command.
+Use the provided Dockerfile to build a docker image & run your
+commands within a docker container. To build an image tagged
+`shome22qual` run the following command.
 
 	docker build -t shome22qual .
 
