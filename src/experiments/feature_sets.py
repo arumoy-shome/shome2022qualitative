@@ -63,7 +63,7 @@ PRIVILEGED = [None, True, False]
 # 3) manually check the csv file/data documentation to obtain list of
 #    features.
 FEATURES = None
-with open(os.path.join(ROOTDIR, "bin", "features.json")) as f:
+with open(os.path.join(ROOTDIR, "src", "experiments", "features.json")) as f:
     FEATURES = json.load(f)
 
 
