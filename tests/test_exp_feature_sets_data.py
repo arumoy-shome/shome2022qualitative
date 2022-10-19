@@ -13,7 +13,7 @@ class TestAdultSexData(unittest.TestCase):
 
     def setUp(self):
         self.adult = pd.read_csv(
-            os.path.join(DATADIR, "exp-feature-sets-adult-sex.csv")
+            os.path.join(DATADIR, "exp-feature-sets-adult-sex-50.csv")
         )
 
     def test_feature_sets(self):
@@ -74,17 +74,16 @@ class TestAdultSexData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The adult dataset must contain a total of 50*9*5*3 = 4050
+            The adult dataset must contain a total of 50*9*5*3 = 6750
             examples.
 
         """
 
-        self.assertEqual(self.adult.shape[0], 4050)
+        self.assertEqual(self.adult.shape[0], 6750)
 
 
 class TestAdultRaceData(unittest.TestCase):
@@ -92,7 +91,7 @@ class TestAdultRaceData(unittest.TestCase):
 
     def setUp(self):
         self.adult = pd.read_csv(
-            os.path.join(DATADIR, "exp-feature-sets-adult-race.csv")
+            os.path.join(DATADIR, "exp-feature-sets-adult-race-50.csv")
         )
 
     def test_feature_sets(self):
@@ -153,17 +152,16 @@ class TestAdultRaceData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The adult dataset must contain a total of 50*9*5*3 = 4050
+            The adult dataset must contain a total of 50*9*5*3 = 6750
             examples.
 
         """
 
-        self.assertEqual(self.adult.shape[0], 4050)
+        self.assertEqual(self.adult.shape[0], 6750)
 
 
 class TestCompasSexData(unittest.TestCase):
@@ -171,7 +169,7 @@ class TestCompasSexData(unittest.TestCase):
 
     def setUp(self):
         self.compas = pd.read_csv(
-            os.path.join(DATADIR, "exp-feature-sets-compas-sex.csv")
+            os.path.join(DATADIR, "exp-feature-sets-compas-sex-50.csv")
         )
 
     def test_feature_sets(self):
@@ -234,17 +232,16 @@ class TestCompasSexData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The compas dataset must contain a total of 50*9*5*3 = 4050
+            The compas dataset must contain a total of 50*7*5*3 = 5250
             examples.
 
         """
 
-        self.assertEqual(self.compas.shape[0], 4050)
+        self.assertEqual(self.compas.shape[0], 5250)
 
 
 class TestCompasRaceData(unittest.TestCase):
@@ -252,7 +249,7 @@ class TestCompasRaceData(unittest.TestCase):
 
     def setUp(self):
         self.compas = pd.read_csv(
-            os.path.join(DATADIR, "exp-feature-sets-compas-race.csv")
+            os.path.join(DATADIR, "exp-feature-sets-compas-race-50.csv")
         )
 
     def test_feature_sets(self):
@@ -315,24 +312,25 @@ class TestCompasRaceData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The compas dataset must contain a total of 50*9*5*3 = 4050
+            The compas dataset must contain a total of 50*7*5*3 = 5250
             examples.
 
         """
 
-        self.assertEqual(self.compas.shape[0], 4050)
+        self.assertEqual(self.compas.shape[0], 5250)
 
 
 class TestBankAgeData(unittest.TestCase):
     """Tests results for the bank-age dataset."""
 
     def setUp(self):
-        self.bank = pd.read_csv(os.path.join(DATADIR, "exp-feature-sets-bank-age.csv"))
+        self.bank = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-bank-age-50.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -390,17 +388,16 @@ class TestBankAgeData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The bank dataset must contain a total of 50*9*5*3 = 4050
+            The bank dataset must contain a total of 50*17*5*3 = 12750
             examples.
 
         """
 
-        self.assertEqual(self.bank.shape[0], 4050)
+        self.assertEqual(self.bank.shape[0], 12750)
 
 
 class TestGermanSexData(unittest.TestCase):
@@ -408,7 +405,7 @@ class TestGermanSexData(unittest.TestCase):
 
     def setUp(self):
         self.german = pd.read_csv(
-            os.path.join(DATADIR, "exp-feature-sets-german-sex.csv")
+            os.path.join(DATADIR, "exp-feature-sets-german-sex-50.csv")
         )
 
     def test_feature_sets(self):
@@ -471,17 +468,16 @@ class TestGermanSexData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The german dataset must contain a total of 50*9*5*3 = 4050
+            The german dataset must contain a total of 50*18*5*3 = 13500
             examples.
 
         """
 
-        self.assertEqual(self.german.shape[0], 4050)
+        self.assertEqual(self.german.shape[0], 13500)
 
 
 class TestGermanAgeData(unittest.TestCase):
@@ -489,7 +485,7 @@ class TestGermanAgeData(unittest.TestCase):
 
     def setUp(self):
         self.german = pd.read_csv(
-            os.path.join(DATADIR, "exp-feature-sets-german-age.csv")
+            os.path.join(DATADIR, "exp-feature-sets-german-age-50.csv")
         )
 
     def test_feature_sets(self):
@@ -552,24 +548,25 @@ class TestGermanAgeData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The german dataset must contain a total of 50*9*5*3 = 4050
+            The german dataset must contain a total of 50*18*5*3 = 13500
             examples.
 
         """
 
-        self.assertEqual(self.german.shape[0], 4050)
+        self.assertEqual(self.german.shape[0], 13500)
 
 
 class TestMepsRaceData(unittest.TestCase):
     """Tests results for the meps-race dataset."""
 
     def setUp(self):
-        self.meps = pd.read_csv(os.path.join(DATADIR, "exp-feature-sets-meps-race.csv"))
+        self.meps = pd.read_csv(
+            os.path.join(DATADIR, "exp-feature-sets-meps-race-50.csv")
+        )
 
     def test_feature_sets(self):
         """Test feature sets.
@@ -627,14 +624,13 @@ class TestMepsRaceData(unittest.TestCase):
                 3,
             )
 
-    @unittest.skip("skip until we have data for 50 iterations.")
     def test_example_count(self):
         """Test total count of examples.
 
         Test:
-            The meps dataset must contain a total of 50*9*5*3 = 4050
+            The meps dataset must contain a total of 50*40*5*3 = 30000
             examples.
 
         """
 
-        self.assertEqual(self.meps.shape[0], 4050)
+        self.assertEqual(self.meps.shape[0], 30000)

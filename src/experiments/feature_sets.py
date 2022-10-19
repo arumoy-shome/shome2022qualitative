@@ -12,9 +12,9 @@ The script accepts two positional arguments:
 E.g. the following command runs the experiment for adult-sex dataset
 for 5 iterations:
 
-    python3 bin/exp-features-sets.py adult-sex 5
+    python3 src/experiments/exp-features-sets.py adult-sex 5
 
-See python3 bin/exp-feature-sets.py --help for more details.
+See python3 src/experiments/exp-feature-sets.py --help for more details.
 
 Use the bin/exp-features-sets.bash script to execute this script for
 all datasets in parallel.
