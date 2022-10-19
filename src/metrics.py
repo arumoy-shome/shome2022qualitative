@@ -61,7 +61,9 @@ def train_test_split(dataset_label, protected, features_to_keep):
     return memory[dataset_label][len(features_to_keep)]
 
 
-def compute_metrics(dataset_label, model, features_to_keep, protected, privileged):
+def compute_metrics(
+    dataset_label, model, features_to_keep, protected, privileged, iteration
+):
     """Map for populating data or model metrics.
 
     In:
@@ -70,6 +72,7 @@ def compute_metrics(dataset_label, model, features_to_keep, protected, privilege
         features_to_keep: List, list of features to use in training data
         protected: Str
         privileged: None or Bool
+        iteration: Int
 
     Returns:
         metrics: Dict
@@ -89,6 +92,7 @@ def compute_metrics(dataset_label, model, features_to_keep, protected, privilege
             num_features=len(features_to_keep),
             protected=protected,
             privileged=privileged,
+            iteration=iteration,
         )
 
     else:
@@ -106,6 +110,7 @@ def compute_metrics(dataset_label, model, features_to_keep, protected, privilege
             num_features=len(features_to_keep),
             protected=protected,
             privileged=privileged,
+            iteration=iteration,
         )
 
 
@@ -122,6 +127,7 @@ def compute_data_metrics(**kwargs):
         num_features: Int
         protected: Str, protected attribute
         privileged: None or Bool
+        iteration: Int
 
     Returns:
         Metrics: Dict
@@ -158,6 +164,7 @@ def compute_model_metrics(**kwargs):
         num_features: Int
         protected: Str, protected attribute
         privileged: None or Bool
+        iteration: Int
 
     Returns:
         Metrics: Dict

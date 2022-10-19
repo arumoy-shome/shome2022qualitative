@@ -144,6 +144,7 @@ if __name__ == "__main__":
                         features_to_keep=features_to_keep,
                         protected=protected,
                         privileged=privileged,
+                        iteration=iteration,
                     )
                     rows.append(row)
                     logging.info(
