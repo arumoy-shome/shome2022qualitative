@@ -1,0 +1,370 @@
+#+title: Experiment with Feature Sets
+#+date: [2022-10-17 Mon]
+#+property: header-args:python :session *sh22qual* :exports both
+
+This document analyses the =data/exp-feature-sets-*-50.csv= datasets
+ie. results from the feature sets experiments.
+
+* Init
+
+#+begin_src python :results silent
+  import os
+  import sys
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+  import matplotlib.pyplot as plt
+
+  ROOTDIR = os.path.abspath(os.path.join(os.getcwd(), ".."))
+  DATADIR = os.path.join(ROOTDIR, "data")
+  sys.path.insert(0, ROOTDIR)
+  pd.set_option('display.max_columns', None)
+  pd.set_option('display.max_colwidth', None)
+#+end_src
+
+* EDA
+Lets analyse the data obtained from 50 iterations of the experiment.
+First, we need to combine the datasets into a single dataframe.
+
+#+begin_src python
+  import glob
+
+  frames = [pd.read_csv(frame) for frame in glob.glob(os.path.join(DATADIR, "*-50.csv"))]
+
+  data = pd.concat(frames)
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 93750 | 25 |
+
+#+begin_src python
+  data.dtypes
+#+end_src
+
+#+RESULTS:
+#+begin_example
+num_negatives                    float64
+theil_index                      float64
+accuracy                         float64
+FPR                              float64
+average_abs_odds_difference      float64
+disparate_impact                 float64
+model                             object
+FN                               float64
+TNR                              float64
+protected                         object
+FP                               float64
+base_rate                        float64
+TPR                              float64
+num_positives                    float64
+true_positive_rate_difference    float64
+FNR                              float64
+TP                               float64
+statistical_parity_difference    float64
+PPV                              float64
+f1                               float64
+num_features                       int64
+privileged                        object
+iteration                          int64
+TN                               float64
+dataset_label                     object
+dtype: object
+#+end_example
+
+* Disparate Impact & Statistical Parity Difference [0/2]
+In this section we take a closer look at the disparate impact &
+statistical parity difference metrics. We start with these two since
+we have both data & model variants for these metrics.
+
+#+begin_src python
+  # fairness metrics are calculated without conditioning on any (un)privileged group
+  metrics = data[data["privileged"] == "None"]
+  metrics = metrics[[
+      "disparate_impact",
+      "statistical_parity_difference",
+      "iteration",
+      "model",
+      "protected",
+      "num_features",
+      "dataset_label"
+  ]]
+
+  metrics
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       disparate_impact  statistical_parity_difference  iteration  \
+0              0.380463                      -0.190953          0   
+3              0.325643                      -0.176814          0   
+6              0.425396                      -0.167885          0   
+9              0.322013                      -0.170099          0   
+12             0.360431                      -0.176439          0   
+...                 ...                            ...        ...   
+29985          0.456837                      -0.138794         49   
+29988          0.272496                      -0.112363         49   
+29991          0.528534                      -0.108183         49   
+29994          0.263804                      -0.117350         49   
+29997          0.384522                      -0.081692         49   
+
+                        model protected  num_features dataset_label  
+0                        None       sex            11         adult  
+3          logisticregression       sex            11         adult  
+6      decisiontreeclassifier       sex            11         adult  
+9          adaboostclassifier       sex            11         adult  
+12     randomforestclassifier       sex            11         adult  
+...                       ...       ...           ...           ...  
+29985                    None      RACE             3          meps  
+29988      logisticregression      RACE             3          meps  
+29991  decisiontreeclassifier      RACE             3          meps  
+29994      adaboostclassifier      RACE             3          meps  
+29997  randomforestclassifier      RACE             3          meps  
+
+[31250 rows x 7 columns]
+#+end_example
+
+Lets preprocess the data next prior to analysis. zhang2021ignorance
+took the absolute value for all fairness metrics. For disparate impact
+zhang took the distance of the metric to one & then normalised the
+value between [0, 1]. We also lowercase the values in the =protected=
+column while we are are at it.
+
+#+begin_src python :results silent
+  cols = ["disparate_impact", "statistical_parity_difference"]
+  metrics["protected"] = metrics["protected"].str.lower()
+  metrics["disparate_impact"] = metrics["disparate_impact"] - 1
+  metrics[cols] = metrics[cols].abs()
+
+  from sklearn.preprocessing import MinMaxScaler
+
+  scaler = MinMaxScaler()
+  metrics["disparate_impact"] = scaler.fit_transform(
+      metrics["disparate_impact"].values.reshape(-1, 1)
+  ).ravel()
+
+#+end_src
+
+Lets create a simple lineplot to observe the general trend of the
+fairness metrics across various feature sets. Since different datasets
+have different protected attributes, we need to create separate
+figures for each dataset.
+
+#+begin_src python :results silent :exports none
+  dataset_labels = metrics["dataset_label"].unique().tolist()
+  cols = ["disparate_impact", "statistical_parity_difference"]
+
+  for dataset_label in dataset_labels:
+      df = metrics[metrics["dataset_label"] == dataset_label]
+      name = "lineplot--exp-feature-sets--{}--di-spd.svg".format(dataset_label)
+      protected = df["protected"].unique().tolist()
+      fig, axs = plt.subplots(
+          nrows=len(protected),
+          ncols=len(cols),
+          figsize=(5*len(cols),5*len(protected)),
+          sharey=True,
+      )
+
+      for row, p in enumerate(protected):
+          for col, metric in enumerate(cols):
+              ax=axs[row,col] if len(protected) > 1 else axs[col]
+              ax.set_title("protected: {}".format(p))
+              ax.set_xlabel("num_features")
+              ax.set_ylabel(metric)
+              sns.lineplot(
+                  data=df,
+                  y=metric,
+                  x="num_features",
+                  hue="model",
+                  style="model",
+                  ax=ax,
+              )
+
+      fig.tight_layout()
+      fig.savefig(name, format="svg")
+#+end_src
+
+- [ ] focus on each dataset
+- [ ] widen across all datasets
+- generally speaking, in some dataset-protected-model combinations I
+  see that increasing feature set size improves fairness
+
+Lets also look at the distribution of the fairness metrics across
+feature set sizes using boxplots.
+
+#+begin_src python :results silent :exports none
+  dataset_labels = metrics["dataset_label"].unique().tolist()
+  cols = ["disparate_impact", "statistical_parity_difference"]
+
+  for dataset_label in dataset_labels:
+      df = metrics[metrics["dataset_label"] == dataset_label]
+      name = "boxplot--exp-feature-sets--{}--di-spd.svg".format(dataset_label)
+      protected = df["protected"].unique().tolist()
+      fig, axs = plt.subplots(
+          nrows=len(protected),
+          ncols=len(cols),
+          figsize=(10*len(cols),5*len(protected)),
+          sharey=True,
+      )
+
+      for row, p in enumerate(protected):
+          for col, metric in enumerate(cols):
+              ax=axs[row,col] if len(protected) > 1 else axs[col]
+              ax.set_title("protected: {}".format(p))
+              ax.set_xlabel("num_features")
+              ax.set_ylabel(metric)
+              sns.boxplot(
+                  data=df,
+                  y=metric,
+                  x="num_features",
+                  hue="model",
+                  dodge=True,
+                  ax=ax,
+              )
+
+      fig.tight_layout()
+      fig.savefig(name, format="svg")
+#+end_src
+
+** Relationship between data & model variant [0/0]
+In this section we want to validate that the data & model metrics are
+related to one another. We employ two types of tests:
+1. Correlation between data & model variants
+2. Fitting a linear regression model between data & model variants
+
+The data needs some manipulation to make it fit for further
+visualisations. We want the following columns:
+1. x: the data variant of fairness metrics (float)
+2. y: the model variant of fairness metrics (float)
+4. model: the model used for the y value
+6. protected: the name of the protected attribute
+7. metric: name of the fairness metric
+
+As above, we will create different figures for each dataset.
+
+#+begin_src python :results silent
+  dataset_labels = metrics["dataset_label"].unique().tolist()
+  cols = ["disparate_impact", "statistical_parity_difference"]
+  models = metrics["model"].unique().tolist()
+  models.remove("None")
+
+  for dataset_label in dataset_labels:
+      df = metrics[metrics["dataset_label"] == dataset_label]
+      name = "heatmap--exp-feature-sets--{}--di-spd.svg".format(dataset_label)
+      protected = df["protected"].unique().tolist()
+      num_features = df["num_features"].unique().tolist()
+      num_features.sort()         # ascending order
+      fig, axs = plt.subplots(
+          nrows=len(protected),
+          ncols=len(cols),
+          figsize=(5*len(cols),5*len(protected)),
+          sharey=True,
+      )
+
+      for row, p in enumerate(protected):
+          _df = df[df["protected"] == p]
+          for col, metric in enumerate(cols):
+              frame = []
+              # this is a crappy implementation; next loop can be put
+              # outside the above loop, but then it makes creating the
+              # figures a bit more tricky...
+              for n in num_features:
+                  __df = _df[_df["num_features"] == n]
+                  pivot = __df.pivot(
+                      index="iteration",
+                      columns="model",
+                      values="disparate_impact"
+                  )
+                  frame.append(pivot)
+
+              frame = pd.concat(frame)
+              ax=axs[row,col] if len(protected) > 1 else axs[col]
+              ax.set_title("protected: {} metric: {}".format(p, metric))
+              corr = frame.corr()
+              mask = np.zeros_like(corr)
+              mask[np.triu_indices_from(mask)] = True
+              sns.heatmap(
+                  data=corr,
+                  mask=mask,
+                  square=True,
+                  ax=ax,
+              )
+      fig.tight_layout()
+      fig.savefig(name, format="svg")
+#+end_src
+
++ [ ] analyse correlation heatmaps within datasets
++ [ ] then generalise results across datasets
++ in general, I see that for certain dataset-protected-model
+  combinations, the data & model variants are correlated.
+
+Next, we want to fit a linear regression model on the data & model
+variants.
+
+#+begin_src python :results silent
+  dataset_labels = metrics["dataset_label"].unique().tolist()
+  cols = ["disparate_impact", "statistical_parity_difference"]
+  models = metrics["model"].unique().tolist()
+  models.remove("None")
+
+  for dataset_label in dataset_labels:
+      df = metrics[metrics["dataset_label"] == dataset_label]
+      name = "regplot--exp-feature-sets--{}--di-spd.svg".format(dataset_label)
+      protected = df["protected"].unique().tolist()
+      num_features = df["num_features"].unique().tolist()
+      num_features.sort()
+
+      _frames = []
+      for p in protected:
+          _df = df[df["protected"] == p]
+          for metric in cols:
+              _pivots = []
+              for n in num_features:
+                  __df = _df[_df["num_features"] == n]
+                  pivot = __df.pivot(
+                      index="iteration",
+                      columns="model",
+                      values="disparate_impact"
+                  )
+                  _pivots.append(pivot)
+
+              pivoted = pd.concat(_pivots)
+
+              _chunks = []
+              for x, y in zip(["None"]*len(models), models):
+                  _chunk = pivoted[[x,y]]
+                  _chunk = _chunk.rename(columns={x: "x", y: "y"})
+                  _chunk["model"] = y
+                  _chunk["metric"] = metric
+                  _chunk["protected"] = p
+                  _chunks.append(_chunk)
+
+              chunked = pd.concat(_chunks)
+              _frames.append(chunked)
+
+      frame = pd.concat(_frames)
+      g = sns.lmplot(
+          data=frame,
+          x="x",
+          y="y",
+          hue="model",
+          col="metric",
+          row="protected",
+          scatter=False,
+          sharex=False,
+      )
+      g.tight_layout()
+      g.savefig(name, format="svg")
+
+#+end_src
+
+* Base rate & others [0/2]
+In this section we consider all 4 fairness metrics & try to find a
+relationship with the base rate metric since this is the only data
+metric fairness that may be generalisable to all model fairness
+metrics.
+
+- [ ] lineplot of baserate vs. other metrics; how do the conditioned
+  base rates compare to other metrics?
+- [ ] 
+
