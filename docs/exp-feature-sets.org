@@ -1,6 +1,9 @@
 #+title: Experiment with Feature Sets
 #+date: [2022-10-17 Mon]
-#+property: header-args:python :session *sh22qual* :exports both
+#+options: toc:t
+#+toc: tables
+#+html_head: <link rel="stylesheet" href="main.css">
+#+property: header-args:python :session *sh22qual* :exports both :eval no-export
 
 This document analyses the =data/exp-feature-sets-*-50.csv= datasets
 ie. results from the feature sets experiments.
@@ -184,14 +187,73 @@ figures for each dataset.
       fig.savefig(name, format="svg")
 #+end_src
 
+#+caption: Lineplot DI & SPD Adult
+#+name: fig-adult-lineplot-di-spd
+[[file:lineplot--exp-feature-sets--adult--di-spd.svg]]
+
+#+caption: Lineplot DI & SPD Compas
+#+name: fig-compas-lineplot-di-spd
+[[file:lineplot--exp-feature-sets--compas--di-spd.svg]]
+
+#+caption: Lineplot DI & SPD Bank
+#+name: fig-bank-lineplot-di-spd
+[[file:lineplot--exp-feature-sets--bank--di-spd.svg]]
+
+#+caption: Lineplot DI & SPD German
+#+name: fig-german-lineplot-di-spd
+[[file:lineplot--exp-feature-sets--german--di-spd.svg]]
+
+#+caption: Lineplot DI & SPD Meps
+#+name: fig-meps-lineplot-di-spd
+[[file:lineplot--exp-feature-sets--meps--di-spd.svg]]
+
+* TODO conduct analysis
 - [ ] focus on each dataset
 - [ ] widen across all datasets
+
+** High level observations [0/1]
 - generally speaking, in some dataset-protected-model combinations I
   see that increasing feature set size improves fairness
+- the data variants generally stay constant while model variants show
+  improve in fairness as feature set increases
+- some models (like decisiontreeclassifier) is relatively stable while
+  other models (adaboost) improve a lot
+- models for some dataset-protected combinations show significant
+  improvements (compas-{sex,face} for instance) across both metrics
+  while others (like bank-age) show significant improvement only in
+  one metric; but this could simply be due to the mathematical formula
+  of the metric (SPD is a difference; less variance?)
+- no discernable improvements in some dataset-protected pairs
+  (german-{age,sex} & meps-race)
+- [ ] my expectation was that the data variants would be constant
+  (straight line) since we use the same test split across all
+  iterations; unless there is a bug in the code?
 
 Lets also look at the distribution of the fairness metrics across
 feature set sizes using boxplots.
 
+#+caption: Boxplot DI & SPD Adult
+#+name: fig-adult-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--adult--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD Compas
+#+name: fig-compas-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--compas--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD Bank
+#+name: fig-bank-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--bank--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD German
+#+name: fig-german-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--german--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD Meps
+#+name: fig-meps-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--meps--di-spd.svg]]
+
+** High level observations [0/0]
+- 
 #+begin_src python :results silent :exports none
   dataset_labels = metrics["dataset_label"].unique().tolist()
   cols = ["disparate_impact", "statistical_parity_difference"]
@@ -232,17 +294,10 @@ related to one another. We employ two types of tests:
 1. Correlation between data & model variants
 2. Fitting a linear regression model between data & model variants
 
-The data needs some manipulation to make it fit for further
-visualisations. We want the following columns:
-1. x: the data variant of fairness metrics (float)
-2. y: the model variant of fairness metrics (float)
-4. model: the model used for the y value
-6. protected: the name of the protected attribute
-7. metric: name of the fairness metric
+Lets create heatmaps of the correlations between the data & model
+variants of the fairness metrics.
 
-As above, we will create different figures for each dataset.
-
-#+begin_src python :results silent
+#+begin_src python :results silent :exports none
   dataset_labels = metrics["dataset_label"].unique().tolist()
   cols = ["disparate_impact", "statistical_parity_difference"]
   models = metrics["model"].unique().tolist()
@@ -293,26 +348,53 @@ As above, we will create different figures for each dataset.
       fig.savefig(name, format="svg")
 #+end_src
 
+#+caption: Heatmap DI & SPD Adult
+#+name: fig-adult-heatmap-di-spd
+[[file:heatmap--exp-feature-sets--adult--di-spd.svg]]
+
+#+caption: Heatmap DI & SPD Compas
+#+name: fig-compas-heatmap-di-spd
+[[file:heatmap--exp-feature-sets--compas--di-spd.svg]]
+
+#+caption: Heatmap DI & SPD Bank
+#+name: fig-bank-heatmap-di-spd
+[[file:heatmap--exp-feature-sets--bank--di-spd.svg]]
+
+#+caption: Heatmap DI & SPD German
+#+name: fig-german-heatmap-di-spd
+[[file:heatmap--exp-feature-sets--german--di-spd.svg]]
+
+#+caption: Heatmap DI & SPD Meps
+#+name: fig-meps-heatmap-di-spd
+[[file:heatmap--exp-feature-sets--meps--di-spd.svg]]
+
 + [ ] analyse correlation heatmaps within datasets
 + [ ] then generalise results across datasets
 + in general, I see that for certain dataset-protected-model
   combinations, the data & model variants are correlated.
 
 Next, we want to fit a linear regression model on the data & model
-variants.
+variants. The data needs some manipulation to make it fit for further
+visualisations. We want the following columns:
+1. x: the data variant of fairness metrics (float)
+2. y: the model variant of fairness metrics (float)
+3. num_features: the number of features used (int)
+4. model: the model used for the y value
+5. protected: the name of the protected attribute
+6. metric: name of the fairness metric
+7. dataset_label: name of the dataset
 
-#+begin_src python :results silent
+#+begin_src python :exports both
   dataset_labels = metrics["dataset_label"].unique().tolist()
   cols = ["disparate_impact", "statistical_parity_difference"]
   models = metrics["model"].unique().tolist()
   models.remove("None")
+  frame = []
 
   for dataset_label in dataset_labels:
       df = metrics[metrics["dataset_label"] == dataset_label]
-      name = "regplot--exp-feature-sets--{}--di-spd.svg".format(dataset_label)
       protected = df["protected"].unique().tolist()
       num_features = df["num_features"].unique().tolist()
-      num_features.sort()
 
       _frames = []
       for p in protected:
@@ -326,14 +408,16 @@ variants.
                       columns="model",
                       values="disparate_impact"
                   )
+                  pivot["num_features"] = n
                   _pivots.append(pivot)
 
               pivoted = pd.concat(_pivots)
 
               _chunks = []
               for x, y in zip(["None"]*len(models), models):
-                  _chunk = pivoted[[x,y]]
+                  _chunk = pivoted[[x,y,"num_features"]]
                   _chunk = _chunk.rename(columns={x: "x", y: "y"})
+                  _chunk["dataset_label"] = dataset_label
                   _chunk["model"] = y
                   _chunk["metric"] = metric
                   _chunk["protected"] = p
@@ -341,22 +425,100 @@ variants.
 
               chunked = pd.concat(_chunks)
               _frames.append(chunked)
+      framed = pd.concat(_frames)
+      frame.append(framed)
+  frame = pd.concat(frame)
+  frame
 
-      frame = pd.concat(_frames)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+model             x         y  num_features dataset_label  \
+iteration                                                   
+0          0.204947  0.223081            11         adult   
+1          0.204947  0.223081            11         adult   
+2          0.204947  0.223081            11         adult   
+3          0.204947  0.223081            11         adult   
+4          0.204947  0.223081            11         adult   
+...             ...       ...           ...           ...   
+45         0.179681  0.197927             3          meps   
+46         0.179681  0.204885             3          meps   
+47         0.179681  0.198855             3          meps   
+48         0.179681  0.197746             3          meps   
+49         0.179681  0.203604             3          meps   
+
+model                       model                         metric protected  
+iteration                                                                   
+0              logisticregression               disparate_impact       sex  
+1              logisticregression               disparate_impact       sex  
+2              logisticregression               disparate_impact       sex  
+3              logisticregression               disparate_impact       sex  
+4              logisticregression               disparate_impact       sex  
+...                           ...                            ...       ...  
+45         randomforestclassifier  statistical_parity_difference      race  
+46         randomforestclassifier  statistical_parity_difference      race  
+47         randomforestclassifier  statistical_parity_difference      race  
+48         randomforestclassifier  statistical_parity_difference      race  
+49         randomforestclassifier  statistical_parity_difference      race  
+
+[50000 rows x 7 columns]
+#+end_example
+
+
+#+begin_src python :results silent :exports none
+  for dataset_label in dataset_labels:
+      name = "regplot--exp-feature-sets--{}--di-spd.svg".format(dataset_label)
+      df = frame[frame["dataset_label"] == dataset_label]
       g = sns.lmplot(
-          data=frame,
+          data=df,
           x="x",
           y="y",
           hue="model",
+          markers=[".", "+", "x", "^"],
+          units="num_features",
           col="metric",
           row="protected",
-          scatter=False,
           sharex=False,
       )
       g.tight_layout()
       g.savefig(name, format="svg")
 
 #+end_src
+
+#+caption: Regplot DI & SPD Adult
+#+name: fig-adult-regplot-di-spd
+[[file:regplot--exp-feature-sets--adult--di-spd.svg]]
+
+#+caption: Regplot DI & SPD Compas
+#+name: fig-compas-regplot-di-spd
+[[file:regplot--exp-feature-sets--compas--di-spd.svg]]
+
+#+caption: Regplot DI & SPD Bank
+#+name: fig-bank-regplot-di-spd
+[[file:regplot--exp-feature-sets--bank--di-spd.svg]]
+
+#+caption: Regplot DI & SPD German
+#+name: fig-german-regplot-di-spd
+[[file:regplot--exp-feature-sets--german--di-spd.svg]]
+
+#+caption: Regplot DI & SPD Meps
+#+name: fig-meps-regplot-di-spd
+[[file:regplot--exp-feature-sets--meps--di-spd.svg]]
+
+The scatterplots bring in a lot of noise, lets try with plotting with
+the mean of the 50 iterations.
+
+- need to understand how linear regression works; I have a feeling
+  what we are plotting does not make statistical sense!
+
+** TODO lineplot data vs. model over num_features
+Is there a linear relationship between model & data variants when we
+vary the feature sets?
+
+- this will be computational heavy (the grid will grow as number of
+  features increases!); refactor this notebook's code into python
+  module next
 
 * Base rate & others [0/2]
 In this section we consider all 4 fairness metrics & try to find a
