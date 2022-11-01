@@ -207,11 +207,11 @@ figures for each dataset.
 #+name: fig-meps-lineplot-di-spd
 [[file:lineplot--exp-feature-sets--meps--di-spd.svg]]
 
-* TODO conduct analysis
+** TODO conduct analysis
 - [ ] focus on each dataset
 - [ ] widen across all datasets
 
-** High level observations [0/1]
+** TODO High level observations [0/1]
 - generally speaking, in some dataset-protected-model combinations I
   see that increasing feature set size improves fairness
 - the data variants generally stay constant while model variants show
@@ -232,27 +232,7 @@ figures for each dataset.
 Lets also look at the distribution of the fairness metrics across
 feature set sizes using boxplots.
 
-#+caption: Boxplot DI & SPD Adult
-#+name: fig-adult-boxplot-di-spd
-[[file:boxplot--exp-feature-sets--adult--di-spd.svg]]
-
-#+caption: Boxplot DI & SPD Compas
-#+name: fig-compas-boxplot-di-spd
-[[file:boxplot--exp-feature-sets--compas--di-spd.svg]]
-
-#+caption: Boxplot DI & SPD Bank
-#+name: fig-bank-boxplot-di-spd
-[[file:boxplot--exp-feature-sets--bank--di-spd.svg]]
-
-#+caption: Boxplot DI & SPD German
-#+name: fig-german-boxplot-di-spd
-[[file:boxplot--exp-feature-sets--german--di-spd.svg]]
-
-#+caption: Boxplot DI & SPD Meps
-#+name: fig-meps-boxplot-di-spd
-[[file:boxplot--exp-feature-sets--meps--di-spd.svg]]
-
-** High level observations [0/0]
+** TODO analyse boxplot results [0/0]
 - 
 #+begin_src python :results silent :exports none
   dataset_labels = metrics["dataset_label"].unique().tolist()
@@ -287,6 +267,29 @@ feature set sizes using boxplots.
       fig.tight_layout()
       fig.savefig(name, format="svg")
 #+end_src
+
+#+caption: Boxplot DI & SPD Adult
+#+name: fig-adult-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--adult--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD Compas
+#+name: fig-compas-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--compas--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD Bank
+#+name: fig-bank-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--bank--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD German
+#+name: fig-german-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--german--di-spd.svg]]
+
+#+caption: Boxplot DI & SPD Meps
+#+name: fig-meps-boxplot-di-spd
+[[file:boxplot--exp-feature-sets--meps--di-spd.svg]]
+
+*** TODO add violinplots
+So we can check the distribution within the iterations.
 
 ** Relationship between data & model variant [0/0]
 In this section we want to validate that the data & model metrics are
@@ -370,6 +373,8 @@ variants of the fairness metrics.
 
 + [ ] analyse correlation heatmaps within datasets
 + [ ] then generalise results across datasets
++ [ ] currently we are generalising over all feature sets, should we
+  be looking per feature set?
 + in general, I see that for certain dataset-protected-model
   combinations, the data & model variants are correlated.
 
@@ -485,6 +490,8 @@ iteration
       g.savefig(name, format="svg")
 
 #+end_src
+
+** TODO add scatterplot to lmplot
 
 #+caption: Regplot DI & SPD Adult
 #+name: fig-adult-regplot-di-spd

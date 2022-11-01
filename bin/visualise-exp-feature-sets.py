@@ -10,6 +10,7 @@ The visualisations are saved as svg files under docs/ directory.
 
 """
 
+import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -22,56 +23,7 @@ DATADIR = os.path.join(ROOTDIR, "data")
 DOCDIR = os.path.join(ROOTDIR, "docs")
 
 sys.path.insert(0, ROOTDIR)
-from src.data import process
-
-
-def savefig(fig, name):
-    """Save a matplotlib or seaborn figure in svg format.
-
-    The function also calls tight_layout prior to saving.
-
-    Args:
-        fig: matplotlib.fig.Figure or seaborn.*Grid object
-        name: str, name of figure without extension
-
-    Returns:
-        None
-
-    """
-    fig.tight_layout()
-    fig.savefig(name + ".svg", format="svg")
-
-
-def lineplot(data, cols, name):
-    """Create lineplot.
-
-    TODO write description
-    Args:
-        data: pandas.Dataframe
-
-    Returns:
-        None
-
-    """
-    fig, axs = plt.subplots(
-        nrows=1,
-        ncols=len(cols),
-        figsize=(5*len(cols), 5),
-        sharey=True,
-    )
-
-    for idx, metric in enumerate(cols):
-        ax=axs[idx]
-        ax.set_ylabel(metric)
-        sns.lineplot(
-            data=data,
-            x="num_features",
-            y=metric,
-            hue="model",
-            style="model",
-            ax=axs[idx])
-
-    savefig(fig=fig, name=name)
+from src.data import process, pivot_frame
 
 
 def parse_args():
@@ -102,14 +54,248 @@ def parse_args():
     return parser.parse_args()
 
 
+def savefig(fig, name):
+    """Save a matplotlib or seaborn figure in svg format.
+
+    The function also calls tight_layout prior to saving.
+
+    Args:
+        fig: matplotlib.fig.Figure or seaborn.*Grid object
+        name: str, name of figure without extension
+
+    Returns:
+        None
+
+    """
+    name = name + ".svg"
+    fig.tight_layout()
+    fig.savefig(os.path.join(DOCDIR, name), format="svg")
+
+
+def gcfa(ncols, nrows=1, square=True):
+    SCALER = 5 if square else 10
+    W = SCALER * ncols
+    H = 5
+    fig, axs = plt.subplots(
+        nrows=nrows,
+        ncols=ncols,
+        figsize=(W, H),
+        sharey=True,
+    )
+
+    return fig, axs
+
+
+def lineplot(data, cols, name):
+    """Create lineplot.
+
+    TODO write description
+    Args:
+        data: pandas.Dataframe
+
+    Returns:
+        None
+
+    """
+    fig, axs = gcfa(ncols=len(cols))
+
+    for idx, metric in enumerate(cols):
+        ax = axs[idx]
+        ax.set_ylabel(metric)
+        sns.lineplot(
+            data=data,
+            x="num_features",
+            y=metric,
+            hue="model",
+            style="model",
+            ax=axs[idx],
+        )
+
+    savefig(fig=fig, name=name)
+
+
+def boxplot(data, cols, name):
+    """Create boxplot.
+
+    Args:
+        data: pandas.DataFrame
+        cols: List, colums of figure, passed to seaborn.boxplot.cols
+        name: Str, name of figure
+    """
+    fig, axs = gcfa(ncols=len(cols), square=False)
+
+    for idx, metric in enumerate(cols):
+        ax = axs[idx]
+        ax.set_ylabel(metric)
+        sns.boxplot(
+            data=data,
+            x="num_features",
+            y=metric,
+            hue="model",
+            dodge=True,
+            ax=ax,
+        )
+
+    savefig(fig=fig, name=name)
+
+
+def violinplot(data, cols, name):
+    """Create violinplot.
+
+    Args:
+        data: pandas.DataFrame
+        cols: List, columns of figure, passed to seaborn.violinplot.cols
+        name: Str, name of figure
+    """
+    fig, axs = gcfa(ncols=len(cols), square=False)
+
+    for idx, metric in enumerate(cols):
+        ax = axs[idx]
+        ax.set_ylabel(metric)
+        sns.violinplot(
+            data=data, x="num_features", y=metric, hue="model", dodge=True, ax=ax
+        )
+
+    savefig(fig=fig, name=name)
+
+
+def stripplot(data, cols, name):
+    fig, axs = gcfa(ncols=len(cols))
+
+    for idx, metric in enumerate(cols):
+        ax = axs[idx]
+        ax.set_ylabel(metric)
+        ax.tick_params(axis="x", labelrotation=90)
+        sns.stripplot(
+            data=data,
+            x="model",
+            y=metric,
+            hue="num_features",
+            dodge=True,
+            ax=ax,
+        )
+    savefig(fig, name)
+            
+        
+def heatmap(data, cols, name):
+    """Create heatmap of correlations.
+
+    Args:
+        data: pandas.DataFrame
+        cols: List, columns of figure, passed to seaborn.heatmap.cols
+        name: Str, name of figure
+    """
+    num_features = data["num_features"].unique().tolist()
+    num_features.sort()  # ascending order
+    grid = sns.FacetGrid(
+        data=data,
+        col="num_features",
+        col_wrap=5,
+        sharex=True,
+        sharey=True,
+    )
+    fig = grid.fig
+    axs = grid.axes
+
+    for metric in enumerate(cols):
+        for idx, n in enumerate(num_features):
+            ax = axs[idx]
+            pivoted = pivot_frame(data=data[data["num_features"] == n], values=metric)
+            corr = pivoted.corr()
+            mask = np.zeros_like(corr)
+            mask[np.triu_indices_from(mask)] = True
+            sns.heatmap(
+                data=corr,
+                mask=mask,
+                square=True,
+                annot=True,
+                fmt=".3f",
+                ax=ax,
+            )
+        savefig(fig, name)
+
+
+def correlation(data, cols, name):
+    num_features = data["num_features"].unique().tolist()
+    fig, axs = gcfa(ncols=len(cols))
+
+    def pivot_data(data, values):
+        _pivots = []
+        for n in num_features:
+            _pivots.append(pivot_frame(data[data["num_features"] == n], values))
+        return pd.concat(_pivots)
+
+    for idx, metric in enumerate(cols):
+        ax = axs[idx]
+        ax.set_title(metric)
+        pivoted = pivot_data(
+            data=data,
+            values=metric,
+        )
+        corr = pivoted.corr()
+        mask = np.zeros_like(corr)
+        mask[np.triu_indices_from(mask)] = True
+        sns.heatmap(
+            data=corr,
+            mask=mask,
+            square=True,
+            annot=True,
+            fmt=".3f",
+            ax=ax,
+        )
+    savefig(fig, name)
+
+
+def scatterplot_data_vs_model(data, cols, name):
+    num_features = data["num_features"].unique().tolist()
+    models = data["model"].unique().tolist()
+    models.remove("None")
+    fig, axs = gcfa(ncols=len(cols))
+
+    def pivot_data(data, values):
+        _pivots = []
+        for n in num_features:
+            _pivot = pivot_frame(data[data["num_features"] == n], values)
+            _pivot["num_features"] = n
+            _pivots.append(_pivot)
+        return pd.concat(_pivots)
+
+    def stack_data(data, xs, ys):
+        _stacks = []
+        for x, y in zip(xs, ys):
+            _stack = data[[x, y, "num_features"]]
+            _stack = _stack.rename(columns={x: "x", y: "y"})
+            _stack["model"] = y
+            _stacks.append(_stack)
+        return pd.concat(_stacks)
+
+    for idx, metric in enumerate(cols):
+        ax = axs[idx]
+        ax.set_title(metric)
+        ax.set_xlabel("data")
+        ax.set_ylabel("model")
+        pivoted_data = pivot_data(data=data, values=metric)
+        stacked_data = stack_data(
+            data=pivoted_data,
+            xs=["None"] * len(models),
+            ys=models,
+        )
+        sns.scatterplot(
+            data=stacked_data,
+            x="x",
+            y="y",
+            hue="model",
+            ax=ax,
+        )
+    savefig(fig, name)
+
+
 if __name__ == "__main__":
     args = parse_args()
 
     dataset_label = args.dataset
     data = pd.read_csv(
-        os.path.join(
-            DATADIR,
-            "exp-feature-sets-{}-50.csv".format(dataset_label))
+        os.path.join(DATADIR, "exp-feature-sets-{}-50.csv".format(dataset_label))
     )
     # fairness metrics are calculated without conditioning on any
     # (un)privileged group
@@ -128,4 +314,44 @@ if __name__ == "__main__":
         name=name,
     )
 
-    name = "lineplot--exp-feature-sets--{}--di-spd".format(dataset_label)
+    name = "boxplot--exp-feature-sets--{}--di-spd".format(dataset_label)
+    boxplot(
+        data=data,
+        cols=cols,
+        name=name,
+    )
+
+    # name = "violinplot--exp-feature-sets--{}--di-spd".format(dataset_label)
+    # violinplot(
+    #     data=data,
+    #     cols=cols,
+    #     name=name,
+    # )
+
+    name = "scatterplot--exp-feature-sets--{}--di-spd".format(dataset_label)
+    stripplot(
+        data=data,
+        cols=cols,
+        name=name,
+    )
+
+    name = "scatterplot--exp-feature-sets--{}--data-vs-model".format(dataset_label)
+    scatterplot_data_vs_model(
+        data=data,
+        cols=cols,
+        name=name,
+    )
+    # relationship plots
+    # name = "heatmap--exp-feature-sets--{}--di".format(dataset_label)
+    # heatmap(
+    #     data=data,
+    #     cols=["disparate_impact"],
+    #     name=name,
+    # )
+
+    name = "heatmap--exp-feature-sets--{}--di-spd".format(dataset_label)
+    correlation(
+        data=data,
+        cols=cols,
+        name=name,
+    )

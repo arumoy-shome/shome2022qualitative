@@ -15,6 +15,14 @@ METRICS = [
     "true_positive_rate_difference",
 ]
 
+def pivot_frame(data: pd.DataFrame, values: str) -> pd.DataFrame:
+    """Pivot given data."""
+    return data.pivot(
+        index="iteration",
+        columns="model",
+        values=values,
+    )
+
 
 def lower(frame, cols):
     """Lowercase columns.
