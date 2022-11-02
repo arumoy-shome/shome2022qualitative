@@ -32,7 +32,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATADIR = os.path.join(ROOTDIR, "data")
 
 # NOTE: we need the following hack since we want to execute this file
@@ -42,7 +42,7 @@ DATADIR = os.path.join(ROOTDIR, "data")
 # ourselves.
 sys.path.insert(0, ROOTDIR)
 from src.metrics import compute_metrics
-from src.csv import write_csv
+from src.utils import train_test_split, write_csv
 
 MODELS = [
     None,
@@ -63,7 +63,7 @@ PRIVILEGED = [None, True, False]
 # 3) manually check the csv file/data documentation to obtain list of
 #    features.
 FEATURES = None
-with open(os.path.join(ROOTDIR, "src", "experiments", "features.json")) as f:
+with open(os.path.join(ROOTDIR, "src", "features.json")) as f:
     FEATURES = json.load(f)
 
 
@@ -136,6 +136,12 @@ if __name__ == "__main__":
 
     for iteration in range(0, args.iterations):
         for features_to_keep in feature_sets:
+            train, test = train_test_split(
+                dataset_label=dataset_label,
+                protected=protected,
+                features_to_keep=features_to_keep,
+            )
+
             for model in MODELS:
                 for privileged in PRIVILEGED:
                     row = compute_metrics(
@@ -145,6 +151,8 @@ if __name__ == "__main__":
                         protected=protected,
                         privileged=privileged,
                         iteration=iteration,
+                        train=train,
+                        test=test,
                     )
                     rows.append(row)
                     logging.info(

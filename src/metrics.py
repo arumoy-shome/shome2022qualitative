@@ -7,62 +7,35 @@ dataset & ML model.
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from aif360.metrics import BinaryLabelDatasetMetric, ClassificationMetric
-from aif360.datasets import (
-    AdultDataset,
-    CompasDataset,
-    BankDataset,
-    GermanDataset,
-    MEPSDataset21,
-)
-from . import csv
-
-PRIVILEGED_CLASSES_MAP = {
-    "adult": {"sex": [["Male"]], "race": [["White"]]},
-    "compas": {"sex": [["Female"]], "race": [["Caucasian"]]},
-    "bank": {"age": [lambda x: x > 25]},
-    "german": {"sex": [["male"]], "age": [lambda x: x > 25]},
-    "meps": {"RACE": [["White"]]},
-}
-DATASET_MAP = {
-    "adult": AdultDataset,
-    "compas": CompasDataset,
-    "bank": BankDataset,
-    "german": GermanDataset,
-    "meps": MEPSDataset21,
-}
-
-memory = {}
 
 
-def train_test_split(dataset_label, protected, features_to_keep):
-    if dataset_label not in memory.keys():
-        # top level key does not exists
-        # compute & cache everything
-        memory[dataset_label] = {}
-    else:
-        # top level key exists
-        # bottom level key may not exist
-        if len(features_to_keep) not in memory[dataset_label]:
-            # bottom level key also does not exist
-            # compute & cache everything
-            pass
-        else:
-            # result already cached
-            return memory[dataset_label][len(features_to_keep)]
+def new_row(kwargs):
+    """Return new row.
 
-    dataset = DATASET_MAP[dataset_label]
-    full = dataset(
-        protected_attribute_names=[protected],
-        privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
-        features_to_keep=features_to_keep,
-    )
-    memory[dataset_label][len(features_to_keep)] = full.split([0.75], shuffle=True)
+    Args:
+        kwargs: Dict
 
-    return memory[dataset_label][len(features_to_keep)]
+    Returns:
+        row: Dict
+
+    """
+    row = {}
+    for k, v in kwargs.items():
+        row[k] = v
+
+    return row
 
 
 def compute_metrics(
-    dataset_label, model, features_to_keep, protected, privileged, iteration
+    dataset_label,
+    model,
+    features_to_keep,
+    protected,
+    privileged,
+    iteration,
+    train,
+    test,
+    frac=1.0,
 ):
     """Map for populating data or model metrics.
 
@@ -78,12 +51,6 @@ def compute_metrics(
         metrics: Dict
     """
 
-    train, test = train_test_split(
-        dataset_label=dataset_label,
-        protected=protected,
-        features_to_keep=features_to_keep,
-    )
-
     if model is None:
         return compute_data_metrics(
             dataset=test,
@@ -93,6 +60,7 @@ def compute_metrics(
             protected=protected,
             privileged=privileged,
             iteration=iteration,
+            frac=frac,
         )
 
     else:
@@ -111,6 +79,7 @@ def compute_metrics(
             protected=protected,
             privileged=privileged,
             iteration=iteration,
+            frac=frac,
         )
 
 
@@ -150,7 +119,7 @@ def compute_data_metrics(**kwargs):
         ] = metrics.statistical_parity_difference()
     kwargs["privileged"] = str(kwargs["privileged"])
 
-    return csv.new_row(kwargs)
+    return new_row(kwargs)
 
 
 def compute_model_metrics(**kwargs):
@@ -214,4 +183,4 @@ def compute_model_metrics(**kwargs):
         )  # alias equal_opportunity_difference
     kwargs["privileged"] = str(kwargs["privileged"])
 
-    return csv.new_row(kwargs)
+    return new_row(kwargs)

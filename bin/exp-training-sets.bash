@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Parallel execution of bin/exp-feature-sets.bash
+# Parallel execution of bin/exp-training-sets.bash
 #
 # This script executes the bin/exp-feature-sets.py script in parallel
 # for all dataset & protected attribute pairs. The script accepts the
@@ -8,10 +8,10 @@
 # 1 iteration.
 
 # Usage:
-# To run exp-feature-sets.py for all datasets & 5 iterations, run the
+# To run exp-training-sets.py for all datasets & 5 iterations, run the
 # following command:
 #
-#    ./bin/exp-feature-sets.bash 5
+#    ./bin/exp-training-sets.bash 5
 #
 
 # This script is intended to be run within a docker container (see the
@@ -36,5 +36,5 @@ DATASETS=(
 )
 
 echo "${DATASETS[@]}" |
-    xargs -n 2 -P 0 python3 bin/exp-feature-sets.py
+    xargs -n 2 -P 0 python3 bin/exp-training-sets.py
 
