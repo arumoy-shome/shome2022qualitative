@@ -4,8 +4,6 @@ This provides functions to calculate the fairness metrics for a given
 dataset & ML model.
 """
 
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 from aif360.metrics import BinaryLabelDatasetMetric, ClassificationMetric
 
 
@@ -24,63 +22,6 @@ def new_row(kwargs):
         row[k] = v
 
     return row
-
-
-def compute_metrics(
-    dataset_label,
-    model,
-    features_to_keep,
-    protected,
-    privileged,
-    iteration,
-    train,
-    test,
-    frac=1.0,
-):
-    """Map for populating data or model metrics.
-
-    In:
-        dataset_label: Str
-        model: Obj, sklearn ML model
-        features_to_keep: List, list of features to use in training data
-        protected: Str
-        privileged: None or Bool
-        iteration: Int
-
-    Returns:
-        metrics: Dict
-    """
-
-    if model is None:
-        return compute_data_metrics(
-            dataset=test,
-            dataset_label=dataset_label,
-            model="None",
-            num_features=len(features_to_keep),
-            protected=protected,
-            privileged=privileged,
-            iteration=iteration,
-            frac=frac,
-        )
-
-    else:
-        pipe = make_pipeline(StandardScaler(), model())
-        pipe.fit(X=train.features, y=train.labels.ravel())
-        y_pred = pipe.predict(test.features).reshape(-1, 1)
-        classified = test.copy()
-        classified.labels = y_pred
-
-        return compute_model_metrics(
-            dataset=test,
-            classified_dataset=classified,
-            dataset_label=dataset_label,
-            model=pipe.steps[-1][0],
-            num_features=len(features_to_keep),
-            protected=protected,
-            privileged=privileged,
-            iteration=iteration,
-            frac=frac,
-        )
 
 
 def compute_data_metrics(**kwargs):

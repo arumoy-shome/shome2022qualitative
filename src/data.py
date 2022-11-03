@@ -79,5 +79,5 @@ def process(frame):
         round(frame=frame, cols=["frac"])
     except KeyError:
         pass
-    
+
     zhang2021ignorance(frame=frame)
