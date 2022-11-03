@@ -21,6 +21,8 @@ all datasets in parallel.
 
 """
 
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
@@ -37,7 +39,7 @@ ROOTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATADIR = os.path.join(ROOTDIR, "data")
 
 sys.path.insert(0, ROOTDIR)
-from src.metrics import compute_metrics
+from src.metrics import compute_data_metrics, compute_model_metrics
 from src.utils import train_test_split, write_csv
 
 MODELS = [
@@ -99,6 +101,20 @@ def generate_training_sets(train, random=False):
     return training_sets
 
 
+def log(kws):
+    logging.info(
+        "dataset: {} subset: {} protected: {} frac: {} model: {} privileged: {} iteration: {}".format(
+            kws["dataset_label"],
+            kws["subset_label"],
+            kws["protected"],
+            kws["frac"],
+            kws["model"],
+            kws["privileged"],
+            kws["iteration"],
+        )
+    )
+
+
 if __name__ == "__main__":
     args = parse_args()
     rows = []
@@ -115,28 +131,57 @@ if __name__ == "__main__":
         for frac, subset in training_sets:
             for model in MODELS:
                 for privileged in PRIVILEGED:
-                    row = compute_metrics(
-                        dataset_label=dataset_label,
-                        model=model,
-                        features_to_keep=FEATURES[dataset_label],
-                        protected=protected,
-                        privileged=privileged,
-                        iteration=iteration,
-                        frac=frac,
-                        train=subset,
-                        test=test,
-                    )
-                    rows.append(row)
-                    logging.info(
-                        "dataset: {} protected: {} frac: {:.2f} model: {} privileged: {} iteration: {}".format(
-                            dataset_label,
-                            protected,
-                            frac,
-                            row["model"],
-                            row["privileged"],
-                            iteration,
+                    if model is None:
+                        # NOTE calculating data fairness metrics for
+                        # the test set is redundant for this
+                        # experiment, however we include it to mirror
+                        # results in the feature sets experiment
+                        row = compute_data_metrics(
+                            dataset=test,
+                            dataset_label=dataset_label,
+                            subset_label="test",
+                            model="None",
+                            frac=frac,
+                            protected=protected,
+                            privileged=privileged,
+                            iteration=iteration,
                         )
-                    )
+                        rows.append(row)
+                        log(row)
+
+                        row = compute_data_metrics(
+                            dataset=subset,
+                            dataset_label=dataset_label,
+                            subset_label="train",
+                            model="None",
+                            frac=frac,
+                            protected=protected,
+                            privileged=privileged,
+                            iteration=iteration,
+                        )
+                        rows.append(row)
+                        log(row)
+                    else:
+                        pipe = make_pipeline(StandardScaler(), model())
+                        pipe.fit(X=subset.features, y=subset.labels.ravel())
+                        y_pred = pipe.predict(test.features).reshape(-1, 1)
+                        classified = test.copy()
+                        classified.labels = y_pred
+
+                        row = compute_model_metrics(
+                            dataset=test,
+                            classified_dataset=classified,
+                            dataset_label=dataset_label,
+                            subset_label="test",
+                            model=pipe.steps[-1][0],
+                            frac=frac,
+                            protected=protected,
+                            privileged=privileged,
+                            iteration=iteration,
+                        )
+                        rows.append(row)
+                        log(row)
+
 
     write_csv(
         filename=os.path.join(
