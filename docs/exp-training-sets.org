@@ -1,0 +1,123 @@
+#+title: Experiment with Training Sets
+#+date: [2022-11-03 Thu]
+#+options: toc:t
+#+toc: tables
+#+html_head: <link rel="stylesheet" href="main.css">
+#+property: header-args:python :session *sh22qual* :exports both :eval no-export
+
+This document analyses the =data/exp-training-sets-*-50.csv= datasets.
+
+* Init
+
+#+begin_src python :results silent
+  import os
+  import sys
+  import pandas as pd
+  import seaborn as sns
+  import matplotlib.pyplot as plt
+
+  ROOTDIR = os.path.abspath(os.path.join(os.getcwd(), ".."))
+  DATADIR = os.path.join(ROOTDIR, "data")
+  sys.path.insert(0, ROOTDIR)
+  pd.set_option('display.max_columns', None)
+  pd.set_option('display.max_colwidth', None)
+#+end_src
+
+* EDA
+Lets analyse the data obtained from 50 iterations of the experiment.
+
+#+begin_src python
+  import glob
+
+  frames = [pd.read_csv(frame) for frame in glob.glob(os.path.join(DATADIR, "exp-train*-50.csv"))]
+
+  data = pd.concat(frames)
+  data.shape
+#+end_src
+
+#+RESULTS:
+| 114000 | 26 |
+
+#+begin_src python
+  data.dtypes
+#+end_src
+
+#+RESULTS:
+#+begin_example
+theil_index                      float64
+num_features                       int64
+FNR                              float64
+PPV                              float64
+dataset_label                     object
+FP                               float64
+statistical_parity_difference    float64
+true_positive_rate_difference    float64
+FN                               float64
+base_rate                        float64
+model                             object
+f1                               float64
+iteration                          int64
+TP                               float64
+disparate_impact                 float64
+TNR                              float64
+FPR                              float64
+num_positives                    float64
+frac                             float64
+privileged                        object
+TN                               float64
+accuracy                         float64
+num_negatives                    float64
+average_abs_odds_difference      float64
+TPR                              float64
+protected                         object
+dtype: object
+#+end_example
+
+#+begin_src python
+  data["frac"].describe()
+#+end_src
+
+#+RESULTS:
+: count    114000.000000
+: mean          0.550000
+: std           0.273862
+: min           0.100000
+: 25%           0.300000
+: 50%           0.550000
+: 75%           0.800000
+: max           1.000000
+: Name: frac, dtype: float64
+
+#+begin_src python
+  data["frac"].value_counts()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+0.10    6000
+0.60    6000
+0.95    6000
+0.90    6000
+0.85    6000
+0.80    6000
+0.75    6000
+0.70    6000
+0.65    6000
+0.55    6000
+0.15    6000
+0.50    6000
+0.45    6000
+0.40    6000
+0.35    6000
+0.30    6000
+0.25    6000
+0.20    6000
+1.00    6000
+Name: frac, dtype: int64
+#+end_example
+
+#+begin_src python
+  data["frac"] = data["frac"].round(decimals=2)
+#+end_src
+
+#+RESULTS:
