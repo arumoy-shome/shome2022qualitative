@@ -120,15 +120,15 @@ if __name__ == "__main__":
     rows = []
 
     dataset_label, protected = args.dataset.split("-")
+    train, test = train_test_split(
+        dataset_label=dataset_label,
+        protected=protected,
+        features_to_keep=FEATURES[dataset_label],
+    )
+    training_sets = generate_training_sets(train)
 
-    for iteration in range(0, args.iterations):
-        train, test = train_test_split(
-            dataset_label=dataset_label,
-            protected=protected,
-            features_to_keep=FEATURES[dataset_label],
-        )
-        training_sets = generate_training_sets(train)
-        for frac, subset in training_sets:
+    for frac, subset in training_sets:
+        for iteration in range(0, args.iterations):
             for model in MODELS:
                 for privileged in PRIVILEGED:
                     if model is None:
