@@ -2,3 +2,4 @@ aif360
 pandas
 scikit-learn
 seaborn
+statsmodels

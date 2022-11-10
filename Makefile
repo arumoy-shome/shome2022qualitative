@@ -10,23 +10,9 @@ etags:
 	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
 
 fmt:
-	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec .venv/bin/black {} +
+	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec black {} +
 
 lint:
-	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec .venv/bin/pyflakes {} +
+	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec pyflakes {} +
 
-data/data.csv: bin/data.py
-	.venv/bin/python3 bin/data.py
-	bin/preprocess.bash data/data.csv
-
-visualise: data/data.csv
-	.venv/bin/python3 bin/visualise.py
-
-%.html: %.org
-	rm $@
-	emacs $< --batch -f org-html-export-to-html --kill
-
-data: data/data.csv
-publish: $(HTMLFILES)
-
-.PHONY: ctags etags fmt lint data visualise publish
+.PHONY: ctags etags fmt lint
