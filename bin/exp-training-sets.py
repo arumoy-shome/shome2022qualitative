@@ -182,7 +182,6 @@ if __name__ == "__main__":
                         rows.append(row)
                         log(row)
 
-
     write_csv(
         filename=os.path.join(
             DATADIR,

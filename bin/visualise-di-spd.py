@@ -336,7 +336,7 @@ if __name__ == "__main__":
     )
 
     # NOTE the following boxplots & violinplots are not that useful & very "noisy"
-    
+
     # name = "boxplot" + name + "--di-spd"
     # boxplot(
     #     data=data,
@@ -353,7 +353,7 @@ if __name__ == "__main__":
     # )
 
     # NOTE this scatterplot is very "noisy" & hard to interpret
-    
+
     # name = "scatterplot" + name + "--di-spd"
     # stripplot(
     #     data=data,
@@ -364,7 +364,7 @@ if __name__ == "__main__":
 
     # NOTE the linear regression plot already includes the scatterplot
     # so this one is not that useful
-    
+
     # name = "scatterplot" + name + "--di-spd--data-vs-model"
     # scatterplot_data_vs_model(
     #     data=data,

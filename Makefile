@@ -10,9 +10,9 @@ etags:
 	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
 
 fmt:
-	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec black {} +
+	find . -type f -name '*.py' -not -path '*direnv*' -not -path '*vendor*' -exec black {} +
 
 lint:
-	find . -type f -name '*.py' -not -path '*venv*' -not -path '*vendor*' -exec pyflakes {} +
+	find . -type f -name '*.py' -not -path '*direnv*' -not -path '*vendor*' -exec pyflakes {} +
 
 .PHONY: ctags etags fmt lint
