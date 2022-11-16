@@ -20,7 +20,13 @@ Use the bin/exp-training-size.bash script to execute this script for
 all datasets in parallel.
 
 """
-
+from aif360.datasets import (
+    AdultDataset,
+    CompasDataset,
+    BankDataset,
+    GermanDataset,
+    MEPSDataset21,
+)
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -40,7 +46,7 @@ DATADIR = os.path.join(ROOTDIR, "data")
 
 sys.path.insert(0, ROOTDIR)
 from src.metrics import compute_data_metrics, compute_model_metrics
-from src.utils import train_test_split, write_csv
+from src.utils import write_csv
 
 MODELS = [
     None,
@@ -50,6 +56,23 @@ MODELS = [
     RandomForestClassifier,
 ]
 PRIVILEGED = [None, True, False]
+
+PRIVILEGED_CLASSES_MAP = {
+    "adult": {"sex": [["Male"]], "race": [["White"]]},
+    "compas": {"sex": [["Female"]], "race": [["Caucasian"]]},
+    "bank": {"age": [lambda x: x > 25]},
+    "german": {"sex": [["male"]], "age": [lambda x: x > 25]},
+    "meps": {"RACE": [["White"]]},
+}
+
+DATASET_MAP = {
+    "adult": AdultDataset,
+    "compas": CompasDataset,
+    "bank": BankDataset,
+    "german": GermanDataset,
+    "meps": MEPSDataset21,
+}
+
 FEATURES = None
 with open(os.path.join(ROOTDIR, "src", "features.json")) as f:
     FEATURES = json.load(f)
@@ -88,24 +111,10 @@ def parse_args():
     return parser.parse_args()
 
 
-def generate_training_sets(train, random=False):
-    training_sets = []
-
-    for frac in np.arange(0.1, 1.0, 0.05):
-        subset, _ = train.split(
-            [frac], shuffle=False
-        )  # TODO do we want to shuffle here?
-        training_sets.append((frac, subset))
-
-    training_sets.append((1.0, train))  # add the full set as well
-    return training_sets
-
-
 def log(kws):
-    logging.info(
-        "dataset: {} subset: {} protected: {} frac: {} model: {} privileged: {} iteration: {}".format(
+    print(
+        "dataset: {} protected: {} frac: {} model: {} privileged: {} iteration: {}".format(
             kws["dataset_label"],
-            kws["subset_label"],
             kws["protected"],
             kws["frac"],
             kws["model"],
@@ -120,39 +129,22 @@ if __name__ == "__main__":
     rows = []
 
     dataset_label, protected = args.dataset.split("-")
-    train, test = train_test_split(
-        dataset_label=dataset_label,
-        protected=protected,
+    full = DATASET_MAP[dataset_label](
+        protected_attribute_names=[protected],
+        privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
         features_to_keep=FEATURES[dataset_label],
     )
-    training_sets = generate_training_sets(train)
+    train, test = full.split([0.75], shuffle=True)
 
-    for frac, subset in training_sets:
-        for iteration in range(0, args.iterations):
+    for iteration in range(0, args.iterations):
+        for frac in np.arange(0.1, 1.0, 0.05):
+            subset, _ = train.split([frac], shuffle=True)
             for model in MODELS:
                 for privileged in PRIVILEGED:
                     if model is None:
-                        # NOTE calculating data fairness metrics for
-                        # the test set is redundant for this
-                        # experiment, however we include it to mirror
-                        # results in the feature sets experiment
-                        row = compute_data_metrics(
-                            dataset=test,
-                            dataset_label=dataset_label,
-                            subset_label="test",
-                            model="None",
-                            frac=frac,
-                            protected=protected,
-                            privileged=privileged,
-                            iteration=iteration,
-                        )
-                        rows.append(row)
-                        log(row)
-
                         row = compute_data_metrics(
                             dataset=subset,
                             dataset_label=dataset_label,
-                            subset_label="train",
                             model="None",
                             frac=frac,
                             protected=protected,
@@ -172,7 +164,6 @@ if __name__ == "__main__":
                             dataset=test,
                             classified_dataset=classified,
                             dataset_label=dataset_label,
-                            subset_label="test",
                             model=pipe.steps[-1][0],
                             frac=frac,
                             protected=protected,
