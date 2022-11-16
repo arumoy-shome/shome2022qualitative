@@ -20,7 +20,13 @@ Use the bin/exp-features-sets.bash script to execute this script for
 all datasets in parallel.
 
 """
-
+from aif360.datasets import (
+    AdultDataset,
+    CompasDataset,
+    BankDataset,
+    GermanDataset,
+    MEPSDataset21,
+)
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -31,6 +37,7 @@ import sys
 import json
 import argparse
 import logging
+import random
 
 logging.basicConfig(level=logging.INFO)
 
@@ -44,7 +51,7 @@ DATADIR = os.path.join(ROOTDIR, "data")
 # ourselves.
 sys.path.insert(0, ROOTDIR)
 from src.metrics import compute_data_metrics, compute_model_metrics
-from src.utils import train_test_split, write_csv
+from src.utils import write_csv
 
 MODELS = [
     None,
@@ -55,6 +62,22 @@ MODELS = [
 ]
 MIN_FEATURES_TO_KEEP = 3
 PRIVILEGED = [None, True, False]
+
+PRIVILEGED_CLASSES_MAP = {
+    "adult": {"sex": [["Male"]], "race": [["White"]]},
+    "compas": {"sex": [["Female"]], "race": [["Caucasian"]]},
+    "bank": {"age": [lambda x: x > 25]},
+    "german": {"sex": [["male"]], "age": [lambda x: x > 25]},
+    "meps": {"RACE": [["White"]]},
+}
+
+DATASET_MAP = {
+    "adult": AdultDataset,
+    "compas": CompasDataset,
+    "bank": BankDataset,
+    "german": GermanDataset,
+    "meps": MEPSDataset21,
+}
 
 # NOTE: the following features are derived from the corresponding
 # class in the aif360.datasets module. The default set & order
@@ -67,32 +90,6 @@ PRIVILEGED = [None, True, False]
 FEATURES = None
 with open(os.path.join(ROOTDIR, "src", "features.json")) as f:
     FEATURES = json.load(f)
-
-
-def generate_feature_sets(dataset_label, random=False):
-    """Map for generating feature sets based on dataset.
-
-    Args:
-        dataset_label: Str, name of dataset
-        random: Bool, defaults to False. When True randomise feature
-        order.
-
-    Returns:
-        feature_sets: List[List], list of feature sets where each item
-        is a list of features to keep.
-    """
-
-    feature_sets = []
-    features = FEATURES[dataset_label].copy()
-
-    # NOTE: we copy the list since python passes lists by reference (not value)!
-    # TODO: refactor this using lambda & map()
-    while len(features) >= MIN_FEATURES_TO_KEEP:
-        feature_sets.append(features.copy())
-        # TODO: to randomise, pass random index to pop
-        features.pop()
-
-    return feature_sets
 
 
 def parse_args():
@@ -129,7 +126,7 @@ def parse_args():
 
 
 def log(kws):
-    logging.info(
+    print(
         "dataset: {} subset: {} protected: {} features: {} model: {} privileged: {} iteration: {}".format(
             kws["dataset_label"],
             kws["subset_label"],
@@ -148,15 +145,18 @@ if __name__ == "__main__":
     rows = []
 
     dataset_label, protected = args.dataset.split("-")
-    feature_sets = generate_feature_sets(dataset_label)
 
-    for features_to_keep in feature_sets:
-        train, test = train_test_split(
-            dataset_label=dataset_label,
-            protected=protected,
-            features_to_keep=features_to_keep,
-        )
-        for iteration in range(0, args.iterations):
+    for iteration in range(0, args.iterations):
+        for num_features in range(
+            MIN_FEATURES_TO_KEEP, len(FEATURES[dataset_label]) + 1
+        ):  # 3 to max
+            features_to_keep = random.sample(FEATURES[dataset_label], num_features)
+            full = DATASET_MAP[dataset_label](
+                protected_attribute_names=[protected],
+                privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
+                features_to_keep=features_to_keep,
+            )
+            train, test = full.split([0.75], shuffle=True)
             for model in MODELS:
                 for privileged in PRIVILEGED:
                     if model is None:
@@ -165,7 +165,7 @@ if __name__ == "__main__":
                             dataset_label=dataset_label,
                             subset_label="test",
                             model="None",
-                            num_features=len(features_to_keep),
+                            num_features=num_features,
                             protected=protected,
                             privileged=privileged,
                             iteration=iteration,
@@ -178,7 +178,7 @@ if __name__ == "__main__":
                             dataset_label=dataset_label,
                             subset_label="train",
                             model="None",
-                            num_features=len(features_to_keep),
+                            num_features=num_features,
                             protected=protected,
                             privileged=privileged,
                             iteration=iteration,
@@ -198,7 +198,7 @@ if __name__ == "__main__":
                             dataset_label=dataset_label,
                             subset_label="test",
                             model=pipe.steps[-1][0],
-                            num_features=len(features_to_keep),
+                            num_features=num_features,
                             protected=protected,
                             privileged=privileged,
                             iteration=iteration,
