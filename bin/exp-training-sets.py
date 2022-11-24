@@ -129,15 +129,15 @@ if __name__ == "__main__":
     rows = []
 
     dataset_label, protected = args.dataset.split("-")
-    full = DATASET_MAP[dataset_label](
-        protected_attribute_names=[protected],
-        privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
-        features_to_keep=FEATURES[dataset_label],
-    )
-    train, test = full.split([0.75], shuffle=True)
 
     for iteration in range(0, args.iterations):
         for frac in np.linspace(start=0.1, stop=1.0, num=10):
+            full = DATASET_MAP[dataset_label](
+                protected_attribute_names=[protected],
+                privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
+                features_to_keep=FEATURES[dataset_label],
+            )
+            train, test = full.split([0.75], shuffle=True)
             subset, _ = train.split([frac], shuffle=True)
             for model in MODELS:
                 for privileged in PRIVILEGED:
