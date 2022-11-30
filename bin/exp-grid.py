@@ -21,6 +21,8 @@ Use the bin/exp-grid.bash script to execute this script for all
 datasets in parallel.
 
 """
+from src.utils import write_csv
+from src.metrics import compute_data_metrics, compute_model_metrics
 from aif360.datasets import (
     AdultDataset,
     CompasDataset,
@@ -52,8 +54,6 @@ DATADIR = os.path.join(ROOTDIR, "data")
 # following imports don't work if we don't manipulate sys.path
 # ourselves.
 sys.path.insert(0, ROOTDIR)
-from src.metrics import compute_data_metrics, compute_model_metrics
-from src.utils import write_csv
 
 MODELS = [
     None,
@@ -142,7 +142,8 @@ if __name__ == "__main__":
     for iteration in range(0, args.iterations):
         for num_features in range(MIN_FEATURES_TO_KEEP, len(FEATURES[dataset_label]) + 1):
             for frac in np.linspace(start=0.1, stop=1.0, num=10):
-                features_to_keep = random.sample(FEATURES[dataset_label], num_features)
+                features_to_keep = random.sample(
+                    FEATURES[dataset_label], num_features)
                 full = DATASET_MAP[dataset_label](
                     protected_attribute_names=[protected],
                     privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],
@@ -167,7 +168,8 @@ if __name__ == "__main__":
                             log(row)
                         else:
                             pipe = make_pipeline(StandardScaler(), model())
-                            pipe.fit(X=subset.features, y=subset.labels.ravel())
+                            pipe.fit(X=subset.features,
+                                     y=subset.labels.ravel())
                             y_pred = pipe.predict(test.features).reshape(-1, 1)
                             classified = test.copy()
                             classified.labels = y_pred
