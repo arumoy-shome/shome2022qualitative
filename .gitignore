@@ -4,3 +4,10 @@
 *.log
 data/
 *.pdf
+*.aux
+*.out
+*.fls
+*.fdb_latexmk
+*.blg
+*.bbl
+report/ijcai22.*

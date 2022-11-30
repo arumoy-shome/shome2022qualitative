@@ -15,4 +15,7 @@ fmt:
 lint:
 	find . -type f -name '*.py' -not -path '*direnv*' -not -path '*vendor*' -exec pyflakes {} +
 
-.PHONY: ctags etags fmt lint
+report: report/report.tex report/report.bib $(wildcard report/*.pdf)
+	latexmk -pdf -outdir=report report/report.tex
+
+.PHONY: ctags etags fmt lint report
