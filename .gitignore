@@ -11,3 +11,4 @@ data/
 *.blg
 *.bbl
 report/ijcai22.*
+datasets

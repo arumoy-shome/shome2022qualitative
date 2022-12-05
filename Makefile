@@ -1,21 +1,7 @@
-PYFILES:=$(shell find . -type f -name '*.py' -path '*bin*')
-ORGFILES:=$(wildcard docs/*.org)
-HTMLFILES:=$(ORGFILES:.org=.html)
-IMGFILES:=$(shell find docs -type f -name '*.png' -or -name '*.pdf')
+outline:
+	fd -e=md -e=tex -X ctags --tag-relative=yes {}
 
-ctags:
-	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags --tag-relative=yes --languages=-javascript,css,json {} +
-
-etags:
-	find . -type f -not -path "*git*" -not -path "*vendor*" -exec ctags -e --tag-relative=yes --languages=-javascript,css,json {} +
-
-fmt:
-	find . -type f -name '*.py' -not -path '*direnv*' -not -path '*vendor*' -exec black {} +
-
-lint:
-	find . -type f -name '*.py' -not -path '*direnv*' -not -path '*vendor*' -exec pyflakes {} +
-
-report: report/report.tex report/report.bib $(wildcard report/*.pdf)
+report: 
 	latexmk -pdf -outdir=report report/report.tex
 
-.PHONY: ctags etags fmt lint report
+.PHONY: outline report

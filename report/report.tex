@@ -31,8 +31,8 @@
 % for a nice explanation of how to define new theorems, but keep
 % in mind that the amsthm package is already included in this
 % template and that you must *not* alter the styling.
-\newtheorem{example}{Example}
-\newtheorem{theorem}{Theorem}
+% \newtheorem{example}{Example}
+% \newtheorem{theorem}{Theorem}
 
 % Following comment is from ijcai97-submit.tex:
 % The preparation of these files was supported by Schlumberger Palo Alto
@@ -57,7 +57,7 @@
 % PDF Info Is REQUIRED.
 % Please **do not** include Title and Author information
 \pdfinfo{
-/TemplateVersion (IJCAI.2022.0)
+  /TemplateVersion (IJCAI.2022.0)
 }
 
 \title{IJCAI--22 Formatting Instructions}
@@ -74,14 +74,14 @@
 % Multiple author syntax (remove the single-author syntax above and the \iffalse ... \fi here)
 
 \author{
-Arumoy Shome$^1$
-\and
-Lu{\'\i}s Cruz$^1$\And
-Arie van Deursen$^{1}$
-\affiliations
-$^1$Delft University of Technology\\
-\emails
-\{a.shome, l.cruz, arie.vandeursen\}@tudelft.nl
+  Arumoy Shome$^1$
+  \and
+  Lu{\'\i}s Cruz$^1$\And
+  Arie van Deursen$^{1}$
+  \affiliations
+  $^1$Delft University of Technology\\
+  \emails
+  \{a.shome, l.cruz, arie.vandeursen\}@tudelft.nl
 }
 
 
@@ -90,7 +90,8 @@ $^1$Delft University of Technology\\
 \maketitle
 
 \begin{abstract}
-%% TODO
+  %% TODO
+  This is an abstract that I am writing \cite{sambasivan}.
 \end{abstract}
 
 \appendix
@@ -110,17 +111,12 @@ $^1$Delft University of Technology\\
 %% RQ3: can we minimise to data fairness metrics when experimenting
 %% with feature size?
 
-\section{Related Work}\label{sec:related}
+\section{Background \& Related Work}\label{sec:related}
 %% TODO
 
 %% summarise the current work on fairness testing; touch upon this
 %% aspect from a SE perspective; the fairness metrics we have (and why
 %% we use specific ones);
-
-\section{Methodology}\label{sec:method}
-%% TODO should we include numbers conditioned on
-%% privileged/unprivileged?
-
 \begin{table}[htb]
   \centering
   \caption{Datasets used in the study}
@@ -148,12 +144,14 @@ $^1$Delft University of Technology\\
     \bottomrule
   \end{tabular}
   \label{tab:datasets}
-  \end{table}
+\end{table}
 %% TODO brief commentary on tab:datasets, the ones we use (and why),
 %% the range of examples; short comment on pre-existing bias in the
 %% dataset.
 
 %% list the fairness metrics we use in our analysis & why
+
+
 \begin{equation}
   DI_{data} = \frac{P(Y=1|D=0)}{P(Y=1|D=1)}
   \label{eq:di-data}
@@ -174,39 +172,138 @@ $^1$Delft University of Technology\\
   \label{eq:spd-model}
 \end{equation}
 
-%% list the ML models we use in our analysis & why
+%% list the ML models we use in our analysis and why (because we want
+%% to generalise over multiple datasets)
+
+\section{Methodology}\label{sec:method}
+%% TODO should we include numbers conditioned on
+%% privileged/unprivileged?
+
+%% - we use 5 popular datasets from the fairness literature
+%% - we use 4 popular ML models used in prior fairness testing
+%% literature
+%% - we use 2 popular group fairness metrics used in the fairness
+%% literature
+%% - we calculate fairness metrics first on the data (DFM) and next on
+%% the predictions of the model on the test set (MFM) and analyse the
+%% results
+%% - we normalise all results following the procedure used by
+%% zhang2021ignorance 
+%% - we use correlation & linear regression to analyse the
+%% relationship between DFM & MFM; we observe that they are related to
+%% one another; DFM can indicate fairness issues in the model with
+%% statistical significance
 
 %% outline the data collection setup; break this down by the
 %% experiments (we have two); explain the slicing mechanism in each
 %% experiment, how & why we are shuffling the example & feature orders
 
-%% list the fairness metrics we collect; how we aggregate them, etc.
-
 %% TODO definitely need to diagram; hard to explain experimental
 %% design using only words
-Figure \ref{fig:exp-training-sets} presents the experimental design
-for the training sets experiment. The dataset is split into a training
-(75\%) and testing (25\%) subset. Random samples of varying size
-between 10\% and 100\% are then taken to train the machine learning
-models. The trained models are used to derive predictions from the
-test subset. The fairness metrics are calculated twice: once using the
-random training sample (data fairness metrics) and again using the
-predictions derived from the models trained on the corresponding
-random sample.
+
+%% we only consider one protected attribute at a time; for feature
+%% sets experiment, we consider a minimum of 3 features (in addition
+%% to the protected attribute & target features)
+Figure \ref{fig:exp-design} presents the experimental design for the
+study. For each dataset, protected attribute and model tuple, we use a
+75-25 split to create the training and test sets. There are two
+flavours of fairness metrics calculated next. We calculate the DFMs on
+the training set and the MFMs on the predictions of the model on the
+test set. Next we analyse the DFM & MFM by observing the correlation
+between them and by fitting a linear regression model. We repeat this
+procedure 50 times and use statistical hypothesis testing to validate
+that our results are statistically significant.
+
+We extend the above experiment further in two ways (by adopting the
+experimental design from \citea{zhang2021ignorance}). First, we
+experiment with different number of training examples and second with
+different number of features in the training set. For both examples,
+we shuffle the order of the examples in the training & test sets. For
+the feature sets experiment, we additionally shuffle the order of the
+features.
+
+For the training sets experiment, we create different sub-subsets of
+the training subset from 10\% to 100\%. For the feature sets
+experiment, we consider a minimum of 3 features (in addition to the
+protected attribute and the target feature) to all features.
 
 \section{Results \& Discussion}\label{sec:results}
+
+%% as disclaimer: mention that for visual aids we typically focus on
+%% the adult-sex dataset but results for all datasets is provided as
+%% part of the replication package.
+
+%% start with the smallest unit: full training data, show that there
+%% is a positive correlation between the DFM & MFM for all models &
+%% datasets. Show that linear regression is also positive.
+
+%% move on to experiment with the training sets; use
+%% zhang2021ignorance to show that most of the changes are
+%% significant; show the correlation & linear regression results
+
+%% finally present the feature sets experiment; again same
+%% presentation order as training sets experiment.
+
 %% list & explain the two tests we use to evaluate relationship
 %% between data & model metrics (we have two: correlation & linear
 %% regression)
 
 %% present the results from the two experiments & our analysis
 
-%% exp-training-sets: emphasise the importance of data quality. If we look at the underlying data, the 
-%% we need to link the results & our discussion to the research
-%% questions we are trying to answer
+%% exp-training-sets: emphasise the importance of data quality. If we
+%% look at the underlying data, the we need to link the results & our
+%% discussion to the research questions we are trying to answer
+
+\subsubsection{Full Training Set}
+
+Figure \ref{fig:boxplot-di-spd-full} presents the distribution of the
+fairness metrics across the datasets. We observe that the DFM agree
+with the MFM in all cases. SPD is observed to be more sensitive to the
+size of the training set since the variability is higher in datasets
+with lesser number of training examples. We also observe that the tree
+based classifiers (DT and RF) are make more fair decisions compared to
+the other classifiers, sometimes even better than the DFM.
+
+Figure \ref{fig:heatmap-corr-full-data} shows the correlation between
+the DFM and the MFM across all models and datasets. We observe that
+most correlations are close to zero, indicating a weak relationship
+between the DFM and MFM. 
+
+From \ref{fig:boxplot-di-spd-full} we note that the variability
+
+%% move to the correlation analysis from here; explain why we primarily
+%% have no correlation; comment on the few examples where we do have a
+%% strong (positive or negative) correlation & that they are
+%% statistically significant; in our analysis we recommend that if its
+%% possible in some cases then we should always test for fairness;
+%% comment on the meaning behind the direction of the correlation; no
+%% correlation means that we need both for testing; positive means
+%% there is a possibility for prioritisation; interpretation of
+%% negative correlation is bit more challenging; use a lineplot to
+%% show that the DFM does not change as much, for the cases where we
+%% have a negative correlation, show that the MFM decreased (meaning
+%% the model learned to make fair predictions) and the cases where
+%% there was a positive correlation the model simply
+%% reflected/amplified the bias in the data
+
+%% for these few cases where we see a correlation, we further use
+%% linear regression; comment on the r^2 and distribution of the
+%% residuals.
+
+\subsubsection{Training Sets Experiment}
+
+\subsubsection{Feature Sets Experiment}
 
 \section{Threats to Validity}\label{sec:threats}
-%% TODO
+%% TODO we did not look at the underlying distribution of the training
+%% dataset (which is biased to begin with); it will be interesting to
+%% evaluate if we can minimize fairness testing when we utilise bias
+%% mitigation techniques
+
+% note on linear regression model: we used ordinary-least squares with
+% degree 1 to estimate the fit; we tried different degrees with
+% model=DT and dataset=adult-sex; we also investigated baysian linear
+% regression
 
 \section{Conclusion}\label{sec:conclude}
 %% TODO
