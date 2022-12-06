@@ -3,7 +3,7 @@
 .venv/
 *.log
 data/
-*.pdf
+report/report.pdf
 *.aux
 *.out
 *.fls

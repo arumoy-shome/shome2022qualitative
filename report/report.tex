@@ -209,16 +209,16 @@ study. For each dataset, protected attribute and model tuple, we use a
 75-25 split to create the training and test sets. There are two
 flavours of fairness metrics calculated next. We calculate the DFMs on
 the training set and the MFMs on the predictions of the model on the
-test set. Next we analyse the DFM & MFM by observing the correlation
+test set. Next we analyse the DFM and MFM by observing the correlation
 between them and by fitting a linear regression model. We repeat this
 procedure 50 times and use statistical hypothesis testing to validate
 that our results are statistically significant.
 
 We extend the above experiment further in two ways (by adopting the
-experimental design from \citea{zhang2021ignorance}). First, we
+experimental design from \cite{zhang2021ignorance}). First, we
 experiment with different number of training examples and second with
 different number of features in the training set. For both examples,
-we shuffle the order of the examples in the training & test sets. For
+we shuffle the order of the examples in the training and test sets. For
 the feature sets experiment, we additionally shuffle the order of the
 features.
 
@@ -226,6 +226,10 @@ For the training sets experiment, we create different sub-subsets of
 the training subset from 10\% to 100\%. For the feature sets
 experiment, we consider a minimum of 3 features (in addition to the
 protected attribute and the target feature) to all features.
+
+% TODO mention that we check the statistical significance of the
+% correlation & linear regression analysis by observing the p values
+% at 3 alpha levels: 0.01, 0.05 & 0.01
 
 \section{Results \& Discussion}\label{sec:results}
 
@@ -254,22 +258,71 @@ protected attribute and the target feature) to all features.
 %% look at the underlying data, the we need to link the results & our
 %% discussion to the research questions we are trying to answer
 
-\subsubsection{Full Training Set}
+\subsubsection{Full Training Set}\label{sec:results-full-data}
 
 Figure \ref{fig:boxplot-di-spd-full} presents the distribution of the
+%% or "we observe that DFM and MFM convey the same information..."
 fairness metrics across the datasets. We observe that the DFM agree
 with the MFM in all cases. SPD is observed to be more sensitive to the
 size of the training set since the variability is higher in datasets
-with lesser number of training examples. We also observe that the tree
-based classifiers (DT and RF) are make more fair decisions compared to
-the other classifiers, sometimes even better than the DFM.
+with lesser number of training examples. The variability of the DFM is
+lesser compared to the MFM. This is because in addition to the
+randomness from the data shuffling in the training set, the models are
+assigned random initial states in every iteration. Finally, the tree
+based classifiers (DT and RF) make fairer decisions compared to the
+other classifiers, sometimes even better than the baseline provided by
+the DFM.
+
+%% TODO investigate large variability in the bank-age dataset.
+%% 2022-12-05 I have some a possible explaination, but not sure if it
+% is the right one
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{boxplot--dataset--di-spd--exp-full.pdf}
+  \caption{Distribution of DFM and MFM across datasets}
+  \label{fig:boxplot-di-spd-full}
+\end{figure}
 
 Figure \ref{fig:heatmap-corr-full-data} shows the correlation between
-the DFM and the MFM across all models and datasets. We observe that
-most correlations are close to zero, indicating a weak relationship
-between the DFM and MFM. 
+the DFM and the MFM across all models and datasets. We primarily
+observe darker colors in the heatmap indicating that there is no
+significant correlation between the DFM and MFM in most of the
+cases. As noted in the distribution analysis above, we see less
+variability in DFM compared to MFM. In the correlation analysis we are
+therefore trying to explain the additional variability in the MFM
+using the limited variability in the DFM, which is not possible.
 
-From \ref{fig:boxplot-di-spd-full} we note that the variability
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{heatmap--corr--full-data.pdf}
+  \caption{Correlation between DFM and MFM}
+  \label{fig:heatmap-corr-full-data}
+\end{figure}
+
+We observe 14 cases however, where the correlation is statistically
+significant. For these cases, we additionally conduct linear
+regression analysis. Figure \ref{fig:scatterplot-dfm-mfm-adult-race}
+and \ref{fig:scatterplot-dfm-mfm-compas-race} represent two
+contrasting examples. Figure \ref{fig:scatterplot-dfm-mfm-adult-race}
+presents the linear regression fit along with the scatter plot of the
+residuals for the \emph{adult-race} dataset and decision tree model.
+
+%% TODO commentary on linear regression + residual plots
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{scatterplot--dfm--mfm--adult-race.pdf}
+  \caption{Correlation between DFM and MFM}
+  \label{fig:scatterplot-dfm-mfm-adult-race}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{scatterplot--dfm--mfm--compas-race.pdf}
+  \caption{Correlation between DFM and MFM}
+  \label{fig:scatterplot-dfm-mfm-compas-race}
+\end{figure}
 
 %% move to the correlation analysis from here; explain why we primarily
 %% have no correlation; comment on the few examples where we do have a
@@ -286,10 +339,6 @@ From \ref{fig:boxplot-di-spd-full} we note that the variability
 %% there was a positive correlation the model simply
 %% reflected/amplified the bias in the data
 
-%% for these few cases where we see a correlation, we further use
-%% linear regression; comment on the r^2 and distribution of the
-%% residuals.
-
 \subsubsection{Training Sets Experiment}
 
 \subsubsection{Feature Sets Experiment}
@@ -304,6 +353,14 @@ From \ref{fig:boxplot-di-spd-full} we note that the variability
 % degree 1 to estimate the fit; we tried different degrees with
 % model=DT and dataset=adult-sex; we also investigated baysian linear
 % regression
+
+% pvalue for scipy.stats.spearmanr is not reliable for datasets less
+% than 500 examples; this is a threat for the full-data experiment
+% since we only have 50 observations per model-dataset combo; this
+% means that with more iterations we may see a correlation with
+% significance where currently there is none; but this does not change
+% our final recommendation which is to test with both data & model in
+% these cases
 
 \section{Conclusion}\label{sec:conclude}
 %% TODO
