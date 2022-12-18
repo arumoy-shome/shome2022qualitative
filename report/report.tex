@@ -76,7 +76,7 @@
 \author{
   Arumoy Shome$^1$
   \and
-  Lu{\'\i}s Cruz$^1$\And
+  Lu{\'\i}s Cruz$^1$\and
   Arie van Deursen$^{1}$
   \affiliations
   $^1$Delft University of Technology\\
@@ -130,6 +130,75 @@
 %% TODO brief overview of group fairness & the metrics we are using in
 %% this study along with the datasets.
 
+%% list the fairness metrics we use in our analysis & why
+
+\section{Experimental Design}\label{sec:method}
+
+%% - we use 5 popular datasets from the fairness literature
+%% - we use 4 popular ML models used in prior fairness testing
+%% literature
+%% - we use 2 popular group fairness metrics used in the fairness
+%% literature
+%% - we calculate fairness metrics first on the data (DFM) and next on
+%% the predictions of the model on the test set (MFM) and analyse the
+%% results
+%% - we normalise all results following the procedure used by
+%% zhang2021ignorance 
+%% - we use correlation (and linear regression) to analyse the
+%% relationship between DFM & MFM
+
+%% spearman correlation is less sensitive to outliers and does not
+%% assume normality which is why we use it in our analysis
+
+%% verify the assumptions of linear regressions are validated & met in
+%% our analysis; we check the coefficient of determination (R^2) which
+%% is a general measure for goodness of fit; value close to 1
+%% indicates variability in y is explained by the regression model
+%% (ie. by x); we also check the plot of residuals against fitted
+%% values: if most data is centered around 0 and evenly spread then it
+%% indicates a linear relationship with constant variability
+
+\subsection{Datasets, ML Models and Fairness Metrics}\label{sec:method-parameters}
+
+We use the popular python package \emph{AIF360} by IBM to obtain the
+datasets and the fairness metrics in this study \cite{aif360}. We use
+two popular group fairness metrics namely \emph{Disparate Impact (DI)}
+and \emph{Statistical Parity Difference (SPD)} in this study. We are
+restricted to only 2 fairness metrics since these are the only two
+metrics which have a model dependent and independent variants.
+Equations \ref{eq:di-data} and \ref{eq:spd-data} show the data variant
+of the DI and SPD fairness metrics respectively. The model variant of
+DI and SPD is given by Equations \ref{eq:di-model}
+and \ref{eq:spd-model} where we use the predictions of the trained ML
+models instead of the dataset.
+
+\begin{equation}
+  DI_{data} = \frac{P(Y=1|D=0)}{P(Y=1|D=1)}
+  \label{eq:di-data}
+\end{equation}
+
+\begin{equation}
+  DI_{model} = \frac{P(\hat{Y}=1|D=0)}{P(\hat{Y}=1|D=1)}
+  \label{eq:di-model}
+\end{equation}
+
+\begin{equation}
+  SPD_{data} = P(Y=1|D=0)-P(Y=1|D=1)
+  \label{eq:spd-data}
+\end{equation}
+
+\begin{equation}
+  DI_{model} = P(\hat{Y}=1|D=0)-P(\hat{Y}=1|D=1)
+  \label{eq:spd-model}
+\end{equation}
+
+%% mention that these are all the datasets provided by the aif360 package
+Table \ref{tab:datasets} presents the datasets used in this study. We
+consider tabular datasets which have been extensively used in prior
+scientific contributions on fairness testing in ML. Since some
+datasets contain more than one protected attribute, we pre-process the
+datasets such that they contain only one protected attribute 
+
 \begin{table}
   \centering
   \caption{Datasets used in the study}
@@ -152,76 +221,16 @@
   \end{tabular}
   \label{tab:datasets}
 \end{table}
-%% TODO brief commentary on tab:datasets, the ones we use (and why),
-%% the range of examples; short comment on pre-existing bias in the
-%% dataset.
 
-%% list the fairness metrics we use in our analysis & why
+%% data preprocessing: we use the default pre-processing done by
+%% aif360 library for the datasets; null values are dropped and
+%% categorical variables are label encoded
 
+%% we use scikit-learn for generating the training-testing splits and
+%% the learning algorithms; we use standard scaler prior to training
 
-\begin{equation}
-  DI_{data} = \frac{P(Y=1|D=0)}{P(Y=1|D=1)}
-  \label{eq:di-data}
-\end{equation}
-
-\begin{equation}
-  DI_{model} = \frac{P(\hat{Y}=1|D=0)}{P(\hat{Y}=1|D=1)}
-  \label{eq:di-model}
-\end{equation}
-
-\begin{equation}
-  SPD_{data} = P(Y=1|D=0)-P(Y=1|D=1)
-  \label{eq:spd-data}
-\end{equation}
-
-\begin{equation}
-  DI_{model} = P(\hat{Y}=1|D=0)-P(\hat{Y}=1|D=1)
-  \label{eq:spd-model}
-\end{equation}
-
-%% list the ML models we use in our analysis and why (because we want
-%% to generalise over multiple datasets)
-
-\section{Methodology}\label{sec:method}
-%% TODO should we include numbers conditioned on
-%% privileged/unprivileged?
-
-%% - we use 5 popular datasets from the fairness literature
-%% - we use 4 popular ML models used in prior fairness testing
-%% literature
-%% - we use 2 popular group fairness metrics used in the fairness
-%% literature
-%% - we calculate fairness metrics first on the data (DFM) and next on
-%% the predictions of the model on the test set (MFM) and analyse the
-%% results
-%% - we normalise all results following the procedure used by
-%% zhang2021ignorance 
-%% - we use correlation & linear regression to analyse the
-%% relationship between DFM & MFM; we observe that they are related to
-%% one another; DFM can indicate fairness issues in the model with
-%% statistical significance
-
-%% spearman correlation is less sensitive to outliers and does not
-%% assume normality which is why we use it in our analysis
-
-%% verify the assumptions of linear regressions are validated & met in
-%% our analysis; we check the coefficient of determination (R^2) which
-%% is a general measure for goodness of fit; value close to 1
-%% indicates variability in y is explained by the regression model
-%% (ie. by x); we also check the plot of residuals against fitted
-%% values: if most data is centered around 0 and evenly spread then it
-%% indicates a linear relationship with constant variability
-
-%% outline the data collection setup; break this down by the
-%% experiments (we have two); explain the slicing mechanism in each
-%% experiment, how & why we are shuffling the example & feature orders
-
-%% TODO definitely need to diagram; hard to explain experimental
-%% design using only words
-
-%% we only consider one protected attribute at a time; for feature
-%% sets experiment, we consider a minimum of 3 features (in addition
-%% to the protected attribute & target features)
+\subsection{Data Collection}\label{sec:method-data-collection}
+%% TODO
 
 \begin{figure*}
   \centering
@@ -230,7 +239,7 @@
   \label{fig:method}
 \end{figure*}
 
-Figure \ref{fig:method} presents the experimental design for the
+Figure \ref{fig:method} presents the experimental design for the
 study. For each dataset, protected attribute and model tuple, we use a
 75-25 split with shuffling to create the training and test sets. For
 the experiment
@@ -447,7 +456,7 @@ training size.
 %% global view: can we prioritise data testing when we experiment with
 %% training size?
 
-\subsection{Feature Sets Experiment}\label{sec:results-feature-sets}
+\subsection{Correlation across feature sample sizes}\label{sec:results-feature-sets}
 
 \begin{figure}
   \centering
@@ -468,7 +477,7 @@ is no significant correlation between the DFM and MFM as the number of
 features in the training dataset changes.
 Figure \ref{fig:lineplot--num-features--di-spd--bank-age} shows the
 relationship between the fairness metrics with the feature sample
-sizes in the XXX dataset. We observe that the MFM decreases as the
+sizes in the bank-age dataset. We observe that the MFM decreases as the
 number of features in the training set is increased while the DFM
 remains constant across all feature sample sizes. Our results from the
 MFM align with the results reported by Zhang et
