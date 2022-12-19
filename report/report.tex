@@ -21,7 +21,6 @@
 \usepackage{booktabs}
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\usepackage{multirow}
 \urlstyle{same}
 
 % the following package is optional:
@@ -134,41 +133,17 @@
 
 \section{Experimental Design}\label{sec:method}
 
-%% - we use 5 popular datasets from the fairness literature
-%% - we use 4 popular ML models used in prior fairness testing
-%% literature
-%% - we use 2 popular group fairness metrics used in the fairness
-%% literature
-%% - we calculate fairness metrics first on the data (DFM) and next on
-%% the predictions of the model on the test set (MFM) and analyse the
-%% results
-%% - we normalise all results following the procedure used by
-%% zhang2021ignorance 
-%% - we use correlation (and linear regression) to analyse the
-%% relationship between DFM & MFM
-
-%% spearman correlation is less sensitive to outliers and does not
-%% assume normality which is why we use it in our analysis
-
-%% verify the assumptions of linear regressions are validated & met in
-%% our analysis; we check the coefficient of determination (R^2) which
-%% is a general measure for goodness of fit; value close to 1
-%% indicates variability in y is explained by the regression model
-%% (ie. by x); we also check the plot of residuals against fitted
-%% values: if most data is centered around 0 and evenly spread then it
-%% indicates a linear relationship with constant variability
-
 \subsection{Datasets, ML Models and Fairness Metrics}\label{sec:method-parameters}
 
 We use the popular python package \emph{AIF360} by IBM to obtain the
 datasets and the fairness metrics in this study \cite{aif360}. We use
 two popular group fairness metrics namely \emph{Disparate Impact (DI)}
 and \emph{Statistical Parity Difference (SPD)} in this study. We are
-restricted to only 2 fairness metrics since these are the only two
-metrics which have a model dependent and independent variants.
-Equations \ref{eq:di-data} and \ref{eq:spd-data} show the data variant
-of the DI and SPD fairness metrics respectively. The model variant of
-DI and SPD is given by Equations \ref{eq:di-model}
+restricted to only these metrics since the AIF360 library provides a
+model dependent as well as a model independent varient for only these
+metrics. Equations \ref{eq:di-data} and \ref{eq:spd-data} show the
+data variant of the DI and SPD fairness metrics respectively. The
+model variant of DI and SPD is given by Equations \ref{eq:di-model}
 and \ref{eq:spd-model} where we use the predictions of the trained ML
 models instead of the dataset.
 
@@ -192,45 +167,44 @@ models instead of the dataset.
   \label{eq:spd-model}
 \end{equation}
 
-%% mention that these are all the datasets provided by the aif360 package
 Table \ref{tab:datasets} presents the datasets used in this study. We
 consider tabular datasets which have been extensively used in prior
-scientific contributions on fairness testing in ML. Since some
-datasets contain more than one protected attribute, we pre-process the
-datasets such that they contain only one protected attribute 
+scientific contributions on fairness testing in
+ML \ref{zhang2021ignorance,biswas2020machine,biswas2021fair,chen2022fairness}.
+Based on prior work, we only consider one protected attribute at any
+given time thus giving us 8 independent datasets for the study. We
+follow the default preprocessing steps as implemented by the AIF360
+library by dropping all missing values and label encoding the
+categorical features. Prior to training, the features in the training
+and testing subsets are standardised by removing the mean of the
+sample and scaling to unit variance, a popular and well established
+paradigm in ML.
 
 \begin{table}
   \centering
   \caption{Datasets used in the study}
-  \begin{tabular}{p{0.3\linewidth} p{0.1\linewidth} p{0.1\linewidth} r}
+  \begin{tabular}{l l r}
     \toprule
-    \textbf{Name} & \textbf{Prot.} & \textbf{Abbr.} &
-    \textbf{Total Examples}\\
+    \textbf{Name} & \textbf{Prot.} & \textbf{Total Examples}\\
     \midrule
-    \multirow{2}{*}{German Credit \cite{CITEME}} & age & GA &
-    1000\\
-      & sex & GS & 1000\\
-    \multirow{2}{*}{Compas Score \cite{CITEME}} & race & CR &
-    6167\\
-      & sex & CS & 6167\\
-    Medical Survey 2021 \cite{CITEME} & race & MR & 15675\\
-    Bank Marketing \cite{CITEME} & age & BA & 30488\\
-    \multirow{2}{*}{Adult Income \cite{CITEME}} & race & AR & 45222\\
-      & sex & AS & 45222\\
+    German Credit \cite{CITEME} & age, sex & 1000\\
+    Compas Score \cite{CITEME} & race, sex & 6167\\
+    Medical Survey 2021 \cite{CITEME} & race & 15675\\
+    Bank Marketing \cite{CITEME} & age & 30488\\
+    Adult Income \cite{CITEME} & race, sex & 45222\\
     \bottomrule
   \end{tabular}
   \label{tab:datasets}
 \end{table}
 
-%% data preprocessing: we use the default pre-processing done by
-%% aif360 library for the datasets; null values are dropped and
-%% categorical variables are label encoded
+We use the popular python library scikit-learn \cite{sklearn} for
+creating the training and testing subsets and training the ML models.
+We use 4 ML models of varying complexity namely, \emph{Logistic
+Regression}, \emph{Decision Trees}, \emph{Random Forest} and \emph{Ada
+boost} based on their popularity in practise and in prior scientific
+publications \cite{CITEME}.
 
-%% we use scikit-learn for generating the training-testing splits and
-%% the learning algorithms; we use standard scaler prior to training
-
-\subsection{Data Collection}\label{sec:method-data-collection}
-%% TODO
+\subsection{Fairness Evaluation}\label{sec:method-fair-eval}
 
 \begin{figure*}
   \centering
@@ -239,40 +213,49 @@ datasets such that they contain only one protected attribute
   \label{fig:method}
 \end{figure*}
 
-Figure \ref{fig:method} presents the experimental design for the
-study. For each dataset, protected attribute and model tuple, we use a
-75-25 split with shuffling to create the training and test sets. For
-the experiment
+Figure \ref{fig:method} presents the methodology used in this study
+for evaluating the fairness of ML models and datasets. The full
+dataset is split into a training and testing subset using a 75-25
+split with shuffling. The learning algorithm is trained using the
+training set and the trained model is used to predict the labels for
+the testing set. We quantify the bias in the underlying distribution
+of the training set by evaluating the data variants of the fairness
+metrics (DFM) using only the training set. Similarly, we quantify the
+bias in the model after training by evaluating the model variants of
+the fairness metrics (MFM) using the predictions of the model. We
+adopted the same transformation steps as outlined by Zhang et
+al \cite{zhang2021ignorance} to scale all fairness metric values
+between 0 and 1 such that higher metric values indicate more bias.
 
-%% we quantity the bias in the underlying distribution of the training
-%% data by evaluating the fairness metrics using only the training
-%% data; we quantify the bias in the model after training by
-%% calculating fairness metrics using the predictions of the model on
-%% the test set
+%% TODO perhaps we should mention the transformation steps?
+%% TODO is scale the right word above?
 
-We calculate the DFMs on the training set and the MFMs on the
-predictions of the model on the test set. Next we analyse the DFM and
-MFM by observing the correlation between them and by fitting a linear
-regression model. We repeat this procedure 50 times and use
-statistical hypothesis testing to validate that our results are
-statistically significant.
+We extend the above experiment further in two ways by adopting the
+experimental design from Zhang et al \cite{zhang2021ignorance}).
+First, we experiment with different number of training examples and
+second with different number of features in the training set. For both
+experiments, we shuffle the order of the examples in the training and
+testing sets. For the feature sets experiment, we additionally shuffle
+the order of the features. For the training sets experiment, we
+generate different training samples of varying sizes starting from
+10\% until 100\%. For the feature sets experiment, we start with a
+minimum of 3 features (in addition to the protected attribute and
+target) and introduce one new feature until all the features are
+utilised.
 
-We extend the above experiment further in two ways (by adopting the
-experimental design from \cite{zhang2021ignorance}). First, we
-experiment with different number of training examples and second with
-different number of features in the training set. For both examples,
-we shuffle the order of the examples in the training and test sets. For
-the feature sets experiment, we additionally shuffle the order of the
-features.
+We use Spearman Rank Correlation to quantify the linear relationship
+between the DFM and MFM. We use Spearman correlation since it does not
+assume normality in the distributions and is less sensitive to
+outliners. We repeat all experiments 50 times and use hypothesis
+testing to verify the statistically significant of our resuls. We
+report the statistical significance of our results at three $\alpha$
+levels of 0.01, 0.05 and 0.1. For simplicity, we represent the
+statistical significance using astericks where more number of
+astericks indicates lower $pvalue$ and thus higher statistical
+significance.
 
-For the training sets experiment, we create different sub-subsets of
-the training subset from 10\% to 100\%. For the feature sets
-experiment, we consider a minimum of 3 features (in addition to the
-protected attribute and the target feature) to all features.
-
-% TODO mention that we check the statistical significance of the
-% correlation & linear regression analysis by observing the p values
-% at 3 alpha levels: 0.01, 0.05 & 0.1
+%% TODO is the explaination on statistical significance and how we
+%% show it clear?
 
 \section{Results}\label{sec:results}
 %% introduce the experiments and results briefly; other general info
@@ -535,6 +518,14 @@ to be tested.
 %% data and model.
 
 \section{Threats to Validity}\label{sec:threats}
+
+%% verify the assumptions of linear regressions are validated & met in
+%% our analysis; we check the coefficient of determination (R^2) which
+%% is a general measure for goodness of fit; value close to 1
+%% indicates variability in y is explained by the regression model
+%% (ie. by x); we also check the plot of residuals against fitted
+%% values: if most data is centered around 0 and evenly spread then it
+%% indicates a linear relationship with constant variability
 
 %% significance of correlation is not reliable for sample size less
 %% than 500 (limitation of scipy's implementation of spearman
