@@ -4,4 +4,7 @@ outline:
 report: 
 	latexmk -pdf -outdir=report report/report.tex
 
-.PHONY: outline report
+present:
+	latexmk -xelatex -outdir=report report/presentation.tex
+
+.PHONY: outline report present
