@@ -59,7 +59,7 @@
   /TemplateVersion (IJCAI.2022.0)
 }
 
-\title{IJCAI--22 Formatting Instructions}
+\title{Data vs. Model ML Fairness Testing: An Empirical Study}
 
 % Single author syntax
 %% \author{
@@ -111,6 +111,14 @@
 %% metrics identifies fairness issues in the model as well? to what
 %% extend does this relationship hold?
 
+\begin{itemize}
+\item{\textbf{RQ1.}} \textbf{What is the relationship between DFM
+  and MFM as the underlying data distribution chages?}
+\item{\textbf{RQ2.}} \textbf{What is the relationship between DFM and
+  MFM across various training sample sizes?}
+\item{\textbf{RQ3.}} \textbf{What is the relationship between DFM and
+  MFM across various feature sample sizes?}
+\end{itemize}
 %% RQ1: is there a relationship between DFM and MFM?
 %% RQ1.2: does this relationship hold as the underlying distribution
 %% of the data changes?
@@ -119,9 +127,13 @@
 
 \section{Background \& Related Work}\label{sec:related}
 
+%% we might have to write a paragraph on SE4ML; talk about the entire
+%% ML life cycle; link it to fairness testing;
+
 %% summarise the current work on fairness testing; touch upon this
 %% aspect from a SE perspective; the fairness metrics we have (and why
 %% we use specific ones);
+%% - zhang2021ignorance, 
 
 %% TODO (brief) review on test prioritisation/minimisation from SE &
 %% ML perspective
@@ -197,6 +209,24 @@ paradigm in ML.
   \label{tab:datasets}
 \end{table}
 
+\begin{table}
+  \centering
+  \caption{Parameters of the study}
+  \begin{tabular}{lr}
+    \toprule
+    \textbf{Parameter} & \textbf{Count}\\
+    \midrule
+    Datasets & 8\\
+    ML models & 4\\
+    Fairness metrics & 2\\
+    Iterations & 50\\
+    Total cases & 64\\
+    Total training and fairness evaluation cycles & 3200\\
+    \bottomrule
+  \end{tabular}
+  \label{tab:parameters}
+\end{table}
+
 We use the popular python library scikit-learn \cite{sklearn} for
 creating the training and testing subsets and training the ML models.
 We use 4 ML models of varying complexity namely, \emph{Logistic
@@ -261,7 +291,9 @@ significance.
 %% introduce the experiments and results briefly; other general info
 %% that is used across all experiments can be reported here;
 
-\subsection{Full Training Set}\label{sec:results-full-data}
+\subsection{Full Training Set Experiment}\label{sec:results-full}
+
+\subsubsection{What is the relationship between DFM and MFM?}\label{sec:results-full-rel}
 
 \begin{figure}
   \centering
@@ -270,8 +302,6 @@ significance.
   \label{fig:boxplot--dataset--di-spd--exp-full}
 \end{figure}
 
-In this section we analyse the relationship between the DFM and MFM
-when the full training dataset is used to train the models.
 Figure \ref{fig:boxplot--dataset--di-spd--exp-full} presents the
 distribution of the fairness metrics across the datasets. We observe
 that DFM and MFM convey similar information in all cases. The
@@ -296,29 +326,6 @@ better than the baseline provided by the DFM.
 % they have different mathematical formulae (former is a division
 % while the later is a subtraction).
 
-Figure \ref{fig:heatmap--corr--full-data} shows the correlation between
-the DFM and the MFM across all models and datasets. The significance
-of the correlation is indicated by the degree of stars where higher
-number of stars indicate lower values of $\alpha$. We test the
-significance of the correlation at 3 levels of $\alpha$ namely $0.01$,
-$0.05$ and $0.1$. A higher number of stars indicate that the
-correlation is statistically significant, and not caused by chance.
-
-We primarily observe darker colors in the heatmap indicating that
-there is no correlation between the DFM and MFM in most of the cases.
-The distribution of the training dataset changes every iteration since
-we shuffle the order of the examples prior to creating the training
-and testing sets. However this is not enough to produce a significant
-quantity of change and thus consequently no correlation amongst the
-DFM and MFM.
-
-%% This is also why we only observe statistically significant correlation
-%% in only 14 of the 64 cases.
-
-%% lack of correlation may arise from lack of significant bias in the
-%% dataset; thus the DFM and MFM are just random and will never be
-%% related; see german-sex for example
-
 \begin{figure}
   \centering
   \includegraphics[width=0.95\linewidth]{heatmap--corr--full-data.pdf}
@@ -326,28 +333,18 @@ DFM and MFM.
   \label{fig:heatmap--corr--full-data}
 \end{figure}
 
-\subsection{Smaller Training Sets}\label{sec:results-smaller-data}
+Figure \ref{fig:heatmap--corr--full-data} shows the correlation
+between DFM and MFM across all models and datasets. We primarily
+observe darker colors in the heatmap indicating that there is no
+correlation between the DFM and MFM in most of the cases. The
+distribution of the training dataset changes every iteration since we
+shuffle the order of the examples prior to creating the training and
+testing sets. However this is not enough to produce a significant
+quantity of change and thus consequently no correlation amongst the
+DFM and MFM.
 
-% %% correlation will depend on the data quantity, quality and model
-% %% complexity
-% %% we have to check if we have enough data
-% %% we have to check if we have bias in the data
-% %% both of these are influenced/get influenced by the model we use
-
-As seen in Section \ref{sec:results-full-data}, there is no
-significant linear relationship between DFM and MFM due to the lack of
-significant change in the distribution of the training dataset across
-the 50 iterations. To analyse the relationship between the DFM and MFM
-across various data distribution, we modify our experimental design by
-calculating the DFM and MFM across varying training size. The data
-distribution in smaller training samples will change more frequently
-in the 50 iterations at the loss of data quality. To identify a sample
-size that captures a variety of data distribution changes while also
-being a realistic training dataset, we analyse the \emph{accuracy} and
-\emph{f1 score} of the models across the training sample sizes. Next
-we conduct \emph{student t-test} to identify the smallest sample size
-where the performance of the models is similar to that obtained when
-trained using the full training set.
+\subsubsection{How does change in the distribution of the training set
+  affect the relationship between DFM and MFM?}\label{sec:results-full-rel-dist}
 
 \begin{figure}
   \centering
@@ -358,12 +355,27 @@ trained using the full training set.
   \label{fig:training-set-frac-threshold}
 \end{figure}
 
+As seen in Section \ref{sec:results-full-rel}, there is no significant
+linear relationship between DFM and MFM due to the lack of significant
+change in the distribution of the training dataset across the 50
+iterations. To analyse the relationship between the DFM and MFM across
+various data distributions, we modify our experimental design by
+calculating the DFM and MFM across training samples of varying size.
+The data distribution in smaller training samples will change more
+frequently in the 50 iterations at the loss of data quality. To
+identify a sample size that captures a variety of data distribution
+changes while also being a realistic training dataset, we analyse the
+\emph{accuracy} and \emph{f1 score} of the models across the training
+sample sizes. Next we conduct \emph{student t-test} to identify the
+smallest sample size where the performance of the models is similar to
+that obtained when trained using the full training set.
+
 The right plot in Figure \ref{fig:training-set-frac-threshold} shows
 the number of cases where there was a significant difference between
 the two populations. We note that there is a significant difference in
 the performance of the models in majority of the cases when the
 training size is reduced to 50\% while it remains consistent when
-using a training size of 60\% and higher. This is also corroborated by
+using a training size of 60\% or higher. This is also corroborated by
 the left plot in Figure \ref{fig:training-set-frac-threshold} which
 shows the accuracy and f1 of all models across various training sample
 sizes in the german-age dataset. We observe that the performance
@@ -389,57 +401,82 @@ colors indicating a positive correlation between the DFM and MFM. This
 indicates that the DFM and the MFM convey the same information as the
 distribution of the underlying training dataset changes.
 
-\subsection{Correlation across training sample sizes}\label{sec:results-training-sets}
+\subsubsection{How does the training sample size affect the correlation between DFM and MFM?}\label{sec:results-corr-frac}
 
 \begin{figure}
   \centering
   \includegraphics[width=0.95\linewidth]{lineplot--frac--corr.pdf}
   \caption{Distribution of correlation between DFM and MFM across
-    various training samples in adult-sex}
+    various training sample sizes}
   \label{fig:lineplot--frac--corr}
 \end{figure}
 
 In Figure \ref{fig:heatmap--corr--full-data} we observe that the
-smaller datasets typically have no correlation between DFM and MFM
-while the larger datasets typically show a negative correlation. When
-we reduce the training sample size to 60\%, the correlation in the
-smaller datasets become more positive while the larger datasets
-typically do not show any correlation as seen in Figure
+smaller datasets have no correlation between DFM and MFM while the
+larger datasets show a negative correlation. When we reduce the
+training sample size to 60\%, the correlation in the smaller datasets
+become more positive while the larger datasets do not show any
+correlation as seen in Figure
  \ref{fig:heatmap--corr--training-sets-frac}. Based on these
 observations, we hypothesise that the quantity of training data
 influences the fairness in the model. Our hypothesis is corrborated by
 Figure \ref{fig:lineplot--frac--corr} which shows the distribution of
-the correlation between DFM and MFM across the training samples sizes
+the correlation between DFM and MFM across the training sample sizes
 in all datasets and models. The overwhelming majority show that the
 correlation between the DFM and MFM decreases as we increase the
 training size.
 
-% %% don't forget model complexity!
+%% correlation will depend on the data quantity, quality and model
+%% complexity
+%% we have to check if we have enough data
+%% we have to check if we have bias in the data
+%% both of these are influenced/get influenced by the model we use
 
-% This indicates that the models are able to make fairer predictions
-% with more training data.
+Our results indicate that the data quality, data quantity and model
+complexity simultaneously influence the relationship between DFM and
+MFM. We primarily see a positive correlation between the DFM and MFM
+in smaller training samples which indicates that the DFM and MFM
+convey the same information. Or in other words, the models reflect the
+bias present in the training data. With sufficient training data, the
+correlation starts to drop and eventually becomes negative. This
+indicates that the models learn to make fairer predictions and are
+able to circumvent the bias in the training data to a certain extent.
 
-%% correlation analysis shows us a general trend; correlation analysis
-%% within a specific frac tells us that there is a relationship
-%% between DFM and MFM across the iterations; ie. even with the
-%% randomness, we see a relationship
-%% DFM can be an early indicator for the requirement of more training
-%% data although we need to test the model as well (from
-%% zhang2021ignorance); more data is wasted if we do not fix the
-%% underlying imbalance in the datasets; we can use DFM to test our
-%% new samples
+%% I think we should include model complexity and data quality as a
+%% side note; we want to show that our results are generalisable, so
+%% we should focus on data quantity which makes it easy to drive the
+%% story
 
-%% obv: given enough data, the correlation becomes negative meaning
-%% the models are "learning" and making fairer predictions, we know
-%% this because DFM will not reduce (it can only go up) since the
-%% underlying datasets are biased; thus more data => more unfairness
-%% in data => higher DFM
+%% TODO commentary on bias in the underlying datasets? for example
+%% german dataset does not have that much bias but adult does? we
+%% won't have correlation between DFM & MFM when the bias in the data
+%% is low to begin with
 
-%% move next to correlation across all fracs: now we are analysing the
-%% global view: can we prioritise data testing when we experiment with
-%% training size?
+\subsection{Training and Feature Sets Experiments}\label{sec:results-training-feature-sets}
+\subsubsection{What is the relationship between DFM and MFM across
+  various training samples?}\label{sec:results-training-sets}
 
-\subsection{Correlation across feature sample sizes}\label{sec:results-feature-sets}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{heatmap--corr--frac.pdf}
+  \caption{Correlation between DFM and MFM acoss various training
+    sample sizes}
+  \label{fig:heatmap--corr--frac}
+\end{figure}
+
+In this section we analyse the relationship between DFM and MFM across
+varying training sample sizes. In contrast to
+Section \ref{sec:results-corr-frac} where we calculated the
+correlation between DFM and MFM within the specific training sample
+sizes, here we calculate the correlation across all training sample
+sizes. Figure \ref{fig:heatmap--corr--frac} shows the correlation
+between DFM and MFM across various training sample sizes. We primarily
+observe warmer colors in the heatmap indicating that the DFM and the
+MFM convey the same information.
+
+%% This is the test prioritisation angle I think...
+
+\subsubsection{What is the relationship between DFM and MFM across various feature samples?}\label{sec:results-feature-sets}
 
 \begin{figure}
   \centering
@@ -450,48 +487,77 @@ training size.
 \end{figure}
 
 In this section we analyse the relationship between the DFM and MFM
-across varying feature sample sizes in the training dataset. In
-contract to Section \ref{sec:results-training-sets}, we change the
-number of features in the training set and randomise the feature order
-in each iteration. Figure \ref{fig:heatmap--corr--num-features}
-presents the correlation between the DFM and MFM across all feature
-sample sizes. We primarily notice darker colors indicating that there
-is no significant correlation between the DFM and MFM as the number of
+across varying feature sample sizes. In contract to
+Section \ref{sec:results-training-sets}, we change the number of
+features in the training set and randomise the feature order in each
+iteration. Figure \ref{fig:heatmap--corr--num-features} presents the
+correlation between the DFM and MFM across all feature sample sizes.
+We primarily notice darker colors indicating that there is no
+significant correlation between the DFM and MFM as the number of
 features in the training dataset changes.
-Figure \ref{fig:lineplot--num-features--di-spd--bank-age} shows the
-relationship between the fairness metrics with the feature sample
-sizes in the bank-age dataset. We observe that the MFM decreases as the
-number of features in the training set is increased while the DFM
-remains constant across all feature sample sizes. Our results from the
-MFM align with the results reported by Zhang et
-al \cite{zhang2021ignorance}. From Equation \ref{eq:di-data}
-and \ref{eq:spd-data}, the DFM remains constant across all feature set
-samples since the underlying distribution of the data in the training
-set does not change. This explains the lack of significant correlation
-between the DFM and MFM. The larger datasets show a more negative
-correlation. This could however be due to the change in training set
-distribution due to the training-testing split as explained
-in \ref{sec:results-full-data} and \ref{sec:results-smaller-data}.
+
+From Equation \ref{eq:di-data} and \ref{eq:spd-data}, we note that
+feature sample size does not affect the DFM thus explaining the lack
+of significant correlation between the DFM and MFM. The larger
+datasets show a more negative correlation. This however is due to the
+change in training set distribution caused by the training-testing
+split within the 50 iterations as explained
+in \ref{sec:results-full-data} and \ref{sec:results-smaller-data}.
+This can also be verified in
+Figure \ref{fig:lineplot--num-features--corr} which shows the
+relationship between the correlation and the feature sample sizes
+across all datasets and models. There is no discernable relationship
+between the correlation and the feature sample size in the top row
+containing datasets with a small training sample size but large
+feature sample size. In contast, a slight relationship can be observed
+in the bottom row which contains datasets with a larger training
+sample size but smaller feature sample size.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{lineplot--num-features--di-spd--bank-age.pdf}
-  \caption{Relationship between fairness metrics and feature sample
-    sizes in bank-age dataset}
-  \label{fig:lineplot--num-features--di-spd--bank-age}
+  \includegraphics[width=0.95\linewidth]{lineplot--num-features--corr.pdf}
+  \caption{Distribution of correlation between DFM and MFM across
+    various features sample sizes}
+  \label{fig:lineplot--num-features--corr}
 \end{figure}
 
 \section{Discussion}\label{sec:discuss}
 
-The presence of a positive correlation (and a linear relationship)
-between the DFM and MFM indicates that the DFM provides an accurate
-depiction of the fairness issues in the model. In such cases, we can
-consider only testing the data thus minimising testing efforts. The
-presence of a negative correlation indicates that the model was able
-to learn from the training set and make fairer decisions. The presence
-of no correlation indicates no relationship between the DFM and MFM.
-In both cases, no minimisation can be made as both data and model need
-to be tested.
+\subsection{ML fairness testing}\label{sec:discuss-ml-fair-test}
+
+We present a systematic approach to testing for fairness in ML
+systems.
+
+%% there is a tradeoff between efficiency/sustainability and
+%% performance
+%% with a positive correlation: we dont have enough data; can consider
+%% bias mitigation techniques (pre/in/post); or consider data
+%% collection to get more training data
+%% with negative correlation: we already have enough data to
+%% circumvent the fairness issues; we have the option to reduce
+%% training data & use bias mitigation techniques for better
+%% efficiency
+%% no correlation is the sweet spot: we can go either way depending on
+%% our needs; left for more efficiency at the cost of fairness; right
+%% for more accuracy/performance at the cost of more compute
+
+%% TODO a practitioner can simply evaluate fairness of model after
+%% increasing/decreasing training size; why do this correlation
+%% analysis on top of everything?
+
+\subsection{Test prioritisation and
+  minimisation}\label{sec:discuss-test-prior-min}
+
+
+The presence of a positive correlation (and therefore a linear
+relationship) between the DFM and MFM indicates that the DFM provides
+an accurate depiction of the fairness issues in the model. In such
+cases, we can consider only testing the data thus minimising testing
+efforts. The presence of a negative correlation indicates that the
+model was able to learn from the training set and make fairer
+decisions. The presence of no correlation indicates no relationship
+between the DFM and MFM. In both cases, no minimisation can be made as
+both data and model need to be tested.
 
 %% Arie: fairness should not be related to size of data but we find
 %% out that it is; is this a limitation of the type of fairness
@@ -517,46 +583,54 @@ to be tested.
 %% on DFM when experimenting with feature sets; we have to test both
 %% data and model.
 
+\subsection{Explaining fairness in decision trees}\label{sec:discuss-explain-fair-dt}
+
+%% we note that DT consistently outperform other models in terms of
+%% fairness; we see an opportunity to apply xai techniques to
+%% understand why DTs are "fairer" and how they are able to do this
+%% with minimal external efforts
+
 \section{Threats to Validity}\label{sec:threats}
 
-%% verify the assumptions of linear regressions are validated & met in
-%% our analysis; we check the coefficient of determination (R^2) which
-%% is a general measure for goodness of fit; value close to 1
-%% indicates variability in y is explained by the regression model
-%% (ie. by x); we also check the plot of residuals against fitted
-%% values: if most data is centered around 0 and evenly spread then it
-%% indicates a linear relationship with constant variability
+We use the spearman correlation implementation provided by the popular
+python package scipy \ref{scipy}. The $pvalue$ provided by the current
+implementation however is not reliable for population size less than
+500 experiments. This is a threat to the experiments conducted in
+Section \ref{sec:results-full} since we only have 50 samples. For
+these experiments, we additionally conduct linear regression analysis
+using ordinary-least squares and check the coefficient of
+determination ($R^2$) and the mean squared error (MSE) in the
+residuals to evaluate the goodness of fit. We set the MFM as the
+outcome (or dependent) variable $y$ and the DFM as the design (or
+independent) variable $x$. The linear regression results align with
+our findings from the correlation analysis. For the experiment in
+Section \ref{sec:results-full-rel}, the $R^2$ in majority of the cases
+lie close to 0 indicating that the linear regression model is unable
+to explain the variability in the MFM using the DFM. For the
+experiment in Section \ref{sec:results-full-rel-dist}, the $R^2$
+improves relative to the prior experiment thus reflecting the change
+we also observe in the correlation analysis.
 
-%% significance of correlation is not reliable for sample size less
-%% than 500 (limitation of scipy's implementation of spearman
-%% correlation algorithm); mention that we validated correlation with
-%% linear regression; we also explored non-linear relationships: if we
-%% find non linear relationship then we can say that the models
-%% introduce the non-linearity, if not we still have a good addition;
+%% lack of correlation may arise from lack of significant bias in the
+%% dataset; thus the DFM and MFM are just random and will never be
+%% related; see german-sex for example
 
-%% we are picking a subset of the dataset that strikes a good balance
-%% between performance while capturing various fairness issues; thus
-%% each sub-subset can be considered a real-world dataset. threat: we
-%% are grossly generalising this threshold, it depends on the dataset;
-%% consider making this dynamic
+%% revisit this paragraph; last sentence needs to be smoother around
+%% the edges...
+For the experiment conducted in
+Section \ref{sec:results-full-rel-dist} the selection of the training
+sample size of 60\% is a gross approximation and may not be a good fit
+for all datasets used in this study. An alternative albeit
+computationally more expensive solution would be to identify this
+threshold dynamically individually for each dataset. Although this may
+lead to different results in the correlation analysis, we believe that
+the final outcome and insights will remain the same.
+
 
 %% TODO we did not look at the underlying distribution of the training
 %% dataset (which is biased to begin with); it will be interesting to
 %% evaluate if we can minimize fairness testing when we utilise bias
 %% mitigation techniques
-
-% note on linear regression model: we used ordinary-least squares with
-% degree 1 to estimate the fit; we tried different degrees with
-% model=DT and dataset=adult-sex; we also investigated baysian linear
-% regression
-
-% pvalue for scipy.stats.spearmanr is not reliable for datasets less
-% than 500 examples; this is a threat for the full-data experiment
-% since we only have 50 observations per model-dataset combo; this
-% means that with more iterations we may see a correlation with
-% significance where currently there is none; but this does not change
-% our final recommendation which is to test with both data & model in
-% these cases
 
 \section{Conclusion}\label{sec:conclude}
 %% TODO
