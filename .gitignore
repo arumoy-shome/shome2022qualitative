@@ -10,5 +10,4 @@ report/report.pdf
 *.fdb_latexmk
 *.blg
 *.bbl
-report/ijcai22.*
 datasets
