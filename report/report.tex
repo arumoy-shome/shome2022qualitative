@@ -138,6 +138,36 @@
 
 \section{Background \& Related Work}\label{sec:related}
 
+%% Fairness in ML systems has seen several contribution from the Software
+%% Engineering community. Several literature surveys have been conducted
+%% to classify and catalogue various ML fairness testing techniques and
+%% bias mitigation
+%% techniques \cite{wan2021modeling,biswas2020machine,mehrabi2021survey,chen2022fairness}. 
+
+%% 1. Literature reviews & surveys: chen2022fairness, wan2021modeling,
+%%    mehrabi2021survey (also zhang2020machine conducted a more general
+%%    literature review of ML testing)
+%% 2. Empirical analysis of bias mitigation techniques: biswas2021fair,
+%%    feffer2022empirical,
+%% 3. Test input generation: aggarwal2019black, udeshi2018automated,
+%% 4. Empirical study of fairness-performance trade-offs:
+%%    biswas2020machine, zhang2021ignorance
+
+%% The fairness testing landscape can be summarised by the following
+%% topics:
+
+%% 1. *Test input generation* (random, search-based & more). The
+%%    search-based side has seen a lot of interest from the SE community
+%%    since search-based testing is a "hot" topic in SE.
+%% 2. *Test oracle identification*: statistical and metamorphic
+%%    relations. Most papers focus on statistical oracles, specifically
+%%    group fairness since it is easier to perceive by humans.
+%%    Metamorphic relation based test oracles tend to focus on individual
+%%    fairness.
+%% 3. *Testing components*: we can test the data, algorithms and the ML
+%%    library itself.
+
+
 %% surveys:
 %% wan2021modeling: in-processing bias mitigation survey
 
@@ -587,22 +617,20 @@ sample size but smaller feature sample size.
 %% they compared the models at different training sample size;
 %% different but relevant findings;
 %% then model complexity: some models are able to navigate
+
 Our results indicate that the quantity of training data profoundly
 influences the relationship between DFM and MFM. We primarily see a
 positive correlation between the DFM and MFM in smaller training
 samples which indicates that the DFM and MFM convey the same
-information.
+information. With sufficient training data, the correlation starts to
+drop and eventually becomes negative. This indicates that the models
+learn to make fairer predictions and are able to circumvent the bias
+in the training data to a certain extent.
 
 %% bias tends to prevail in ml models trained using smaller datasets;
 %% our results indicate that checking the correlation between DFM and
 %% MFM across several iterations can indicate lack of sufficient
 %% training data
-
-Or in other words, the models reflect the bias present in
-the training data. With sufficient training data, the correlation
-starts to drop and eventually becomes negative. This indicates that
-the models learn to make fairer predictions and are able to circumvent
-the bias in the training data to a certain extent.
 
 
 %% domain expertise: we restricted our analysis to 2 group fairness
@@ -639,30 +667,37 @@ the bias in the training data to a certain extent.
 %% increasing/decreasing training size; why do this correlation
 %% analysis on top of everything?
 
+
+\subsection{Data Drift}\label{sec:discuss-data-drift}
+
+Results from experiments conducted in Section \ref{sec:results-full}
+indicate that the DFM can can be an early indication of fairness
+issues that may manifest in the ML models when the distribution of the
+training data changes. ML systems running in a production environment
+are often monitored to detect degredation in model performance. A
+standard practise is to combine the data encountered by the model in
+the production environment with its predictions to create the training
+set for the next iteration. Since data reflects the real world, change
+in its underlying distribution over time is emminent. Our results
+indicate that DFM can also be used as a early warning system to
+identify fairness related data drifts in automated ML
+pipelines \cite{CITEME}.
+
 \subsection{Test Reduction}\label{sec:discuss-test-red}
 
 Experimentation with the size of the training set (sampling) and
 features of the training set (feature engineering) is a popular
 practise when engineering ML pipelines \ref{CITEME}. Results from
-experiments conducted in
 Section \ref{sec:results-training-feature-sets} indicate that the DFM
-can be an early indication of fairness issues that may manifest in the
-ML models when the distribution of the training data changes. This
-implies that when experimenting with the training sample size, ML
-practitioners can reduce their fairness testing efforts to just the
-data and avoid a full training cycle. ML systems running in a
-production environment are often monitored to detect degredation in
-model performance. A standard practise is to combine the data
-encountered by the model in the production environment with its
-predictions to create the training set for the next iteration. Since
-data reflects the real world, change in its underlying distribution
-over time is emminent. Our results indicate that DFM can also be used
-as a early warning system to identify fairness related data drifts in
-automated ML pipelines \cite{CITEME}. Compounded over the duration
-that a ML system is operational, along with the multiple iterations it
-takes to test a ML system, avoiding a full training cycle while
-evaluating the fairness of the ML system can be very energy efficient
-and sustainable in the long run \cite{CITME}.
+and MFM are positively correlated and thus convey the same information
+when the training sample size changes. This implies that when
+experimenting with the training sample size, ML practitioners can
+reduce their fairness testing efforts to just the data and avoid a
+full training cycle. Compounded over the duration that a ML system is
+operational, along with the multiple iterations it takes to test a ML
+system, avoiding a full training cycle while evaluating the fairness
+of the ML system can be very energy efficient and sustainable in the
+long run \cite{CITME}.
 
 %% if we can find a paper that shows that the churn rate for training
 %% size is more than feature size; then we can back our findings a bit
@@ -673,18 +708,12 @@ be made when experimenting with the feature sample size of the
 training set. \citeauthor{zhang2021ignorance} showed that the feature
 sample size has profound effect on the fairness of the ML model, where
 larger feature sample sizes typically improve the models ability to
-make fairer predictions \cite{zhang2021ignorance}. The DFM used in
-this study do not account for the features in the dataset and thus
-cannot reflect fairness issues that may rise from change in the
-feature sample size of the training dataset. To the best of our
-knowledge, there is no other fairness metric that considers the other
-features in the dataset when evaluating the fairness at the data
-level. When experimenting with the feature set, it is recommended that
-ML practitioners evaluate the fairness at both pre and post training
+make fairer predictions \cite{zhang2021ignorance}. To the best of our
+knowledge, there are no fairness metrics that consider the influence
+of other features on the fairness at the data level. Thus when
+experimenting with the feature set, it is recommended that ML
+practitioners evaluate the fairness at both pre and post training
 stages.
-
-%% test reduction and early fairness issues from data distribution are
-%% two separate things!
 
 %% Arie: fairness should not be related to size of data but we find
 %% out that it is; is this a limitation of the type of fairness
