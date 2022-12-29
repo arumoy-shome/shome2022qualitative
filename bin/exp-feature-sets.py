@@ -20,6 +20,8 @@ Use the bin/exp-features-sets.bash script to execute this script for
 all datasets in parallel.
 
 """
+from src.utils import write_csv
+from src.metrics import compute_data_metrics, compute_model_metrics
 from aif360.datasets import (
     AdultDataset,
     CompasDataset,
@@ -50,8 +52,6 @@ DATADIR = os.path.join(ROOTDIR, "data")
 # following imports don't work if we don't manipulate sys.path
 # ourselves.
 sys.path.insert(0, ROOTDIR)
-from src.metrics import compute_data_metrics, compute_model_metrics
-from src.utils import write_csv
 
 MODELS = [
     None,
@@ -149,7 +149,8 @@ if __name__ == "__main__":
         for num_features in range(
             MIN_FEATURES_TO_KEEP, len(FEATURES[dataset_label]) + 1
         ):  # 3 to max
-            features_to_keep = random.sample(FEATURES[dataset_label], num_features)
+            features_to_keep = random.sample(
+                FEATURES[dataset_label], num_features)
             full = DATASET_MAP[dataset_label](
                 protected_attribute_names=[protected],
                 privileged_classes=PRIVILEGED_CLASSES_MAP[dataset_label][protected],

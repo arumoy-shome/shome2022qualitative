@@ -93,7 +93,26 @@
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
-%% TODO
+
+% We already have a lot of effort & work that has been put into
+% identifying bias mitigation techniques at various "checkpoint" of the
+% ML pipeline; but we lack work in studying the actual process of
+% fairness testing! where is the bias located? we do not know, which
+% bias mitigation techniques to use? we dont know...
+
+% TODO get some news clipings of algorithmic fairness in medical,
+% justice system, healthcare, etc. We need stories with compelling
+% evidence for algorithmic bias & consequenly the need for testing for
+% fairness in ML; use the baker2022algorithmic paper for this
+
+% We need a holistic view of the entire system to identify root cause of
+% bias; if we test for fairness only after training the model, it is
+% very difficult to identify where exactly the bias was introduced. If
+% we test at data level (DFM) and model level (MFM) then we have some
+% "lead" identify root cause! So, if DFM is telling us there is bias,
+% then it is an early indication that the data collection process has
+% flaws; or alternatively, our initial design itself does not account
+% for diversity which leads to a biased data collection process!
 
 %% emphasis is always on developing new models & algorithms; same can
 %% be seen in the fairness testing landscape, we see a lot of new
@@ -138,45 +157,89 @@
 
 \section{Background \& Related Work}\label{sec:related}
 
-%% Fairness in ML systems has seen several contribution from the Software
-%% Engineering community. Several literature surveys have been conducted
-%% to classify and catalogue various ML fairness testing techniques and
-%% bias mitigation
-%% techniques \cite{wan2021modeling,biswas2020machine,mehrabi2021survey,chen2022fairness}. 
+\subsection{Algorithmic Bias and Group Fairness}\label{sec:bias-fairnes}
 
-%% 1. Literature reviews & surveys: chen2022fairness, wan2021modeling,
-%%    mehrabi2021survey (also zhang2020machine conducted a more general
-%%    literature review of ML testing)
-%% 2. Empirical analysis of bias mitigation techniques: biswas2021fair,
-%%    feffer2022empirical,
-%% 3. Test input generation: aggarwal2019black, udeshi2018automated,
-%% 4. Empirical study of fairness-performance trade-offs:
-%%    biswas2020machine, zhang2021ignorance
+% algorithmic bias in a mature field of stufy & research: find papers
+% from diverse backgrounds and summarise them here
+% baker2022algorithmic: survey on algorithmic bias in education software
+% link into fairness in ML & how it stems from algorithmic bias (use
+% the wikipedia page for relevant discussion points)
+% link to different fairness definitions & why we use group fairness;
+% define it and list the relevant metrics here.
 
-%% The fairness testing landscape can be summarised by the following
-%% topics:
+\subsection{Prior Work in ML Fairness Testing}\label{sec:prior-work}
 
-%% 1. *Test input generation* (random, search-based & more). The
-%%    search-based side has seen a lot of interest from the SE community
-%%    since search-based testing is a "hot" topic in SE.
-%% 2. *Test oracle identification*: statistical and metamorphic
-%%    relations. Most papers focus on statistical oracles, specifically
-%%    group fairness since it is easier to perceive by humans.
-%%    Metamorphic relation based test oracles tend to focus on individual
-%%    fairness.
-%% 3. *Testing components*: we can test the data, algorithms and the ML
-%%    library itself.
+Fairness in ML systems has seen several contribution from the Software
+Engineering (SE) community. Fairness in software is considered a
+non-functional property and is encouraged to be considered as early as
+the requirements engineering phase of software design and development.
+Software testing is a well established paradigm of software
+development and often regarded as a requirement for developing
+software. Testing non-deterministic software such as ML systems
+however poses a challenge. With ML solutions being adopted in
+high-risk domains, concerns towards trust, fairness, roboustness,
+privacy and security of ML systems are being raised. Thus considerable
+amount of work has been done on testing ML
+systems \cite{zhang2020machine}.
 
+Several literature surveys have been conducted to classify and
+catalogue various ML fairness testing and bias mitigation
+techniques \cite{wan2021modeling,mehrabi2021survey,chen2022fairness}.
+\citeauthor{wan2021modeling} conducted a large scale survey on
+in-processing bias mitigation stratergies and their
+effectiveness\cite{wan2021modeling}.
 
-%% surveys:
-%% wan2021modeling: in-processing bias mitigation survey
+\citeauthor{chen2022fairness,mehrabi2021survey} conducted a survey of
+existing literature on fairness testing in ML systems.
+\citeauthor{mehrabi2021survey} present a comprehensive survey on the
+state-of-the-art research on fairness in ML with an emphasise on
+fairness issues arising from both the data and the model.
+\citeauthor{chen2022fairness} survey 113 papers addressing fairness
+testing and provide a formal definition of fairness bugs and fairness
+testing in ML from a SE perspective. Authors also reflect on how
+fairness testing differs from traditional software testing and provide
+practical guidelines on how and where to test for fairness within the
+entire Software Development Lifecycle (SDLC).
 
-%% biswas2020machine: survey of ML models in practise; catalogue of
-%% bias in RW models
+Prior work has also focused on conducting empirical analysis of bias
+mitigation
+techniques \cite{biswas2021fair,feffer2022empirical,zhang2021ignorance}.
+\citeauthor{biswas2021fair} take a holistic view of the entire ML
+pipeline and analyse the effect of common data pre-processing
+techniques such as standardiastion, feature selection, encoding and
+sampling on the fairness of ML models. The analysis is conducted using
+37 real-world ML pipelines from Kaggle notebooks which operate on five
+datasets. Typically data for the unprivileged group tends to be
+limited which make pre and post processing bias mitigation techniques
+less effective. \citeauthor{feffer2022empirical} thus conduct
+empirical analysis of bias mitigation in combination with popular
+emsemble techniques such as boosting, bagging, voting and stacking to
+understand the effectiveness of such combinations to migitage bias in
+ML systems \cite{feffer2022empirical}. \citeauthor{zhang2021ignorance}
+studied the effect of training sample and feature sample sizes on the
+fairness of ML models. Authors observe that a small number features
+combined with a large training set contributes significantly to the
+bias in the ML model. In contrast, a large number of features and a
+small training set helps reduce bias \cite{zhang2021ignorance}.
 
-%% mehrabi2021survey: survey on ML fairness (data & model)
-
-%% chen2022fairness: review on ML fairness testing
+Finally several test inpute generation techniques have been
+proposed \cite{aggarwal2019black,udeshi2018automated}.
+\citeauthor{udeshi2018automated} propose Aequitas, an automated tool
+that acceps a model and the protected attributes as inpuut and
+automatically explores the input space to detect specific examples
+that may produce discriminatory behaviour in the
+model \cite{udeshi2018automated}. Removing protected attributes prior
+to training (often referred to as fairness through unawareness) is a
+naive solution which does not work when the protected and unprotected
+attributes are correlated to one another. Exisiting techniques such as
+Themis \cite{galhotra2017fairness} and
+Aequitas \cite{udeshi2018automated} generate random test suites to
+measure presence of individual bias in the model. However they do not
+consider the correlation between protected and unprotected attributes
+and thus often miss such cases. \citeauthor{aggarwal2019black} propose
+a new technique for generating test input using symbolic execution
+which accounts for correlation amongst the protected and unprotected
+attributes \cite{aggarwal2019black}.
 
 %% empirical studies:
 %% feffer2022empirical: bias mitigation along with various voting ML
@@ -196,6 +259,8 @@
 %% aggarwal2019black: symbolic execution; improvement over
 %% udeshi2018automated & ghai2022cascaded
 
+% chakraborty2021bias: Fair-SMOTE; tool rebalances the data
+% distribution; accounts for fairness & performance of the ML models
 
 %% Prior work have conducted analysis of data transformations and their
 %% impact on the fairness of the ML pipeline \cite{biswas2022art}. Work
@@ -212,34 +277,11 @@
 %% issue.
 
 
-
-%% summarise zhang2021ignorance and their findings on relationship
-%% between fairness and training/feature size; although I am not sure
-%% how to distinguish myself from their work; in some aspects our work
-%% contradicts theirs;
-
-%% summarise bias mitigation techniques; pre, in & post processing
-%% techniques; I think biaswas's works will go in there as well.
-
 %% TODO review the fairness papers I have; briefly look at fairness
 %% papers at prior IJCAI proceedings
 
-%% we might have to write a paragraph on SE4ML; talk about the entire
-%% ML life cycle; link it to fairness testing;
-
-%% summarise the current work on fairness testing; touch upon this
-%% aspect from a SE perspective; the fairness metrics we have (and why
-%% we use specific ones);
-%% - zhang2021ignorance, 
-
 %% TODO (brief) review on test prioritisation/minimisation from SE &
 %% ML perspective
-
-%% TODO brief overview of group fairness & the metrics we are using in
-%% this study along with the datasets; we might have to cite some
-%% papers coming from the mathematical/statistical/data side here
-
-%% list the fairness metrics we use in our analysis & why
 
 \section{Experimental Design}\label{sec:method}
 
@@ -597,6 +639,10 @@ sample size but smaller feature sample size.
 
 \section{Discussion}\label{sec:discuss}
 
+%% luis: if we address fairness at the data level then we can focus
+%% only on performance during model evaluation
+
+
 \subsection{ML fairness testing}\label{sec:discuss-ml-fair-test}
 
 %% I think we are the first to empirically evaluate & prove need for
@@ -699,6 +745,14 @@ system, avoiding a full training cycle while evaluating the fairness
 of the ML system can be very energy efficient and sustainable in the
 long run \cite{CITME}.
 
+%% maybe also comment on test reduction from the model angle, in our
+%% study we observe that DTs always have a lower correlation compared
+%% to other models; even with lesser data DTs are able to circumvent
+%% bias in the data better than other models; this means that we
+%% should prioritise testing with DT first? if it has fairness issues
+%% other models are likely going to have worse issues in terms of
+%% fairness?
+
 %% if we can find a paper that shows that the churn rate for training
 %% size is more than feature size; then we can back our findings a bit
 %% more
@@ -726,6 +780,11 @@ stages.
 %% testing; it has several benefits...
 
 \subsection{Explaining fairness in decision trees}\label{sec:discuss-explain-fair-dt}
+
+%% plot of accuracy & fairness across all datasets, show that DTs are
+%% inherently fair (perhaps cite some prior studies on this?), we can
+%% reduce testing in the model land but first evaluating DTs? if DT is
+%% unfair then chances are that other models will have worse biases?
 
 %% we note that DT consistently outperform other models in terms of
 %% fairness; we see an opportunity to apply xai techniques to
