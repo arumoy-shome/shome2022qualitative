@@ -94,78 +94,164 @@
 
 \section{Introduction}\label{sec:intro}
 
-% We already have a lot of effort & work that has been put into
-% identifying bias mitigation techniques at various "checkpoint" of the
-% ML pipeline; but we lack work in studying the actual process of
-% fairness testing! where is the bias located? we do not know, which
-% bias mitigation techniques to use? we dont know...
+Testing non-deterministic Machine Learning (ML) systems is
+challenging. With ML being adopted in high-risk domains that have the
+ability to impact human lives, concerns are being raised toward trust,
+robustness, privacy, security and fairness of such systems. While
+several contributions toward testing ML systems has been made in
+recent years, preference has primarily been given to robustness and
+correctness while other non-functional properties such as security,
+privacy, efficiency, interpretability and fairness have been
+ignored \cite{zhang2020machine,zhang2021ignorance,mehrabi2021survey,wan2021modeling}.
 
-% TODO get some news clipings of algorithmic fairness in medical,
-% justice system, healthcare, etc. We need stories with compelling
-% evidence for algorithmic bias & consequenly the need for testing for
-% fairness in ML; use the baker2022algorithmic paper for this
+The wide adoption of ML systems and its effect on human lives has
+prompted policy and law makers to include accountability and fairness
+in legislations for Artificial Intelligence (AI)
+systems \cite{gdpr2016,aiact2021}. In addition to the underlying
+codebase of ML software systems, the training data and the ML
+algorithms constantly evolve and change through the development
+lifecycle of the ML system (MLDL). Thus a holistic view of the entire
+ML pipeline is essential when testing ML systems as any combination of
+these artifacts can contribute to the bias in the
+system \cite{sculley2015hidden,bosch2021engineering,hutchinson2021towards,sato2019continuous}.
+This however also increases the complexity and cognitive load
+substantially, making it difficult to identify the fault precisely.
 
-% We need a holistic view of the entire system to identify root cause of
-% bias; if we test for fairness only after training the model, it is
-% very difficult to identify where exactly the bias was introduced. If
-% we test at data level (DFM) and model level (MFM) then we have some
-% "lead" identify root cause! So, if DFM is telling us there is bias,
-% then it is an early indication that the data collection process has
-% flaws; or alternatively, our initial design itself does not account
-% for diversity which leads to a biased data collection process!
+Testing for fairness in ML systems is a multi-facet problem and thus
+has seen contributions from diverse scientific communities. An
+abundance of definitions of fairness and consequently techniques to
+mitigate said bias exists in the scientific literature (see
+Section \ref{sec:related} for a summary of relevant prior work). Yet a
+fundamental question still remains unanswered. \emph{Given a fairness
+issue in a ML system, what is the root cause of the bias and what are
+the relevant bias mitigation techniques?}
 
-%% emphasis is always on developing new models & algorithms; same can
-%% be seen in the fairness testing landscape, we see a lot of new
-%% metrics (test oracles) being proposed but we don't actually focus
-%% on the process of testing, how do we test for fairness? and where
-%% do we test for fairness? how do we keep testing for fairness?
+We propose a systematic methodology of testing for fairness in ML
+systems at two distinct locations of the MLDL:
+\begin{itemize}
+\item first prior to training the ML model, using only the training
+  data
+\item and second, after training the ML model using the predictions of
+  the trained model.
+\end{itemize}
 
-%% to the best of our knowledge; we are the first to conduct an
-%% empirical study of fairness testing both at data & model level; we
-%% present a systemmatic methodology & practical recommentations to ML
-%% practitioners on testing for fairness based on empirical results!
+%% TODO luis: feels a bit weak; any thoughts?
+We evaluate our proposed technique empirically on five real-world
+tabular datasets and four ML learning algorithms. Our results indicate
+that the proposed testing technique can aid ML practitioners detect
+the root cause of bias early in the development cycle which can help
+them pick the appropriate bias mitigation solutions that already
+exist. To the best of our knowledge, this is the first empirical study
+of fairness testing both using only the training data and the trained
+ML model. We are also the first to apply root cause analysis of bias
+in ML fairness testing and recommend appropriate bias mitigation
+techniques.
 
-%% fairness & accountability are now part of AI legislation; we need
-%% to test for to ensure modern AI systems are not driven by bias;
-%% however testing such complex systems can not only be challenging
-%% but also incures costs in terms of compute & time; we want to catch
-%% such problems as early as possible...
-
-%% present a general motivation of the problem space & the problem we
-%% are trying to solve
-
-%% present research questions that we want to answer along with brief
-%% preview of results
-
-%% can we rely (with statistical guarantee) that the data fairness
-%% metrics identifies fairness issues in the model as well? to what
-%% extend does this relationship hold?
+The research questions along with a summary of the relevant findings
+are listed below.
 
 \begin{itemize}
-\item{\textbf{RQ1.}} \textbf{What is the relationship between DFM
-  and MFM as the underlying data distribution chages?}
+\item{\textbf{RQ1.}} \textbf{What is the relationship between DFM and
+  MFM as the underlying data distribution changes?}
+
+  TODO add contribution
+  
 \item{\textbf{RQ2.}} \textbf{What is the relationship between DFM and
   MFM across various training sample sizes?}
+
+  TODO add contribution
 \item{\textbf{RQ3.}} \textbf{What is the relationship between DFM and
   MFM across various feature sample sizes?}
+
+  TODO add contribution
 \end{itemize}
-%% RQ1: is there a relationship between DFM and MFM?
-%% RQ1.2: does this relationship hold as the underlying distribution
-%% of the data changes?
-%% RQ2: does this relationship hold as the underlying features in the
-%% dataset change?
 
-\section{Background \& Related Work}\label{sec:related}
+The remainder of the paper is structured as follows...
 
-\subsection{Algorithmic Bias and Group Fairness}\label{sec:bias-fairnes}
+\section{Preliminaries}\label{sec:related}
 
-% algorithmic bias in a mature field of stufy & research: find papers
-% from diverse backgrounds and summarise them here
-% baker2022algorithmic: survey on algorithmic bias in education software
-% link into fairness in ML & how it stems from algorithmic bias (use
-% the wikipedia page for relevant discussion points)
-% link to different fairness definitions & why we use group fairness;
-% define it and list the relevant metrics here.
+% How do we define fairness?
+% How do we mitigate fairness?
+
+% TODO review fairness related papers in IJCAI past preceedings; use
+% the link luis shared for best papers
+
+% TODO review AAAI past preceedings for fairness related papers as well
+
+% fault localisation could also be included & relevant for our work
+
+\subsection{Algorithmic Bias, Bias Mitigation and Group Fairness}\label{sec:bias-fairness}
+
+% not only in ML but also in other social circumstances
+Determining what is ultimately fair is a difficult problem under any
+social, political or economical circumstance. Fairness in the context
+of ML is no different and currently an open challenge. Manually
+validating the labels of the dataset is often an expensive and time
+consuming process which is still prone to cognitive and social biases
+present in the human auditors themselves. Significant efforts have
+therefore been made to quantify the bias present in a ML model using
+fairness metrics. Existing fairness metrics are restricted to binary
+classification problems where one of the outcomes is more favourable
+than the other and the dataset contains one or more \emph{protected
+attributes} such as \emph{race, sex, age, color, religion or
+disability status}. A ML model is said to make unfair decisions if it
+favours a certain group (for instance, male and female can be
+considered two groups for the sex attribute) pertaining to one or more
+protected attributes in the dataset. Fairness metrics can be broadly
+classified into two categories namely, \emph{group fairness} and
+\emph{individual fairness}. Individual fairness dictates that the
+predictions of a ML model should not differ for two similar
+individuals who only differ in the value of the protected
+attribute. While group fairness dictates that the predictions of a ML
+model should be similar for both privileged and unprivileged groups
+present in the
+dataset.  \cite{castelnovo2022clarification,hellman2020measuring,mitchell2021algorithmic,kusner2017counterfactual,grgic2016case,dwork2012fairness,barocas2019fairness,barocas2016big,hardt2016equality,binns2018fairness,hutchinson201950,verma2018fairness,saxena2019fairness}.
+
+There is a growing concensus amongst academics that not all fairness
+metrics can be satisfied simultaneously. There is also a concensus
+that fairness and performance of ML systems are orthogonal to one
+another and involve a trade-off. In fact, identifying the correct
+fairness metric is the primary challenge which typically depends on
+the domain and problem at hand. Fairness in ML is a multi-facet,
+socio-technical problem which benefits from a diverse group of
+stakeholders and domain expertise. It is recommended to consider
+fairness as early as the requirements engineering and software design
+phase \cite{zhang2020machine,chen2022fairness,mehrabi2021survey,zhang2021ignorance}.
+
+Once an appropriate definition of fairness is identified, the relevant
+techniques to mitigate said bias must be found. Bias mitigation
+techniques can be classified into three groups based on the location
+where the migitation technique is applied. Several \emph{in-processing
+techniques} or novel ML algorithms have been proposed that take
+fairness into consideration while training from biased training
+data \cite{zhang2018mitigating,agarwal2018reductions,kearns2018preventing,kearns2019empirical,kamishima2012fairness}. In
+contrast to in-processing techniques which target the ML model,
+\emph{pre-processing}
+ \cite{feldman2015certifying,zemel2013learning,calmon2017optimized,kamiran2012data}
+and \emph{post-processing}
+ \cite{pleiss2017fairness,hardt2016equality,kamiran2012decision}. techniques
+are applied to the training data and the predictions of the ML model
+respectively.
+
+% definitions of fairness (in the context of ML and otherwise):
+% castelnovo2022clarification
+% hellman2020measuring
+% mitchell2021algorithmic
+% kusner2017counterfactual
+% grgic2016case
+% dwork2012fairness
+% barocas2016big
+% hardt2016equality
+% binns2018fairness
+% hutchinson201950
+% verma2018fairness
+% saxena2019fairness
+
+% fairness metrics & how it relates to oracles in software testing:
+% zemel2013learning
+% foulds2020intersectional
+% speicher2018unified
+% zhang2016identifying
 
 \subsection{Prior Work in ML Fairness Testing}\label{sec:prior-work}
 
@@ -187,7 +273,7 @@ catalogue various ML fairness testing and bias mitigation
 techniques \cite{wan2021modeling,mehrabi2021survey,chen2022fairness}.
 \citeauthor{wan2021modeling} conducted a large scale survey on
 in-processing bias mitigation stratergies and their
-effectiveness\cite{wan2021modeling}.
+effectiveness \cite{wan2021modeling}.
 
 \citeauthor{chen2022fairness,mehrabi2021survey} conducted a survey of
 existing literature on fairness testing in ML systems.
@@ -240,6 +326,13 @@ and thus often miss such cases. \citeauthor{aggarwal2019black} propose
 a new technique for generating test input using symbolic execution
 which accounts for correlation amongst the protected and unprotected
 attributes \cite{aggarwal2019black}.
+
+% how is our work different from prior work?
+
+% our work is complementary to all work mentioned above; with our
+% results practitioners can identify the root cause of bias in the ML
+% pipeline and be in a better position to select the appropriate
+% technique/solution to address the problem
 
 %% empirical studies:
 %% feffer2022empirical: bias mitigation along with various voting ML
@@ -332,22 +425,22 @@ and testing subsets are standardised by removing the mean of the
 sample and scaling to unit variance, a popular and well established
 paradigm in ML.
 
-\begin{table}
+\begin{table*}
   \centering
   \caption{Datasets used in the study}
   \begin{tabular}{l l r}
     \toprule
     \textbf{Name} & \textbf{Prot.} & \textbf{Total Examples}\\
     \midrule
-    German Credit \cite{CITEME} & age, sex & 1000\\
-    Compas Score \cite{CITEME} & race, sex & 6167\\
-    Medical Survey 2021 \cite{CITEME} & race & 15675\\
-    Bank Marketing \cite{CITEME} & age & 30488\\
-    Adult Income \cite{CITEME} & race, sex & 45222\\
+    German Credit \cite{hofmann1994german} & age, sex & 1000\\
+    Compas Score \cite{angwin2016machine} & race, sex & 6167\\
+    Medical Survey 2021 \cite{mepsdata} & race & 15675\\
+    Bank Marketing \cite{moro2014data} & age & 30488\\
+    Adult Income \cite{kohavi1996scaling} & race, sex & 45222\\
     \bottomrule
   \end{tabular}
   \label{tab:datasets}
-\end{table}
+\end{table*}
 
 \begin{table}
   \centering
@@ -639,30 +732,29 @@ sample size but smaller feature sample size.
 
 \section{Discussion}\label{sec:discuss}
 
-%% luis: if we address fairness at the data level then we can focus
-%% only on performance during model evaluation
+% luis: if we address fairness at the data level then we can focus
+% only on performance during model evaluation
 
 
 \subsection{ML fairness testing}\label{sec:discuss-ml-fair-test}
 
-%% I think we are the first to empirically evaluate & prove need for
-%% testing for fairness at data & model level; although we have prior
-%% work that only speculates need for testing at both levels
+% I think we are the first to empirically evaluate & prove need for
+% testing for fairness at data & model level; although we have prior
+% work that only speculates need for testing at both levels
 
-%% zhang2021ignorance: with balanced data, fairness in models improve;
-%% we did out analysis using imbalanced data; we can expect results to
-%% be better when we use balanced data
+% zhang2021ignorance: with balanced data, fairness in models improve;
+% we did out analysis using imbalanced data; we can expect results to
+% be better when we use balanced data
 
-%% effect of training size on fairness testing: data size affects the
-%% DFM -> more biased data = higher DFM but the same does not hold
-%% true for MFM; after a certain "threshold" the models start to
-%% "learn" and make fairer decisions...
-%% data quality affects the metrics: simply adding more data does not
-%% always help; zhang21 showed that more data tends to make models
-%% unfair; we compared DFM and MFM at a given training sample size;
-%% they compared the models at different training sample size;
-%% different but relevant findings;
-%% then model complexity: some models are able to navigate
+% effect of training size on fairness testing: data size affects the
+% DFM -> more biased data = higher DFM but the same does not hold true
+% for MFM; after a certain "threshold" the models start to "learn" and
+% make fairer decisions... data quality affects the metrics: simply
+% adding more data does not always help; zhang21 showed that more data
+% tends to make models unfair; we compared DFM and MFM at a given
+% training sample size; they compared the models at different training
+% sample size; different but relevant findings; then model complexity:
+% some models are able to navigate
 
 Our results indicate that the quantity of training data profoundly
 influences the relationship between DFM and MFM. We primarily see a
@@ -673,45 +765,55 @@ drop and eventually becomes negative. This indicates that the models
 learn to make fairer predictions and are able to circumvent the bias
 in the training data to a certain extent.
 
-%% bias tends to prevail in ml models trained using smaller datasets;
-%% our results indicate that checking the correlation between DFM and
-%% MFM across several iterations can indicate lack of sufficient
-%% training data
+% We need a holistic view of the entire system to identify root cause
+% of bias; if we test for fairness only after training the model, it
+% is very difficult to identify where exactly the bias was
+% introduced. If we test at data level (DFM) and model level (MFM)
+% then we have some "lead" identify root cause! So, if DFM is telling
+% us there is bias, then it is an early indication that the data
+% collection process has flaws; or alternatively, our initial design
+% itself does not account for diversity which leads to a biased data
+% collection process!
+
+% bias tends to prevail in ml models trained using smaller datasets;
+% our results indicate that checking the correlation between DFM and
+% MFM across several iterations can indicate lack of sufficient
+% training data
 
 
-%% domain expertise: we restricted our analysis to 2 group fairness
-%% metrics; there are several others but they focus on evaluating the
-%% fairness of the model (need y_hat); domain expertise is also
-%% required to evaluate effectiveness of the type of fairness itself!
-%% we used group fairness is it is easy to comprehend (by humans) and
-%% most widely used in practise & literature
+% domain expertise: we restricted our analysis to 2 group fairness
+% metrics; there are several others but they focus on evaluating the
+% fairness of the model (need y_hat); domain expertise is also
+% required to evaluate effectiveness of the type of fairness itself!
+% we used group fairness is it is easy to comprehend (by humans) and
+% most widely used in practise & literature
 
-%% I think we should include model complexity and data quality as a
-%% side note; we want to show that our results are generalisable, so
-%% we should focus on data quantity which makes it easy to drive the
-%% story
+% I think we should include model complexity and data quality as
+% a side note; we want to show that our results are generalisable, so
+% we should focus on data quantity which makes it easy to drive the
+% story
 
-%% TODO commentary on bias in the underlying datasets? for example
-%% german dataset does not have that much bias but adult does? we
-%% won't have correlation between DFM & MFM when the bias in the data
-%% is low to begin with
+% TODO commentary on bias in the underlying datasets? for example
+% german dataset does not have that much bias but adult does? we won't
+% have correlation between DFM & MFM when the bias in the data is low
+% to begin with
 
-%% there is a tradeoff between efficiency/sustainability and
-%% performance
-%% with a positive correlation: we dont have enough data; can consider
-%% bias mitigation techniques (pre/in/post); or consider data
-%% collection to get more training data
-%% with negative correlation: we already have enough data to
-%% circumvent the fairness issues; we have the option to reduce
-%% training data & use bias mitigation techniques for better
-%% efficiency
-%% no correlation is the sweet spot: we can go either way depending on
-%% our needs; left for more efficiency at the cost of fairness; right
-%% for more accuracy/performance at the cost of more compute
+% there is a tradeoff between efficiency/sustainability and
+% performance
+% with a positive correlation: we dont have enough data; can consider
+% bias mitigation techniques (pre/in/post); or consider data
+% collection to get more training data
+% with negative correlation: we already have enough data to
+% circumvent the fairness issues; we have the option to reduce
+% training data & use bias mitigation techniques for better
+% efficiency
+% no correlation is the sweet spot: we can go either way depending on
+% our needs; left for more efficiency at the cost of fairness; right
+% for more accuracy/performance at the cost of more compute
 
-%% TODO a practitioner can simply evaluate fairness of model after
-%% increasing/decreasing training size; why do this correlation
-%% analysis on top of everything?
+% TODO a practitioner can simply evaluate fairness of model after
+% increasing/decreasing training size; why do this correlation
+% analysis on top of everything?
 
 
 \subsection{Data Drift}\label{sec:discuss-data-drift}
@@ -780,6 +882,9 @@ stages.
 %% testing; it has several benefits...
 
 \subsection{Explaining fairness in decision trees}\label{sec:discuss-explain-fair-dt}
+
+% relevant citations:
+% chakraborty2020making: LIME
 
 %% plot of accuracy & fairness across all datasets, show that DTs are
 %% inherently fair (perhaps cite some prior studies on this?), we can
