@@ -637,7 +637,7 @@ by Figure \ref{fig:lineplot--frac--corr} which shows the distribution
 of the correlation between DFM and MFM across the training sample
 sizes in all datasets and models. The x-axis presents the training
 sample size and the y-axis presents the correlation between DFM and
-MFM. The colors represent the models while the style of the line
+MFM. The colours represent the models while the style of the line
 represent the two fairness metrics. Each dataset is represented as
 a separate subplot. The overwhelming majority show that the
 correlation between the DFM and MFM decreases as we increase the
@@ -645,9 +645,10 @@ training size.
 
 \subsection{Training and Feature Sets
   Experiments}\label{sec:results-training-feature-sets}
-%% in addition to the analysis presented above, we replicate analysis
-%% conducted by zhang2021ignorance and evaluate effect of
-%% trainin/feature size on relationship between DFM & MFM...
+In addition to the analysis presented above, we extend the analysis
+conducted by \citeauthor{zhang2021ignorance} by evaluating the effect
+of training and feature sample size on the relationship between DFM
+and MFM.
 
 \subsubsection{What is the relationship between DFM and MFM across
   various training samples?}\label{sec:results-training-sets}
@@ -660,8 +661,6 @@ training size.
   \label{fig:heatmap--corr--frac}
 \end{figure}
 
-% we need to expand here; what are the implications of this positive
-% correlation?
 In this section we analyse the relationship between DFM and MFM across
 varying training sample sizes. In contrast to
 Section \ref{sec:results-corr-frac} where we calculated the
@@ -669,7 +668,7 @@ correlation between DFM and MFM within the specific training sample
 sizes, here we calculate the correlation across all training sample
 sizes. Figure \ref{fig:heatmap--corr--frac} shows the correlation
 between DFM and MFM across various training sample sizes. We primarily
-observe warmer colors in the heatmap indicating that the DFM and the
+observe warmer colours in the heatmap indicating that the DFM and the
 MFM convey the same information.
 
 \subsubsection{What is the relationship between DFM and MFM across various feature samples?}\label{sec:results-feature-sets}
@@ -688,7 +687,7 @@ Section \ref{sec:results-training-sets}, we change the number of
 features in the training set and randomise the feature order in each
 iteration. Figure \ref{fig:heatmap--corr--num-features} presents the
 correlation between the DFM and MFM across all feature sample sizes.
-We primarily notice darker colors indicating that there is no
+We primarily notice darker colours indicating that there is no
 significant correlation between the DFM and MFM as the number of
 features in the training dataset changes.
 
@@ -701,10 +700,10 @@ split within the 50 iterations as explained
 in Section \ref{sec:results-full}. This can also be verified in
 Figure \ref{fig:lineplot--num-features--corr} which shows the
 relationship between the correlation and the feature sample sizes
-across all datasets and models. There is no discernable relationship
+across all datasets and models. There is no discernible relationship
 between the correlation and the feature sample size in the top row
 containing datasets with a small training sample size but large
-feature sample size. In contast, a slight relationship can be observed
+feature sample size. In contrast, a slight relationship can be observed
 in the bottom row which contains datasets with a larger training
 sample size but smaller feature sample size.
 
@@ -761,7 +760,12 @@ initial design of the system itself. In the event that the DFM does
 not indicate bias but the MFM does indicate bias, practitioners can
 narrow down the cause of bias to the learning algorithm itself and opt
 for in-processing or post-processing bias mitigation techniques.
-%% mention that detecting root cause early can lead to significant dev
+
+%% DFM are computationally ``cheap'' and can help identify root cause of
+%% bias early which can lead to significant reduction in the development
+%% time.
+
+%% %% mention that detecting root cause early can lead to significant dev
 %% time reduction -> cost effective & better for developer
 %% productivity.
 
@@ -783,24 +787,22 @@ Same information from the DFM and MFM---specifically, when both DFM
 and MFM are high indicating presence of bias and potential fairness
 issue---may indicate lack of sufficient training data. Under such
 circumstances, practitioners can either choose to collect more data if
-possible else use bias mitigations techniques to address the fairness
+possible else use bias mitigation techniques to address the fairness
 issue. A negative correlation between DFM and MFM may arise from two
-possibilities: either the DFM is lower than the MFM (discussed in
-Section \ref{sec:discuss-root-cause-bias}) or the DFM is higher than
-the MFM which is what we analyse here. A lower MFM value compared to
+possibilities: either the MFM is higher than the DFM (discussed in
+Section \ref{sec:discuss-root-cause-bias}) or the MFM is lower than
+the DFM which is what we analyse here. A lower MFM value compared to
 the DFM merely indicates that the biases in the data is no longer
 reflected by the model. However, there may yet be bias in the model
 from other sources. \citeauthor{zhang2021ignorance} showed that in
 addition to the quantity of training data, the quality itself affects
 the fairness of ML systems. Introducing more data does not always fix
 the bias in the model if the data remains biased.
-%% We recommend that practitioners still take the necessary actions to
-%% mitigate bias in the model using the appropriate techniques.
 
 %% TODO luis: can you provide some citations here to back the claim
 %% that reducing training sample slightly does not harm the
 %% performance but does help with efficiency & sustainability?
-Higher MFM compared to DFM also presents a trade-off between
+Lower MFM compared to DFM also presents a trade-off between
 efficiency and performance. A slight reduction in the training sample
 size, in combination with appropriate bias mitigation techniques,
 allows practitioners to build fair ML systems with quicker training
