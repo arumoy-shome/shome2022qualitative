@@ -801,14 +801,11 @@ addition to the quantity of training data, the quality itself affects
 the fairness of ML systems. Introducing more data does not always fix
 the bias in the model if the data remains biased.
 
-%% TODO luis: can you provide some citations here to back the claim
-%% that reducing training sample slightly does not harm the
-%% performance but does help with efficiency & sustainability?
 Lower MFM compared to DFM also presents a trade-off between efficiency
 and performance. A slight reduction in the training sample size, in
 combination with appropriate bias mitigation techniques, can allow
 practitioners to build fair ML systems with quicker training cycles at
-the cost of negligible predictive performance \cite{CITEME}.
+the cost of negligible predictive performance \cite{verdecchia2022data}.
 Engineering efficient, high quality training data can reduce training
 cycles, time and ultimately project costs. Compounded over the entire
 duration that an ML system stays in production along with the human
