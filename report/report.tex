@@ -91,26 +91,29 @@
 \maketitle
 
 \begin{abstract}
-  % what is the soa and how are we different?
   The wide adoption of Machine Learning (ML) and its ability to impact
   human lives has prompted policy and law makers to include
   accountability and fairness in legislations for Artificial
   Intelligence systems. While several contributions toward testing ML
   systems have been made in recent years, preference has primarily
   been given to robustness and correctness while other non-functional
-  properties such as interpretability and fairness have been
-  ignored. This paper conducts a preliminary study to evaluate the
-  effectiveness of testing for fairness both before and after model
-  training. The proposed testing methodology is evaluated empirically
-  using five real-world datasets and four ML algorithms. Our results
-  indicate that testing for fairness both before and after training
-  can vastly aid practitioners navigate the complex landscape of
-  fairness testing. In particular, testing for fairness prior to
-  training can be a "cheap" and effective means of catching biased
-  data collection process early, detecting data drifts in production
-  systems and reducing testing efforts during the model development
-  phase thus cutting down on the development cycle time and project
-  costs.
+  properties such as fairness have been ignored. This paper conducts a
+  preliminary study to evaluate the effectiveness of testing for
+  fairness both before and after model training. The proposed testing
+  methodology is evaluated empirically using 2 fairness metrics, 4 ML
+  algorithms, 5 real-world datasets and 1600 training and fairness
+  evaluation cycles. We use data and model variants of the fairness
+  metrics to quantify the bias in the training data and the
+  predictions of the model respectively. Our results indicate that
+  that data and model fairness metrics are linearly related to one
+  another both when the distribution and the size of the training set
+  changes. Testing for fairness both before and after training can
+  vastly aid practitioners navigate the complex landscape of fairness
+  testing. In particular, testing for fairness prior to training can
+  be a ``cheap'' and effective means of catching a biased data
+  collection process early, detecting data drifts in production
+  systems and minimising execution of full training cycles thus
+  reducing development time and costs.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -703,21 +706,20 @@ sizes. We primarily notice darker colours indicating that there is no
 significant correlation between the DFM and MFM as the number of
 features in the training dataset changes.
 
-From Equation \ref{eq:di-data} and \ref{eq:spd-data}, we note that
-feature sample size does not affect the DFM thus explaining the lack
-of significant correlation between the DFM and MFM. The larger
-datasets show a more negative correlation. This however is due to the
-change in training set distribution caused by the training-testing
-split within the 50 iterations as explained in
-Section \ref{sec:results-full}. This can also be verified in
-Figure \ref{fig:lineplot--num-features--corr} which shows the
-relationship between the correlation and the feature sample sizes
-across all datasets and models. There is no discernible relationship
-between the correlation and the feature sample size in the top row
-containing datasets with a small training sample size and varying
-feature sample size. A slight relationship can only be observed in the
-bottom right subplots which contain datasets with a large training
-sample size but small feature sample size.
+From Table \ref{tab:fairness-metrics}, we note that feature sample
+size does not affect the DFM thus explaining the lack of significant
+correlation between the DFM and MFM. The larger datasets show a more
+negative correlation. This however is due to the change in training
+set distribution caused by the training-testing split within the 50
+iterations as explained in Section \ref{sec:results-full}. This can
+also be verified in Figure \ref{fig:lineplot--num-features--corr}
+which shows the relationship between the correlation and the feature
+sample sizes across all datasets and models. There is no discernible
+relationship between the correlation and the feature sample size in
+the top row containing datasets with a small training sample size and
+varying feature sample size. A slight relationship can only be
+observed in the bottom right subplots which contain datasets with
+a large training sample size but small feature sample size.
 
 \begin{figure}
   \centering
