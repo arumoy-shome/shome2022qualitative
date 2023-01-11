@@ -4,10 +4,15 @@
 *.log
 data/
 report/report.pdf
+report/presentation.pdf
+report/auto
 *.aux
 *.out
 *.fls
 *.fdb_latexmk
 *.blg
 *.bbl
+*.nav
+*.xml
+*.snm
 datasets
