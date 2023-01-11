@@ -91,7 +91,26 @@
 \maketitle
 
 \begin{abstract}
-  %% TODO
+  % what is the soa and how are we different?
+  The wide adoption of Machine Learning (ML) and its ability to impact
+  human lives has prompted policy and law makers to include
+  accountability and fairness in legislations for Artificial
+  Intelligence systems. While several contributions toward testing ML
+  systems have been made in recent years, preference has primarily
+  been given to robustness and correctness while other non-functional
+  properties such as interpretability and fairness have been
+  ignored. This paper conducts a preliminary study to evaluate the
+  effectiveness of testing for fairness both before and after model
+  training. The proposed testing methodology is evaluated empirically
+  using five real-world datasets and four ML algorithms. Our results
+  indicate that testing for fairness both before and after training
+  can vastly aid practitioners navigate the complex landscape of
+  fairness testing. In particular, testing for fairness prior to
+  training can be a "cheap" and effective means of catching biased
+  data collection process early, detecting data drifts in production
+  systems and reducing testing efforts during the model development
+  phase thus cutting down on the development cycle time and project
+  costs.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -99,6 +118,10 @@
 %% maybe sell it as first empirical study that evalutes effectiveness
 %% of fairness testing at both data & model level?
 
+% TODO say something about the methodology; 32 unique cases; etc.
+% TODO floris: highlight the theoretical contribution of the paper;
+% eg. how can practitioners use the correlation analysis we presented in
+% practise?
 Testing non-deterministic Machine Learning (ML) systems is
 challenging. With ML being adopted in high-risk domains that have the
 ability to impact human lives, concerns are being raised toward trust,
@@ -188,16 +211,16 @@ validating the labels of the dataset is often an expensive and time
 consuming process which is still prone to cognitive and social biases
 present in the human auditors themselves. Significant efforts have
 therefore been made to quantify the bias present in a ML model using
-fairness metrics. Existing fairness metrics are restricted to binary
-classification problems where one of the outcomes is more favourable
-than the other and the dataset contains one or more \emph{protected
-attributes} such as \emph{race, sex, age, colour, religion or
-disability status}. An ML model is said to make unfair decisions if it
-favours a certain group (for instance, male and female can be
-considered two groups for the sex attribute) pertaining to one or more
-protected attributes in the dataset. Fairness metrics can be broadly
-classified into two categories--namely, \emph{group fairness} and
-\emph{individual fairness}. Individual fairness dictates that the
+fairness metrics. Existing fairness metrics are restricted to
+supervised binary classification problems where one of the outcomes is
+more favourable than the other and the dataset contains one or more
+\emph{protected attributes} such as \emph{race, sex, age, colour,
+religion or disability status}. An ML model is said to make unfair
+decisions if it favours a certain group (for instance, male and female
+can be considered two groups for the sex attribute) pertaining to one
+or more protected attributes in the dataset. Fairness metrics can be
+broadly classified into two categories--namely, \emph{group fairness}
+and \emph{individual fairness}. Individual fairness dictates that the
 predictions of an ML model should not differ for two similar
 individuals who only differ in the value of the protected
 attribute. While group fairness dictates that the predictions of an ML
@@ -240,12 +263,7 @@ non-functional property and is encouraged to be considered as early as
 the requirements engineering phase of software design and development.
 Software testing is a well established paradigm of software
 development and often regarded as a requirement for developing
-software. Testing non-deterministic software such as ML systems
-however poses a challenge. With ML solutions being adopted in
-high-risk domains, concerns towards trust, fairness, robustness,
-privacy and security of ML systems are being raised. Thus considerable
-amount of work has been done on testing ML
-systems \cite{zhang2020machine}.
+software \cite{zhang2020machine}.
 
 Several literature surveys have been conducted to classify and
 catalogue various ML fairness testing and bias mitigation techniques.
@@ -345,6 +363,40 @@ MFM in this study is described.
 
 \subsection{Datasets, ML Models and Fairness Metrics}\label{sec:method-parameters}
 
+\begin{table}
+  \centering
+  \begin{tabular}{l r}
+    \toprule
+    \textbf{\emph{DFM}}\\
+    \midrule
+    DI & \(\displaystyle \frac{P(Y=1|D=0)}{P(Y=1|D=1)}\)\\
+    SPD & \(\displaystyle P(Y=1|D=0)-P(Y=1|D=1)\)\\
+    \midrule
+    \textbf{\emph{MFM}}\\
+    \midrule
+    DI & \(\displaystyle \frac{P(\hat{Y}=1|D=0)}{P(\hat{Y}=1|D=1)}\)\\
+    SPD & \(\displaystyle P(\hat{Y}=1|D=0)-P(\hat{Y}=1|D=1)\)\\
+    \bottomrule
+  \end{tabular}
+  \caption{Fairness metrics used in this study}
+  \label{tab:fairness-metrics}
+\end{table}
+
+We use the \emph{AIF360} python package by IBM to obtain the datasets
+and fairness metrics used in this
+study \cite{bellamy2019ai}. Table \ref{tab:fairness-metrics} shows the
+group fairness metrics along with their mathematical formulas used in
+this study. We include all group fairness metrics---namely
+\emph{Disparate Impact (DI)} and \emph{Statistical Parity Difference
+(SPD)}---for which both model and data dependent variants are
+available. The data variant of the fairness metrics use the labels of
+the data (represented by $Y$) where as the model variant use the
+predictions of the trained ML models (represented by
+$\hat{Y}$). Favourable and unfavourable outcomes are represented by
+1 and 0 respectively. Similarly, privileged and unprivileged groups of
+the protected attribute (represented by $D$) are represented by
+1 and 0 respectively.
+
 \begin{table*}
   \centering
   \begin{tabular}{l l r}
@@ -361,42 +413,6 @@ MFM in this study is described.
   \label{tab:datasets}
   \caption{Datasets used in the study}
 \end{table*}
-
-We use the \emph{AIF360} python package by IBM to obtain the datasets
-and fairness metrics used in this study \cite{bellamy2019ai}. We use
-two popular group fairness metrics namely \emph{Disparate Impact (DI)}
-and \emph{Statistical Parity Difference (SPD)} in this study. We are
-restricted to these metrics since they are the only metrics in the
-AIF360 with a model dependent as well as a model independent variant.
-Equations \ref{eq:di-data} and \ref{eq:spd-data} show the data variant
-of the DI and SPD fairness metrics respectively where $Y$ represents
-the labels and $D$ represents the protected attribute. The model
-variant of DI and SPD is given by Equations \ref{eq:di-model}
-and \ref{eq:spd-model} where we use the predictions of the trained ML
-models (represented by $\hat{Y}$). Favourable and unfavourable
-outcomes are represented by 1 and 0 respectively. Similarly,
-privileged and unprivileged groups of the protected attribute are
-represented by 1 and 0 respectively.
-
-\begin{equation}
-  DI_{data} = \frac{P(Y=1|D=0)}{P(Y=1|D=1)}
-  \label{eq:di-data}
-\end{equation}
-
-\begin{equation}
-  DI_{model} = \frac{P(\hat{Y}=1|D=0)}{P(\hat{Y}=1|D=1)}
-  \label{eq:di-model}
-\end{equation}
-
-\begin{equation}
-  SPD_{data} = P(Y=1|D=0)-P(Y=1|D=1)
-  \label{eq:spd-data}
-\end{equation}
-
-\begin{equation}
-  DI_{model} = P(\hat{Y}=1|D=0)-P(\hat{Y}=1|D=1)
-  \label{eq:spd-model}
-\end{equation}
 
 Table \ref{tab:datasets} presents the datasets used in this study. We
 consider tabular datasets which have been extensively used in prior
@@ -420,19 +436,22 @@ publications \cite{zhang2021ignorance,biswas2021fair,biswas2020machine}.
 
 \subsection{Fairness Evaluation}\label{sec:method-fair-eval}
 
+% TODO explain why we do not do any hyperparamer tuning; it optimizes
+% for performance, not fairness and makes results less generalisable
+% since the model fits to the datasets used in this study; consequently
+% we do not need a validation set
 Figure \ref{fig:method} presents the methodology used in this study
-for evaluating the fairness of ML models and datasets. The full
-dataset is split into a training and testing subset using a 75-25
-split with shuffling. The learning algorithm is trained using the
-training set and the trained model is used to predict the labels for
-the testing set. We quantify the bias in the underlying distribution
-of the training set by evaluating the data variants of the fairness
-metrics (DFM) using only the training set. Similarly, we quantify the
-bias in the model after training by evaluating the model variants of
-the fairness metrics (MFM) using the predictions of the model. We
-adopted the same transformation steps as outlined by
+for evaluating the fairness of ML models and datasets. A 75--25 split
+with shuffling is used to create the training and testing splits
+respectively. The learning algorithm is trained using the training set
+and the trained model is used to predict the labels for the testing
+set. We quantify the bias in the underlying distribution of the
+training set by evaluating the DFMs using only the training
+set. Similarly, we quantify the bias in the model after training by
+evaluating the MFMs using the predictions of the model. We adopted the
+same transformation steps as outlined by
 \citeauthor{zhang2021ignorance} to scale all fairness metric values
-between 0 and 1 such that higher metric values indicate more bias.
+between 0 and 1 such that higher values indicate more bias.
 
 \begin{figure*}
   \centering
@@ -467,9 +486,9 @@ size
     Fairness metrics & 2\\
     ML models & 4\\
     Datasets & 8\\
-    Total cases & $8*4=32$\\
+    Total cases & $8\times4=32$\\
     Iterations & 50\\
-    Total fairness evaluation cycles & $32*50=1600$\\
+    Total fairness evaluation cycles & $32\times50=1600$\\
     \bottomrule
   \end{tabular}
   \label{tab:parameters}
@@ -494,8 +513,6 @@ train 4 ML models on 8 datasets producing 32 total cases. The fairness
 for each case is evaluated 50 times using two fairness thus producing
 a total of 1600 training and fairness evaluation cycles.
 
-%% TODO luis: suggestions for better section headers or alternative
-%% structure ideas?
 \section{Results}\label{sec:results}
 
 This section presents the analysis of the relationship between DFM and
@@ -527,7 +544,7 @@ presents the value of the fairness metric. The models used in this
 study are represented using different colors. Both the fairness
 metrics DI (top) and SPD (bottom) are presented in separate plots. We
 observe that DFM and MFM convey similar information in all cases. The
-variability of the DFM is lesser compared to the MFM. This is because
+variability of the DFM is less than the MFM. This is because
 in addition to the randomness from the data shuffling in the training
 set, the models are assigned random initial states in every iteration.
 Finally in several cases the tree based classifiers (DT and RF) make
@@ -537,7 +554,8 @@ better than the baseline provided by the DFM.
 \begin{figure}
   \centering
   \includegraphics[width=0.95\linewidth]{heatmap--corr--full-data.pdf}
-  \caption{Correlation between DFM and MFM}
+  \caption{Correlation between DFM and MFM. ***: $p\le0.01$; **:
+  $p\le0.05$; *: $p\le0.1$}
   \label{fig:heatmap--corr--full-data}
 \end{figure}
 
@@ -583,27 +601,28 @@ sample sizes. Next we conduct \emph{student t-test} to identify the
 smallest sample size where the performance of the models is similar to
 that obtained when trained using the full training set.
 
-Figure \ref{fig:training-set-frac-threshold} (right) presents a
-histogram of the number of cases where there was a significant
-difference between the two populations. We note that there is a
-significant difference in the performance of the models in majority of
-the cases when the training size is reduced to 50\% while it remains
-consistent when using a training size of 60\% or higher. This is also
-corroborated by the lineplot in
+Figure \ref{fig:training-set-frac-threshold} (right) presents
+a histogram of the number of cases where there was a significant
+difference between the two populations. We note that there is
+a significant difference in the performance of the models in majority
+of the cases when the training size is reduced to 50\% while it
+remains consistent when using a training size of 60\% or higher. This
+is also corroborated by the lineplot in
 Figure \ref{fig:training-set-frac-threshold} (left) which shows the
 accuracy and f1 of all models across various training sample sizes in
-the \emph{german-age} dataset. We observe that the performance metrics
-are stable until 60\% of the training set is used after which they
-drop significantly. Thus for majority of the cases, a training sample
-of 60\% allows us to train models with acceptable performance, while
-also capturing a wide variety of fairness issues in the underlying
-training data within the 50 iterations.
+the \emph{german-age} dataset. We observe that the performance
+stabilities starting from 60\% training sample size. Thus for majority
+of the cases, a training sample of 60\% allows us to train models with
+acceptable performance, while also capturing a wide variety of
+fairness issues in the underlying training data within the 50
+iterations.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.95\linewidth]{heatmap--corr--training-sets-frac.pdf}
   \caption{Correlation between DFM and MFM across all models and
-    datasets using 60\% training data}
+  datasets using 60\% training data. ***: $p\le0.01$; **: $p\le0.05$;
+  *: $p\le0.1$}
   \label{fig:heatmap--corr--training-sets-frac}
 \end{figure}
 
@@ -611,10 +630,9 @@ Figure \ref{fig:heatmap--corr--training-sets-frac} shows the
 correlation between the DFM and MFM across all models and datasets
 when trained using 60\% of the original training set. In contrast to
 Figure \ref{fig:heatmap--corr--full-data}, we primarily observe
-brighter, warmer colours indicating a positive correlation between the
-DFM and MFM. This indicates that the DFM and the MFM convey the same
-information as the distribution of the underlying training dataset
-changes.
+a positive correlation between the DFM and MFM. This indicates that
+the DFM and the MFM convey the same information as the distribution of
+the underlying training dataset changes.
 
 \subsubsection{How does the training sample size affect the correlation between DFM and MFM?}\label{sec:results-corr-frac}
 
@@ -659,7 +677,7 @@ and MFM.
   \centering
   \includegraphics[width=0.95\linewidth]{heatmap--corr--frac.pdf}
   \caption{Correlation between DFM and MFM acoss various training
-    sample sizes}
+  sample sizes. ***: $p\le0.01$; **: $p\le0.05$; *: $p\le0.1$}
   \label{fig:heatmap--corr--frac}
 \end{figure}
 
@@ -670,8 +688,8 @@ correlation between DFM and MFM within the specific training sample
 sizes, here we calculate the correlation across all training sample
 sizes. Figure \ref{fig:heatmap--corr--frac} shows the correlation
 between DFM and MFM across various training sample sizes. We primarily
-observe warmer colours in the heatmap indicating that the DFM and the
-MFM convey the same information.
+observe colours indicating that the DFM and the MFM convey similar
+information.
 
 \subsubsection{What is the relationship between DFM and MFM across various feature samples?}\label{sec:results-feature-sets}
 
@@ -679,7 +697,7 @@ MFM convey the same information.
   \centering
   \includegraphics[width=0.95\linewidth]{heatmap--corr--num-features.pdf}
   \caption{Correlation between DFM and MFM across various feature
-    sample sizes}
+  sample sizes. ***: $p\le0.01$; **: $p\le0.05$; *: $p\le0.1$}
   \label{fig:heatmap--corr--num-features}
 \end{figure}
 
@@ -785,6 +803,7 @@ in the training data to a certain extent.
 %% volatility of train-test splits & how ensembling techniques can
 %% mitigate this volatility
 
+% TODO refactor this sentence; too complex
 Same information from the DFM and MFM---specifically, when both DFM
 and MFM are high indicating presence of bias and potential fairness
 issue---may indicate lack of sufficient training data. Under such
