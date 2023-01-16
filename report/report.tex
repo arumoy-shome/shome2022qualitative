@@ -28,6 +28,8 @@
 \newcommand{\highlight}[1]{\begin{framed}%
   \noindent\emph{#1}
 \end{framed}}
+%Custom in-text citation
+\newcommand{\citet}[1]{\citeauthor{#1}~(\citeyear{#1})}
 
 % the following package is optional:
 %\usepackage{latexsym}
@@ -747,10 +749,10 @@ mitigation techniques to address the fairness issue.
 A negative correlation between the DFM and MFM implies that the MFM
 reported a lower value compared to the DFM. This does not however
 guarantee the absense of bias in the
-model. \citeauthor{zhang2021ignorance} showed that in addition to the
+model. \citet{zhang2021ignorance} showed that in addition to the
 quantity of training data, the quality itself affects the fairness of
 ML systems. Introducing more data does not fix the bias in the model
-if the final distribution remains biased \cite{zhang2021ignorance}.
+if the final distribution remains biased.
 
 Lower MFM compared to DFM also presents a trade-off between efficiency
 and performance. A slight reduction in the training sample size, in
