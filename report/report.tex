@@ -186,7 +186,7 @@ follows.
     relationship between DFM and MFM?
 
     Our analysis of the training sample size and how it influences the
-    relationship between DFM and MFM revealed the presence of
+    relationship between DFM and MFM reveals the presence of
     a trade-off between fairness, efficiency and performance. In
     Section \ref{sec:discuss} we provide some practical guidelines on
     how to best navigate this trade-off.
@@ -337,17 +337,16 @@ attributes \cite{aggarwal2019black,udeshi2018automated,galhotra2017fairness}.
 % consider the correlation between protected and unprotected attributes
 % and thus often miss such cases. 
 
-% TODO should this zhang2021 ref be citet?
 This study conducts an empirical analysis of the relationship between
 DFM and MFM, and as such, operates under white-box testing
 assumptions. The experimental design of this study is similar in
-spirit to that proposed by \citeauthor{zhang2021ignorance}. However
-our objective, results and implications are entirely different. While
-\citeauthor{zhang2021ignorance} study the effect of training and
-feature sample size on the fairness of the model, this study aims to
-understand the relationship between DFM and MFM. We analyse change in
-the distribution, sample size and number of features in the training
-set and how it affects this relationship.
+spirit to that proposed by \citet{zhang2021ignorance}. However our
+objective, results and implications are entirely different. While
+\citet{zhang2021ignorance} study the effect of training and feature
+sample size on the fairness of the model, this study aims to
+understand the relationship between DFM and MFM. We analyse how change
+in the distribution, sample size and number of features in the
+training set affects this relationship.
 
 \section{Experimental Design}\label{sec:method}
 
@@ -438,7 +437,7 @@ more bias \cite{zhang2021ignorance,hort2021fairea}.
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.95\linewidth]{method.pdf}
+  \includegraphics[width=\linewidth]{method.pdf}
   \caption{Methodology for evaluating fairness of datasets and ML
   models using DFM and MFM.}
   \label{fig:method}
@@ -505,7 +504,7 @@ the fairness properties of the underlying training dataset changes?}\label{sec:r
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{boxplot--dataset--di-spd--exp-full.pdf}
+  \includegraphics[width=\linewidth]{boxplot--dataset--di-spd--exp-full.pdf}
   \caption{Distribution of DFM and MFM across all datasets and models.}
   \label{fig:boxplot--dataset--di-spd--exp-full}
 \end{figure}
@@ -558,7 +557,7 @@ higher. This is also corroborated by the lineplot in
 Figure \ref{fig:training-set-frac-threshold} (left) which shows the
 accuracy and f1 of all models across various training sample sizes in
 the \emph{german-age} dataset. We observe that the performance
-stabilities starting from 60\% training sample size. Thus for the
+stabilises starting from 60\% training sample size. Thus for the
 majority of the cases, a training sample of 60\% allows us to train
 models with acceptable performance, while also capturing a wide
 variety of fairness issues in the underlying training data within the
@@ -566,7 +565,7 @@ variety of fairness issues in the underlying training data within the
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{heatmap--corr--training-sets-frac.pdf}
+  \includegraphics[width=\linewidth]{heatmap--corr--training-sets-frac.pdf}
   \caption{Correlation between DFM and MFM across all models and
   datasets using 60\% training data. The statistical significance is
   reported using asterisks at three $\alpha$ levels. ***: $p \le
@@ -590,7 +589,7 @@ dataset changes.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{heatmap--corr--full-data.pdf}
+  \includegraphics[width=\linewidth]{heatmap--corr--full-data.pdf}
   \caption{Correlation between DFM and MFM using the full training
   data. ***: $p \le 0.01$; **: $0.01 > p \le0.05$; *: $0.05 > p \le
   0.1$}
@@ -650,7 +649,7 @@ across various training and feature sample sizes?}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{heatmap--corr--frac.pdf}
+  \includegraphics[width=\linewidth]{heatmap--corr--frac.pdf}
   \caption{Correlation between DFM and MFM acoss various training
   sample sizes. ***: $p \le 0.01$; **: $0.01 > p \le 0.05$; *: $0.05
   > p \le 0.1$}
@@ -669,7 +668,7 @@ training sample size changes.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{heatmap--corr--num-features.pdf}
+  \includegraphics[width=\linewidth]{heatmap--corr--num-features.pdf}
   \caption{Correlation between DFM and MFM across various feature
   sample sizes. ***: $p \le 0.01$; **: $0.01 > p \le 0.05$; *: $0.05
   > p \le 0.1$}

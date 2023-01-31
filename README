@@ -1,0 +1,92 @@
+---
+title: "Data vs. Model Machine Learning Fairness Testing: An Empirical Study"
+---
+
+These instructions are to setup the replication package for the paper
+title *Data vs. Model Machine Learning Fairness Testing: An Empirical
+Study* submitted to IJCAI 2023 main track.
+
+# Dependencies
+
+The source code for all experiments and data analysis is in
+`src.zip`. On a unix/freebsd system you can unzip the contents from
+the command line using `unzip src.zip`. The contents of `src.zip` are
+as follows:
+
+```
+Archive:  src.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+      650  10-18-2022 12:13   Dockerfile
+        0  12-18-2022 19:18   bin/
+     1216  11-02-2022 14:01   bin/exp-training-sets.bash
+     1172  11-28-2022 11:59   bin/exp-grid.bash
+     6649  12-01-2022 22:11   bin/exp-grid.py
+     5500  12-17-2022 14:46   bin/exp-training-sets.py
+     1212  11-02-2022 14:00   bin/exp-feature-sets.bash
+     7080  12-28-2022 21:12   bin/exp-feature-sets.py
+    25228  12-09-2022 10:19   docs/datasets-metadata.ipynb
+  1117028  01-11-2023 14:21   docs/exp-feature-sets.ipynb
+   397289  12-17-2022 14:14   docs/exp-full-data.ipynb
+  1525122  01-11-2023 14:21   docs/exp-training-sets.ipynb
+       47  11-09-2022 14:21   requirements.txt
+        0  12-18-2022 19:20   src/
+     4013  12-05-2022 21:42   src/metrics.py
+     2126  10-12-2022 16:52   src/features.json
+        0  10-12-2022 14:18   src/__init__.py
+      464  11-16-2022 15:36   src/utils.py
+     2182  11-03-2022 16:03   src/data.py
+---------                     -------
+  3097186                     20 files
+```
+
+The datasets **used** in this study are present in `datasets.zip`. You
+**do not** need to unzip this file since the provided Docker
+environment will extract & move the datasets to the correct location
+automatically.
+
+The results generated **from** the experiments are stored in csv files
+in `data.zip`. You should unzip this file if you wish to run the
+analysis present in the Jupyter notebooks present in the `docs`
+directory. Make sure to move or make appropriate copies of the
+original data if you wish to generate the data youself using the
+scripts provided in `bin` directory.
+
+Use the provided Dockerfile to build a docker image & run your
+commands within a docker container. To build an image tagged
+`foobarbaz` run the following command.
+
+```sh
+docker build -t foobarbaz .
+```
+
+The following command mounts the current working directory to the
+`/app` directory within a container & runs the
+`bin/exp-feature-sets.bash` script for 5 iterations. The container is
+automatically cleaned up after the script finishes executing.
+
+```sh
+docker run --rm -it -v "$(pwd):/app" foobarbaz ./bin/exp-feature-sets.bash 5
+```
+
+The number of cpus & memory available to the container can be
+specified using the `--cpus` & `--memory` flags. The following command
+limits the number of cores to 8 & the available memory to 32GB.
+
+```sh
+docker run --rm -it -v "$(pwd):/app" --cpus 8.0 --memory 320000000000 foobarbaz ./bin/exp-feature-sets.bash 5
+```
+
+# Running the experiments
+
+Use the python and bash scripts provided in the `bin/` directory to
+run the experiments. Refer to the documentation within the files for
+more details. In general, the python scripts should be used to run the
+experiment for a particular dataset while the bash scripts can be used
+to run the experiment for all datasets.
+
+# Analysing the results
+
+The data analysis is conducted using Jupyter notebooks present in the
+`docs/` directory.
+
