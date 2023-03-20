@@ -390,6 +390,7 @@ and MFM.
   \label{tab:fairness-metrics}
 \end{table}
 
+Although Equalised odds and 
 Table \ref{tab:fairness-metrics} shows the group fairness metrics
 along with their mathematical formulas used in this study. We include
 all group fairness metrics---namely \emph{Disparate Impact (DI)} and
@@ -494,6 +495,9 @@ experiment.
   \label{tab:parameters}
 \end{table}
 
+% there was a comment for R1 regarding shuffling the our experimental data (which we do not do); perhaps clarify how spearkman correlation works here?
+
+% ie. even though we do not suffle our experimental data, and it is sorted by the iteration number, this does not matter since spearman correlation will sort by the rank of the vector internally
 We use Spearman Rank Correlation to quantify the linear relationship
 between the DFM and MFM. We repeat all experiments 50 times and report
 the statistical significance of our results. We consider cases where
@@ -524,21 +528,27 @@ the fairness properties of the underlying training dataset changes?}\label{sec:r
   \label{fig:boxplot--dataset--di-spd--exp-full}
 \end{figure}
 
+% TODO start with a general motivation for this boxplot; we simply want to show the general trend prior to exploring the relationship between DFM & MFM!
+
 Figure \ref{fig:boxplot--dataset--di-spd--exp-full} presents a boxplot
 with the distribution of the fairness metrics across the datasets. The
 x-axis represents the datasets used in this study while the y-axis
 presents the value of the fairness metric. The models used in this
-study are represented using different colors---note that the model
+study are represented using different colours---note that the model
 ``None'' represented in blue refers to the DFM. Both the fairness
-metrics DI (top) and SPD (bottom) are presented in separate plots. We
-observe that distribution of the DFM and MFM are similar in all cases
-indicating that they convey similar information. The variability of
-the DFM is less than the MFM. This is because in addition to the
-randomness from the data shuffling in the training set, the models are
-assigned random initial states in every iteration. Finally in several
+metrics DI (top) and SPD (bottom) are presented in separate plots. Comparing the boxplots for DI and SDP, we note that they follow the same general pattern of distribution. Comparing the DFM and MFM for any given ML model and dataset, we observe a difference in the distribution and variability between the DFM and MFM. This is because, in addition to the randomness from the data shuffling in the training set, the models are assigned random initial states in every iteration thus resulting in different predictions across the iterations and consequently varying MFM values. Finally in several
 cases the tree-based classifiers (DT and RF) make fairer decisions
 compared to the other classifiers, sometimes even better than the
 baseline provided by the DFM.
+% TODO I still don't like the last sentence as much...
+
+% We
+% observe that distribution of the DFM and MFM are similar in all cases
+% indicating that they convey similar information. The variability of
+% the DFM is less than the MFM. This is because in addition to the
+% randomness from the data shuffling in the training set, the models are
+% assigned random initial states in every iteration.
+
 
 \begin{figure}
   \centering
