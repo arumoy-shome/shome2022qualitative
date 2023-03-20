@@ -120,6 +120,9 @@
   minimising execution of full training cycles thus reducing
   development time and costs.
 
+  %% TODO Maybe work in the word "recommend"; we recommend that
+  %% practitioners test for fairness both before and after training?
+
 \end{abstract}
 
 %%
@@ -168,14 +171,18 @@ Metric or DFM). And second, after model training using fairness
 metrics that quantify the bias in the predictions of the trained model
 (henceforth Model Fairness Metric or MFM).
 
-This paper presents an empirical study of the relationship between DFM
-and MFM. The analysis is conducted using $2$ fairness metrics, $4$ ML
-algorithms, $5$ real-world tabular datasets and $1600$ fairness
-evaluation cycles. All source code and results of the study are
-publicly accessible under the CC-BY 4.0
-license\footnote{https://figshare.com/s/67206f7c219b12885a6f}. The
-research questions along with the contributions of this paper are as
-follows.
+While MFM has been widely adopted in practise and well researched in
+academia, we do not yet know the role of DFM when testing for fairness
+in ML systems. To evaluate the effectiveness of DFM for catching
+fairness bugs, we analyse its relationship with MFM through an
+extensive empirical study. The analysis is conducted using $2$
+fairness metrics, $4$ ML algorithms, $5$ real-world tabular datasets
+and $1600$ fairness evaluation cycles. The research questions along
+with the contributions of this paper are as follows.
+
+%% TODO We never say that we should be using DFM instead of MFM, we
+%% simply suggest that we should be doing both. Phrase this as a
+%% general best practise/recommendation for ML practitioners.
 
 \begin{itemize}
   \item{\textbf{RQ1.}} What is the relationship between DFM and MFM as the
@@ -203,6 +210,10 @@ follows.
     fairness issues upstream and avoid execution costs of a full
     training cycle.
 \end{itemize}
+
+All source code and results of the study are publicly accessible under
+the CC-BY 4.0
+license\footnote{https://figshare.com/s/67206f7c219b12885a6f}.
 
 The remainder of the paper is structured as follows.
 Section \ref{sec:related} summarises related concepts and prior work
@@ -502,7 +513,7 @@ between DFM and MFM as the distribution of the training data changes
 while Section \ref{sec:results-training-feature-sets} presents their
 relationship across varying training and feature sample sizes.
 
-\subsection{Full Training Set Experiments}\label{sec:results-full}
+\subsection{Training Data Distribution Experiments}\label{sec:results-full}
 \subsubsection{RQ1. What is the relationship between DFM and MFM as
 the fairness properties of the underlying training dataset changes?}\label{sec:results-full-rel}
 
