@@ -4,6 +4,7 @@
 *.log
 data/
 report/report.pdf
+report/icse24.pdf
 report/presentation.pdf
 report/auto
 *.aux
