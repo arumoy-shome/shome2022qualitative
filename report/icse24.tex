@@ -107,12 +107,15 @@
   correctness of ML systems while other non-functional properties such
   as fairness have been ignored. Although several fairness definitions
   and bias mitigation techniques exist in the literature, all existing
-  solutions evaluate fairness after the training stage. This paper
-  presents an empirical analysis of the relationship between model
-  dependent and independent fairness metrics using $2$ fairness
-  metrics, $4$ ML algorithms, $5$ real-world datasets and $1600$
-  training and fairness evaluation cycles. We find a linear
-  relationship between data and model fairness metrics when the
+  solutions evaluate fairness after the training stage. In this paper,
+  we take the first steps towards evaluating a more holistic approach
+  by testing for fairness both before and after model training. We
+  evaluate the effectiveness of the proposed approach and position it
+  within the ML development lifecycle, using an empirical analysis of
+  the relationship between model dependent and independent fairness
+  metrics. The study uses $2$ fairness metrics, $4$ ML algorithms, $5$
+  real-world datasets and $1600$ fairness evaluation cycles. We find a
+  linear relationship between data and model fairness metrics when the
   distribution and the size of the training data changes. Our results
   indicate that testing for fairness prior to training can be a
   ``cheap'' and effective means of catching a biased data collection
@@ -216,8 +219,8 @@ the experimental design and fairness evaluation strategy is presented.
 The results of this study are presented in Section \ref{sec:results}
 and their implications are discussed in
 Section \ref{sec:implications}. The paper concludes with a few notes
-on the threats to validity in Section \ref{sec:threats} and future
-work in Section \ref{sec:conclude}.
+on the threats to validity and future work in
+Section \ref{sec:threats}.
 
 \section{Preliminaries}\label{sec:related}
 
@@ -437,7 +440,7 @@ study.
 
 \begin{table}
   \centering
-  \caption{Fairness metrics used in this study}
+  \caption{Fairness metrics used in the study}
   \begin{tabular}{l r}
     \toprule
     \textbf{\emph{DFM}}\\
@@ -556,6 +559,8 @@ for each case is evaluated 50 times using two fairness metrics, thus
 producing a total of 1600 training and fairness evaluation cycles.
 
 \subsection{Correlation Analysis}\label{sec:corr-analysis}
+%% !TODO add a table with clear interpretation of correlation results;
+%% consult notes for details
 
 We use correlation analysis to study the relationship between DFM and
 MFM with-respect-to change in three experimental
@@ -566,19 +571,24 @@ robust to outliers. We repeat all experiments 50 times and report the
 statistical significance of our results. We consider cases where
 $pvalue\le0.05$ to be statistically significant in our evaluation.
 
+We do not apply the \emph{Bonferroni correction} to the correlation
+analysis results. Although we report the $pvalue$ for completeness, we
+do not base our implications only on the statistically significant
+results. But rather on general trends observed in our analysis.
+
 A positive correlation means that the DFM and MFM changed in the same
 direction and thus \emph{convey the same information}. A positive
 correlation indicates that both the DFM and MFM show presence of bias
-in the training data and in the model predictions respectively. A
-negative correlation between the DFM and MFM means that they changed
+in the training data and in the model predictions respectively.
+
+A negative correlation between the DFM and MFM means that they changed
 in the opposite direction and \emph{do not convey the same
 information}. This indicates that the bias in the model predictions
-was lower than that present in the training data.
-
-%% TODO should we explain why negative correlation from the inverse is
-%% not possible (ie. DFM reports lower than MFM)? this makes things a
-%% bit more complicated and we do not have sufficient evidence in our
-%% results to back this up.
+was lower than that present in the training data. Note that the
+opposite event---of bias in the model predictions being higher than
+that present in the training data---is unlikely to occur. ML models
+cannot manifest bias towards a particular protected group if the
+training data is unbiased to begin with.
 
 The implications of the correlation results varies based on the
 experimental factor. A detailed discussion is presented in the
@@ -586,8 +596,6 @@ corresponding sub-sections of Section \ref{sec:implications}.
 
 \subsection{Distribution of Experimental Data}\label{sec:data-analysis}
 
-%% TODO unsure how to indicate that we have data from full training
-%% set and 50 iterations
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{boxplot--dataset--di-spd--exp-full.pdf}
@@ -621,13 +629,13 @@ consequently varying MFM values.
 
 \section{Results}\label{sec:results}
 
-%% TODO here we should reiterate that we use correlation; how we
-%% calculate it; and that its on the 50 iterations; refer back to the
-%% relevant section
-
 This section presents the analysis of the relationship between DFM and
-MFM. The section is broken further into three subsections based on the
-research questions.
+MFM. We use correlation to evaluate the relationship between DFM and
+MFM with-respect-to three experimental factors: distribution, size and
+features of the training set (see Section \ref{sec:corr-analysis} for
+interpretation of correlation analysis and how it is used in this
+study). This section is broken further into three subsections based on
+the research questions.
 
 \subsection{RQ1. What is the relationship between DFM and MFM as
 the fairness properties of the underlying training dataset
@@ -658,7 +666,7 @@ changes?}\label{sec:results-full-rel}
   \label{fig:training-set-frac-threshold}
 \end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--training-sets-frac.pdf}
   \caption{Heatmap showing correlation between DFM and MFM for all
@@ -670,9 +678,9 @@ changes?}\label{sec:results-full-rel}
     can be used to identify fairness related data drifts in automated
     ML pipelines.}
   \label{fig:heatmap--corr--training-sets-frac}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--full-data.pdf}
   \caption{Heatmap showing correlation between DFM and MFM using
@@ -682,7 +690,7 @@ changes?}\label{sec:results-full-rel}
     observe darker colours indicating that the DFM and MFM no longer
     convey the same information.}
   \label{fig:heatmap--corr--full-data}
-\end{figure*}
+\end{figure}
 
 To simulate change in the distribution of the training data, we use a
 smaller subset of the original training data. Figure \ref{fig:shuffle}
@@ -797,9 +805,10 @@ correlation between the DFM and MFM decreases as we increase the
 training sample size.}
 
 \subsection{RQ3. What is the relationship between DFM and MFM
-across various training and feature sample sizes?}
+across various training and feature sample
+sizes?}\label{sec:results-size-feature-sample}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--frac.pdf}
   \caption{Heatmap showing correlation between DFM and MFM across all
@@ -811,9 +820,9 @@ across various training and feature sample sizes?}
     sample size, DFM can aid practitioners catch fairness issues
     upstream and avoid execution costs of a full training cycle.}
   \label{fig:heatmap--corr--frac}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--num-features.pdf}
   \caption{Heatmap showing correlation between DFM and MFM across
@@ -825,7 +834,7 @@ across various training and feature sample sizes?}
     both before and after training.}
 
   \label{fig:heatmap--corr--num-features}
-\end{figure*}
+\end{figure}
 
 \begin{figure}
   \centering
@@ -911,8 +920,6 @@ ML pipelines.
   \label{fig:tradeoff}
 \end{figure}
 
-%% TODO jump between positive correlation and lack of sufficient data
-%% is not clear...
 Results from RQ2 indicate that the quantity of training data
 profoundly influences the relationship between DFM and MFM.
 Figure \ref{fig:tradeoff} presents a visual explanation of the RQ2
@@ -943,13 +950,15 @@ the bias in the model if the final distribution remains biased.
 The bottom subplot depicts the effect of training sample size on the
 correctness of the ML models. Depending on the complexity of the ML
 model, its performance stabilises beyond a certain quantity of
-training data. However, this training sample size may be smaller than
-what is required to let the ML model repair some of the bias in the
-dataset automatically. This presents a trade-off between efficiency
-and performance. A slight reduction in the training sample size---in
-combination with bias mitigation techniques and a rich feature sample
-size---can allow practitioners to build fair ML systems with quicker
-training cycles at the cost of negligible predictive
+training data (also observed in
+Figure \ref{fig:training-set-frac-threshold}). However, this training
+sample size may be smaller than what is required to let the ML model
+repair some of the bias in the dataset automatically. This presents a
+trade-off between efficiency and performance. A slight reduction in
+the training sample size---in combination with bias mitigation
+techniques and a rich feature sample size---can allow practitioners to
+build fair ML systems with quicker training cycles at the cost of
+negligible predictive
 performance \cite{verdecchia2022data,zhang2021ignorance}. Engineering
 efficient, high quality training data can reduce training cycles,
 development time and ultimately project costs. Compounded over the
@@ -972,10 +981,13 @@ Results from RQ3 indicate that the DFM and MFM are positively
 correlated and thus convey the same information when the training
 sample size changes. DFM can therefore aid practitioners catch
 fairness issues upstream and avoid execution costs of a full training
-cycle. Considering the entire duration that an ML system is
-operational, along with the multiple iterations it takes to test an ML
-system, avoiding a full training cycle while evaluating its fairness
-can be energy efficient and sustainable in the long run.
+cycle.If the DFM indicates presence of bias, it can also be an early
+indication of flaws in the data collection process or flaws in the
+initial design of the system itself. Considering the entire duration
+that an ML system is operational, along with the multiple iterations
+it takes to test an ML system, avoiding a full training cycle while
+evaluating its fairness can be energy efficient and sustainable in the
+long run.
 
 However the same test reduction cannot be made when experimenting with
 the feature sample size of the training
@@ -986,23 +998,26 @@ of other features on the fairness at the data level. Thus when
 experimenting with the feature sample size, it is recommended that ML
 practitioners evaluate the fairness both before and after training.
 
-\subsection{Locating root cause of bias}\label{sec:discuss-root-cause-bias}
+%% \subsection{Locating root cause of bias}\label{sec:discuss-root-cause-bias}
 
 % TODO we have to mention chakraborty2021bias here; they do root cause
 % of bias in ML!
-Testing for fairness after training the model makes it very difficult
-to identify where exactly the bias was introduced. Testing for
-fairness both at the data (using DFM) and model (using MFM) level
-provides a holistic view on the fairness of the entire system and can
-aid practitioners identify the root cause of bias. If the DFM
-indicates presence of bias, it can be an early indication of flaws in
-the data collection process or flaws in the initial design of the
-system itself. In the event that the DFM does not indicate bias but
-the MFM does, practitioners can narrow down the cause of bias to the
-learning algorithm itself and opt for in-processing or post-processing
-bias mitigation techniques.
+%% Testing for fairness after training the model makes it very difficult
+%% to identify where exactly the bias was introduced. Testing for
+%% fairness both at the data (using DFM) and model (using MFM) level
+%% provides a holistic view on the fairness of the entire system and can
+%% aid practitioners identify the root cause of bias.  In the event that the DFM does not indicate bias but
+%% the MFM does, practitioners can narrow down the cause of bias to the
+%% learning algorithm itself and opt for in-processing or post-processing
+%% bias mitigation techniques.
 
 \subsection{Explaining fairness in decision trees}\label{sec:discuss-explain-fair-dt}
+%% TODO here we should expand and say that we need more work to
+%% understand why DTs are inherently fair; perhaps if this is a
+%% reliable insight, then we can consider test reduction from a model
+%% perspective: if DTs are unfair, changes are that other models will
+%% also be unfair
+
 
 We consistently observe that Decision Trees (DTs) are able to make
 fairer predictions with minimal effort. For instance, in
@@ -1017,24 +1032,33 @@ observation pose an interesting line of query into examining why DTs
 are able to produce fairer predictions using explainable AI
 techniques.
 
-\section{Threats to Validity}\label{sec:threats}
-% we only use two fairness metrics while prior work have used 4. this is because there are currently only 2 fairness metrics with a data variant. this promotes the need for more data-centric fairness metrics
+\section{Threats to Validity and Future Work}\label{sec:threats}
+The exploratory nature of this study revealed several interesting
+insights as described in Section \ref{sec:results}
+and \ref{sec:implications}. This section discusses limitations of the
+current work along with future directions of research.
 
-% real world implications are clear, practitioners will not conduct
-% this correlation analysis to determine if they have insufficient
-% data or not...
+%% !TODO "to what extent do models fix bias?" links with the DT stuff
+%% and tradeoff stuff perhaps...we need a new section for future work
+%% most likely!
 
-% on the matter of simulating distribution change in the training
-% data; we validated with no distribution change as well, when there
-% is no distribution, the correlation cannot be calculated so the
-% analysis fails
 
-We do not apply the \emph{Bonferroni correction} to the correlation
-analysis results. Although we report the $pvalue$ for completeness,
-we do not base our implications only on the statistically significant
-results. But rather on general trends observed in our analysis.
+This study uses two group fairness metrics---namely \emph{Disparate
+Impact} and \emph{Statistical Parity Difference}. Relevant prior work
+mentioned in Section \ref{sec:prior-work} additionally use
+\emph{Average Absolute Odds Difference} and \emph{Equal Opportunity
+Difference} in their analysis. However, we did not find any Python
+library for fairness testing which provides a data-centric
+implementation of these metrics. In
+Section \ref{sec:results-size-feature-sample} we observe that DFM do
+not account for the features in the data. However,
+\citeauthor{zhang2021ignorance} showed that a larger feature sample
+size has a positive effect on the fairness of ML models. Our analysis
+highlights the need for more data-centric fairness metrics. It also
+sheds light on the limitations of the state-of-the-art data fairness
+metrics since they are restricted to the size of the training set.
 
-We use the spearman correlation implementation provided by
+We use the Spearman correlation implementation provided by
 scipy \cite{virtanen2020scipy} python library. The $pvalue$ provided by
 the current implementation however is not reliable for population size
 less than 500 experiments\footnote{See notes in the
@@ -1050,47 +1074,83 @@ the coefficient of determination ($R^2$) and the mean squared error
 (MSE) in the residuals to evaluate the goodness of fit. We set the MFM
 as the outcome (or dependent) variable $y$ and the DFM as the design
 (or independent) variable $x$. The linear regression results align
-with our findings from the correlation analysis.
+with our findings from the correlation analysis. The linear regression
+analysis is done using the statsmodels python
+library \cite{seabold2010statsmodels}.
 
-%% For the experiment in Section \ref{sec:results-full-rel}, the $R^2$ in
-%% majority of the cases lie close to 0 when there is no significant
-%% change in the distribution of the training set. This indicates that
-%% the linear regression model is unable to explain the variability in
-%% the MFM using the DFM. With the simulated distribution change in the
-%% training set, $R^2$ improves relative to the prior experiment thus
-%% reflecting the change we also observe in the correlation analysis.
+%% TODO R.2.2 : Answer to RQ2 says that the correlation between DFM
+%% and MFM decreases for larger training sample sizes, but this seems
+%% to contradict the claim that one can detect fairness drifts in
+%% advance, especially for large datasets. In general, how does one
+%% know if the dataset is "too large" for the correlation to be
+%% useful?---this is a good point (I missed it before)
 
+% !TODO on the matter of simulating distribution change in the training
+% data; we validated with no distribution change as well, when there
+% is no distribution, the correlation cannot be calculated so the
+% analysis fails
 
-%% lack of correlation may arise from lack of significant bias in the
-%% dataset; thus the DFM and MFM are just random and will never be
-%% related; see german-sex for example
+%% !TODO no hard data on the deployment side; mention that we wish to
+%% validate results of this study with real ML projects; also we can
+%% extend the study by validating the drift simulation is actually
+%% doing drift using drift detection metrics; we take the first step
+%% towards this
 
 For the experiment conducted in Section \ref{sec:results-full-rel},
 the simulation of distribution change using a smaller training sample
 size of 60\% is a gross approximation and may not be a good fit for
 all datasets used in this study. The size of the datasets used in the
-study are not consistent. Thus 60\% in large datasets such as
-\emph{adult-sex} may be sufficient training data for the ML models to
-mitigate some of the bias. An alternative albeit computationally more
-expensive solution would be to identify this threshold individually
-for each dataset and update it dynamically as its distribution
-changes.
+study are not consistent. As seen in
+Figure \ref{fig:heatmap--corr--training-sets-frac}, 60\% of the larger
+datasets is sufficient training data for the ML
+models to mitigate some of the bias. An alternative albeit
+computationally more expensive solution would be to identify this
+threshold individually for each dataset and update it dynamically as
+its distribution changes. Generating synthetic data also remains an
+open task for further investigation.
+
+%% This study is limited to tabular datasets and classical ML models. The
+%% datasets and models used in this study reflect prior scientific
+%% contributions. However, a natural extension to the study would be to
+%% include unstructured datasets such as text and images, and neural
+%% network models such as MLP and DNN.
+
+At this moment, the application of the correlation analysis in
+practise remains unclear. Although the results are intriguing and open
+several interesting directions for future research, practitioners are
+not advised to conduct such an expensive analysis in practise. This
+question remains unanswered, however we invite the scientific
+community to investigate further.
+
 
 \section{Conclusion}\label{sec:conclude}
 
 Prior work in ML fairness testing evaluate fairness after the training
-stage, using the predictions of the ML model. In contrast, this study
-presents a more holistic approach by testing for fairness at two
-distinct locations of the ML development lifecycle. We analyse the
-relationship between model dependent and independent fairness metrics
-empirically and find a linear relationship between data and model
-fairness metrics when the distribution and the size of the training
-data changes. Our results indicate that testing for fairness prior to
-training can be a ``cheap'' and effective means of catching fairness
-issues in the upstream stages of automated ML pipelines and aid
-practitioners navigate the complex landscape of fairness testing. As
-an extension of this study, we wish to evaluate the effectiveness of
-DFM in real-world ML systems.
+stage, using the predictions of the ML model. In contrast, we take a
+more holistic approach by testing for fairness at two distinct
+locations of the ML development lifecycle: prior to training using
+fairness metrics that quantify the bias in the training data and after
+training using fairness metrics that quantify the bias in the model
+predictions.
+
+%% alternatively, "... ML development lifecycle: before and after
+%% model training"
+
+We take the first step towards understanding the effectiveness of
+``data-centric'' fairness testing and how it integrates with the
+current ML fairness testing practices and the ML development
+lifecycle. To that extent, we analyse the relationship between model
+dependent and independent fairness metrics empirically and find a
+linear relationship between data and model fairness metrics when the
+distribution and the size of the training data changes.
+
+Our results reveal several interesting insights and further directions
+of research. In particular, testing for fairness prior to training can
+be a ``cheap'' and effective means of catching fairness issues in the
+upstream stages of automated ML pipelines and aid practitioners
+navigate the complex landscape of fairness testing. As an extension of
+this study, we wish to evaluate the effectiveness of data fairness
+metrics in real-world ML systems.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{report}
