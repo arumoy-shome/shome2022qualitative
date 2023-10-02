@@ -212,7 +212,7 @@ The research in itself seems largely sound, albeit not well justified.
 Relevance to software engineering (or even the fairness literature) is
 rather unclear.
 
-# Comments on Novelty
+## Comments on Novelty
 The paper explores a statistical relationship between two metrics in
 depth that is expected to be there by construction. It may be novel in
 a narrow sense, but contributes little to the fairness discourse.
@@ -269,12 +269,13 @@ page) maybe the authors could add some more concrete suggestions.
 ## Artifact Assessment
 3. Average (overall acceptable though certain aspects may be missing)
 
-# Comments on Rigor
+## Comments on Rigor
+
 The experiment design and execution appear to be well done. In spite
 of its relatively small size, the experiment is interesting and
 promising. The main limitations are helpful for possible extensions.
 
-# Comments on Relevance
+## Comments on Relevance
 I find the work providing a good foundations for further research that
 both optimizes model training and data collection. This is relevant
 for SE for ML systems. Given the generalize explosion in size of both
@@ -339,6 +340,7 @@ convey similar information as the training sample size changes but not
 when the feature sample size changes.
 
 ## Overall Comments for authors
+
 The paper tackles an important problem of addressing bias
 quantification in the training data. However, the methodology and
 study investigate fairness and bias with highly simplified
