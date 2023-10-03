@@ -112,7 +112,7 @@ Metric or DFM). And second, after model training using fairness
 metrics that quantify the bias in the predictions of the trained model
 (henceforth Model Fairness Metric or MFM).
 
-While MFM has been widely adopted in practise and well researched in
+While MFM has been widely adopted in practice and well researched in
 academia, we do not yet know the role of DFM when testing for fairness
 in ML systems. The research goal of this study is to evaluate the
 effectiveness of DFM for catching fairness bugs. We do this by
@@ -128,7 +128,7 @@ The research questions along with the contributions of this paper are
 as follows.
 \begin{description}
   \item[RQ1.] What is the relationship between DFM and MFM as the
-    fairness properties of the underlying training dataset changes?
+    fairness properties of the underlying training dataset change?
 
     DFM and MFM convey the same information when the distribution of
     the underlying training dataset changes. This implies that DFM can
@@ -172,7 +172,7 @@ Section \ref{sec:threats}.
 This section provides a summary of the relevant concepts and prior
 work done in ML fairness testing. The section concludes with an
 overview of the existing ML development lifecycle and positions the
-proposed used of DFM within the stages of the lifecycle in contrast to
+proposed use of DFM within the stages of the lifecycle in contrast to
 MFM.
 
 \subsection{Algorithmic Bias, Bias Mitigation and Group Fairness}\label{sec:bias-fairness}
@@ -407,7 +407,7 @@ along with their mathematical formulas used in this study. We include
 all group fairness metrics---namely \emph{Disparate Impact (DI)} and
 \emph{Statistical Parity Difference (SPD)}---for which both model
 dependent and independent variants are available. The DFM use the
-labels of the data ($Y$) where as the MFM use the predictions of the
+labels of the data ($Y$) whereas the MFM use the predictions of the
 trained ML models ($\hat{Y}$). Favourable and unfavourable outcomes
 are represented by $1$ and $0$ respectively. Similarly, privileged and
 unprivileged groups of the protected attribute ($D$) are represented
@@ -448,7 +448,7 @@ We use the scikit-learn \cite{pedregosa2011scikit} python library for
 creating the train-test splits and training the ML models. We use four
 ML models of varying complexity namely, \emph{Logistic Regression},
 \emph{Decision Trees}, \emph{Random Forest} and \emph{Ada boost} based
-on their popularity in practise and in prior scientific
+on their popularity in practice and in prior scientific
 publications \cite{zhang2021ignorance,biswas2021fair,biswas2020machine}.
 
 \subsection{Fairness Evaluation}\label{sec:method-fair-eval}
@@ -847,7 +847,7 @@ information when the distribution and consequently the fairness
 properties of the training data changes. ML systems running in a
 production environment are often monitored to detect degradation in
 model performance. As shown in Figure \ref{fig:ml-lifecycle}, a
-standard practise is to combine the data encountered by the model in
+standard practice is to combine the data encountered by the model in
 the production environment with its predictions to create the training
 set for the next iteration \cite{biessmann2021automated}. Since data
 reflects the real world, change in its underlying distribution over
@@ -926,7 +926,7 @@ Results from RQ3 indicate that the DFM and MFM are positively
 correlated and thus convey the same information when the training
 sample size changes. DFM can therefore aid practitioners catch
 fairness issues upstream and avoid execution costs of a full training
-cycle.If the DFM indicates presence of bias, it can also be an early
+cycle. If the DFM indicates presence of bias, it can also be an early
 indication of flaws in the data collection process or flaws in the
 initial design of the system itself. Considering the entire duration
 that an ML system is operational, along with the multiple iterations
@@ -973,14 +973,14 @@ consistently report lower correlation between DFM and MFM compared to
 other models. This indicates that DTs are able to mitigate the bias
 present in the training data with a smaller training sample size and
 continue to do so as the training same size changes. The above
-observation pose an interesting line of query into examining why DTs
+observation poses an interesting line of query into examining why DTs
 are able to produce fairer predictions using explainable AI
 techniques.
 
 \section{Threats to Validity and Future Work}\label{sec:threats}
 The exploratory nature of this study revealed several interesting
-insights as described in Section \ref{sec:results}
-and \ref{sec:implications}. This section discusses limitations of the
+insights as described in Sections~\ref{sec:results}
+and~\ref{sec:implications}. This section discusses limitations of the
 current work along with future directions of research.
 
 %% !TODO "to what extent do models fix bias?" links with the DT stuff
@@ -1061,14 +1061,13 @@ open task for further investigation.
 %% network models such as MLP and DNN.
 
 At this moment, the application of the correlation analysis in
-practise remains unclear. Although the results are intriguing and open
+practice remains unclear. Although the results are intriguing and open
 several interesting directions for future research, practitioners are
-not advised to conduct such an expensive analysis in practise. This
+not advised to conduct such an expensive analysis in practice. This
 question remains unanswered, however we invite the scientific
 community to investigate further.
 
-
-\section{Conclusion}\label{sec:conclude}
+\section{Conclusion}
 
 Prior work in ML fairness testing evaluate fairness after the training
 stage, using the predictions of the ML model. In contrast, we take a
@@ -1101,7 +1100,12 @@ metrics in real-world ML systems.
 \bibliography{report}
 
 \appendix[Reviews from Last Submission]
-This section presents the reviews obtained from the last submission of this paper. Comments from each reviewer is presented below. For each comment (or group of comments) we provide a short description of the actions taken to address the comments. A more detailed explaination follows the short description.
+
+This section presents the reviews obtained from the last submission of
+this paper. Comments from each reviewer is presented below. For each
+comment (or group of comments) we provide a short description of the
+actions taken to address the comments. A more detailed explaination
+follows the short description.
 
 \subsection{Reviewer 509A}
 \subsubsection{Overall Comments}
@@ -1266,6 +1270,8 @@ Fairness Testing: An Empirical Study submitted to IJCAI 2023 main
 track." This could be a concern: was this a double submission? and as
 the notification of IJCAI was April 19, 2023, is is accepted there?
 
+\highlight{TODO}
+
 \subsubsection{Comments on Presentation}
 
 The work is well structured, written clearly and carrying sufficient
@@ -1278,15 +1284,19 @@ mitigated with online figs in the replication package combined with an
 explicit disclaimer/reference in the first small figure like fig. 3.
 
 A few typo's I could spot:
-- noun 'practise' should be 'practice' I think consistently throughout
-the paper; - 'where as' should be 'whereas'
-- on page 1 RQ1: 'changes' should be 'change
-- on page 2 sect. 2.0: 'used of' should be 'use of'
-- sect. 5.3: 'cycle.If' should be 'cycle. If'
-- sect. 5.4: 'pose' should be 'poses'
-- sect 6.0: 'Section 4 and 5' should be 'Sections 4 and 5'
-- references: I suggest double-checking all upper cases (e.g. in [13]
-'ai' should be 'AI')
+\begin{itemize}
+  \item noun 'practise' should be 'practice' I think consistently throughout the paper;
+  \item 'where as' should be 'whereas'
+  \item on page 1 RQ1: 'changes' should be 'change
+  \item on page 2 sect. 2.0: 'used of' should be 'use of'
+  \item sect. 5.3: 'cycle.If' should be 'cycle. If'
+  \item sect. 5.4: 'pose' should be 'poses'
+  \item sect 6.0: 'Section 4 and 5' should be 'Sections 4 and 5'
+  \item references: I suggest double-checking all upper cases (e.g. in
+    [13] 'ai' should be 'AI')
+\end{itemize}
+
+\highlight{Addressed in text.}
 
 \subsection{Reviewer 509C}
 
@@ -1310,25 +1320,76 @@ Favourable and unfavourable outcomes are represented by
 oversimplification and a justification of why each protected feature
 is not treated separately should be provided.
 
-\highlight{As explained in Section~\ref{sec:method-parameters}, favourable and unfavourable outcomes are represented by 1 and 0 respectively. \textbf{Not} 0 and 1, as the reviewer claims. Similarly, the privileged and unprivileged groups are represented by 1 and 0 respectively. This is a standard practise observed in prior published papers and books on ML fairness (and testing for fairness in ML)~\cite{barocas2019fairness,zhang2021ignorance,biswas2021fair}. We believe the reviewer is confused by how the privileged and unprivileged groups are represented mathematically and in the actual code. The groups are represented according to the specifications of the \emph{AIF360} library in the code~\cite{bellamy2019ai}. Additionally, the implementation of the experiments can be seen in the replication package. It is publicly available on \href{https://figshare.com/s/67206f7c219b12885a6f}{Figshare}.}
+\highlight{As explained in Section~\ref{sec:method-parameters},
+favourable and unfavourable outcomes are represented by 1 and
+0 respectively. \textbf{Not} 0 and 1, as the reviewer
+claims. Similarly, the privileged and unprivileged groups are
+represented by 1 and 0 respectively. This is a standard practice
+observed in prior published papers and books on ML fairness (and
+testing for fairness in
+ML)~\cite{barocas2019fairness,zhang2021ignorance,biswas2021fair}. We
+believe the reviewer is confused by how the privileged and
+unprivileged groups are represented mathematically and in the actual
+code. The groups are represented according to the specifications of
+the \emph{AIF360} library in the
+code~\cite{bellamy2019ai}. Additionally, the implementation of the
+experiments can be seen in the replication package. It is publicly
+available on
+\href{https://figshare.com/s/67206f7c219b12885a6f}{Figshare}.}
 
-Definition of favourable versus unfavourable outcome needs to be provided. The authors simulate a change in distribution of the training data by using a subset of the training data. It is not clear why this is the best approach to simulate a change in distribution. Why not perturb the data in specific ways? The change in distribution is not verified.
+Definition of favourable versus unfavourable outcome needs to be
+provided. The authors simulate a change in distribution of the
+training data by using a subset of the training data. It is not clear
+why this is the best approach to simulate a change in
+distribution. Why not perturb the data in specific ways? The change in
+distribution is not verified.
 
-\highlight{We do not claim that our approach is the best way to simulate a change in the distribution of the underlying training data. We acknowledge the limitations of this approach in Section~\ref{sec:threats} and leave investigation of alternative techniques such as synthetic data generation, as future work.}
+\highlight{We do not claim that our approach is the best way to
+simulate a change in the distribution of the underlying training
+data. We acknowledge the limitations of this approach in
+Section~\ref{sec:threats} and leave investigation of alternative
+techniques such as synthetic data generation, as future work.}
 
-The study primarily focuses on understanding the relationship between DFM and MFM, why is this useful is not completely clear. Isn't the goal to quantify bias both before and after training? So these also need to be assessed individually in how well they address bias, and not just their relationship. 
+The study primarily focuses on understanding the relationship between
+DFM and MFM, why is this useful is not completely clear. Isn't the
+goal to quantify bias both before and after training? So these also
+need to be assessed individually in how well they address bias, and
+not just their relationship. 
 
-\highlight{This is explained in Section~\ref{sec:intro}. MFM has been widely adopted in practise and is relatively well researched compared to DFM. Thus, to understand the effectiveness of DFM in catching fairness bugs, we analyse its relationship to MFM through an extensive empirical study.}
+\highlight{This is explained in Section~\ref{sec:intro}. MFM has been
+widely adopted in practice and is relatively well researched compared
+to DFM. Thus, to understand the effectiveness of DFM in catching
+fairness bugs, we analyse its relationship to MFM through an extensive
+empirical study.}
 
-There's a simple correlation analysis performed in the empirical study but the value of the results and analysis of reasons is not provided. Reason provided is typically training set size or feature size which is the change initiated to begin with.
+There's a simple correlation analysis performed in the empirical study
+but the value of the results and analysis of reasons is not
+provided. Reason provided is typically training set size or feature
+size which is the change initiated to begin with.
 
-\highlight{We use correlation analysis to analyse the relationship between DFM and MFM. To the best of our knowledge, this is the most feasible solution to measure linear relationship between two variables. The fact that it is simple, is a strong positive since simple solutions are easier to interpret. As mentioned in Section~\ref{sec:threats}, we also performed a linear regression analysis to check the relationship between the DFM and MFM. We obtained the same results as the correlation analysis.}
+\highlight{We use correlation analysis to analyse the relationship
+between DFM and MFM. To the best of our knowledge, this is the most
+feasible solution to measure linear relationship between two
+variables. The fact that it is simple, is a strong positive since
+simple solutions are easier to interpret. As mentioned in
+Section~\ref{sec:threats}, we also performed a linear regression
+analysis to check the relationship between the DFM and MFM. We
+obtained the same results as the correlation analysis.}
 
-\highlight{Section~\ref{sec:results} contains an in-depth analysis of the results obtained from our study along with our interpretation. Section~\ref{sec:implications} presents the implications of our results.}
+\highlight{Section~\ref{sec:results} contains an in-depth analysis of
+the results obtained from our study along with our
+interpretation. Section~\ref{sec:implications} presents the
+implications of our results.}
 
-In Figure 6, the authors state they primarily observe a positive correlation between the DFM and MFM. However, the correlation is very weak with low values for the correlation coefficient. This should be further discussed. How are features related to privileged or unprivileged?
+In Figure 6, the authors state they primarily observe a positive
+correlation between the DFM and MFM. However, the correlation is very
+weak with low values for the correlation coefficient. This should be
+further discussed. How are features related to privileged or
+unprivileged?
 
-\highlight{As mentioned in Section~\ref{sec:corr-analysis}, we do not base our implications only on the statistically significant results, rather on general trends observed in our analysis.}
+\highlight{As mentioned in Section~\ref{sec:corr-analysis}, we do not
+base our implications only on the statistically significant results,
+rather on general trends observed in our analysis.}
 
 \subsubsection{Comments on Rigor}
 
