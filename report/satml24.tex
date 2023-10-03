@@ -51,25 +51,22 @@ email address or ORCID}
 
 \begin{abstract}
 
-  Preference has primarily been given to testing for robustness and
-  correctness of ML systems while other non-functional properties such
-  as fairness have been ignored. Although several fairness definitions
-  and bias mitigation techniques exist in the literature, all existing
-  solutions evaluate fairness after the training stage. In this paper,
-  we take the first steps towards evaluating a more holistic approach
-  by testing for fairness both before and after model training. We
-  evaluate the effectiveness of the proposed approach and position it
-  within the ML development lifecycle, using an empirical analysis of
-  the relationship between model dependent and independent fairness
-  metrics. The study uses $2$ fairness metrics, $4$ ML algorithms, $5$
-  real-world datasets and $1600$ fairness evaluation cycles. We find a
-  linear relationship between data and model fairness metrics when the
-  distribution and the size of the training data changes. Our results
-  indicate that testing for fairness prior to training can be a
-  ``cheap'' and effective means of catching a biased data collection
-  process early; detecting data drifts in production systems and
-  minimising execution of full training cycles thus reducing
-  development time and costs.
+  Although several fairness definitions and bias mitigation techniques
+  exist in the literature, all existing solutions evaluate fairness
+  after the training stage. In this paper, we take the first steps
+  towards evaluating a more holistic approach by testing for fairness
+  both before and after model training. We evaluate the effectiveness
+  of the proposed approach and position it within the ML development
+  lifecycle, using an empirical analysis of the relationship between
+  model dependent and independent fairness metrics. The study uses $2$
+  fairness metrics, $4$ ML algorithms, $5$ real-world datasets and
+  $1600$ fairness evaluation cycles. We find a linear relationship
+  between data and model fairness metrics when the distribution and
+  the size of the training data changes. Our results indicate that
+  testing for fairness prior to training can be a ``cheap'' and
+  effective means of catching a biased data collection process early;
+  detecting data drifts in production systems and minimising execution
+  of full training cycles thus reducing development time and costs.
 
 \end{abstract}
 
@@ -1129,9 +1126,6 @@ similar rates of positive outcomes (the paper uses multiple variants
 of this metric). Note that this metric does not care about accuracy of
 the predictions of whether those outcomes are justified or fair.
 
-% NOTE this asshole is wrong, it is not on the same distribution; we simulate change in distribution by sampling
-% NOTE this asshole does not understand how empirical analysis works, thats why we repeat the experiments 50 times!
-% NOTE this asshole seems to think/expect that all papers must be amazing! He has something against being "simple". Simplicility is the very foundation/principles upon which software engineering is built!
 The experiments are set up so that all data is drawn from the same
 dataset/distribution, which main or may not contain bias according to
 this notion of fairness. The fairness on data is evaluated on the same
@@ -1153,44 +1147,175 @@ strategies and ability of different models to learn accurate
 predictions on different subsets of data. I suspect much of this could
 be formally discussed with statistics too.
 
-\highlight{\emph{\textbf{Our Response:}} Hello reviewer 509A.}
+% NOTE it is not on the same distribution; we simulate change in
+% distribution by sampling
+% NOTE reviewer does not understand how empirical analysis works,
+% thats why we repeat the experiments 50 times!
+% NOTE reviewer seems to think/expect that all papers must be
+% amazing! He has something against being "simple". Simplicility is
+% the very foundation/principles upon which software engineering is
+% built!
+% NOTE if this has nothing to do with SE, then why have prior works on
+% the same topic, with similar methodology been accepted into top SE
+% venues?
+\highlight{}
 
 \subsubsection{Minor Comments}
-\begin{IEEEitemize}
+\begin{itemize}
+  % personal opinions/attacks on style of writing/condescending
+    % comments/no constructive feedback provided/running notes rather
+    % than constructive feedback
   \item The introduction has lots of questionable claims.
-  \item Fairness and interpretabiliy have been ignored? Really, when there are entire conferences dedicated to these topics and thousands of papers published yearly? How are the citations supporting this claim, e.g., [56]?
-  \item ``all existing solutions evaluate fairness after the training stage'' there are lots of discussions of fairness in datasets, e.g., look at things like Datasheets for Datasets and the hundreds of debiasing and outlier detection papers that work on data
-  \item ``Testing ML systems is also expensive since it involves a full training-testing cycle'' the form of testing discussed here is simply observing rates of predictions on test or production data -- that doesn’t seem particularly expensive.
-  \item Biased data does not imply biased models and biased models do not imply biased products. There are interventions that can be applied at every of these stages. Most debiasing approaches actually affect the learning or inference stage to overcome known biases in the training data. Interventions at the system level are commonly discussed, such as suppressing entire output categories or adjusting thresholds.
-  \item ``Our results are exploratory'' what does it mean for results (rather than methods) to be exploratory
-  \item What would you consider as ``correctness'' of a model? Accuracy?
-  \item Consider describing the intended contributions in the introduction.
-  \item The related work section highlights a narrow and often flawed understanding of the current fairness discourse
-  \item What is considered as the fairness of a label here? Who decides what label is fair?
-  \item Fairness metrics are very much not restricted to binary classification problems
-  \item ``An ML model is said to make unfair decisions if it favours a certain group or individual pertaining to one or more protected attributes in the dataset.'' -- what does ``favours'' mean here? This statement is almost certainly wrong in its generality.
-  \item The exclusive focus on ``group fairness'' is justified by popularity and ease of computation of this metric? That’s a very weak argument. The much more important reason seems to be that this entire paper would not be possible with other metrics that rely on any notion of accuracy.
-  \item Note that the distinction into individual fairness and group fairness with those particular definitions is a rather unusual outlier commonly repeated in software engineering literature on fairness that’s almost entirely absent anywhere else.
-  \item ``There is a growing consensus amongst academics that not all fairness metrics can be satisfied simultaneously'' -- this is a mathematical fact that has been proven (and is fairly obvious)
-  \item ``There is also a consensus that fairness and performance of ML systems are orthogonal to one another and involve a trade-off.'' -- this in contrast is quite disputed. Some argue that the tradeoff only occurs due to a wrong notion of ``performance''.
-  \item The entire related work section does not clearly map citations to claims. Citations seem to be mostly added at the end of a paragraph as a cluster.
-  \item The discussion of fairness tools seems largely pointless without mentioning the corresponding fairness properties/metrics.
-  \item ``in the recent shift towards application of ML to safety critical domains, the ground truth must be established through data collection, cleaning and labelling [4, 13, 43].'' -- it is entirely unclear to this reviewer how the cited papers relate to this claim.
-  \item ``With the data ready, a highly experimental phase begins.'' -- many studies show that real data science (outside of student homework assignments) almost never follows this waterfall-like process.
-  \item ``We include all group fairness metrics'' -- It is unclear what is the baseline for the word “all” here. There are many different ways to measure what’s loosely described as group fairness. Does this just mean all that are readily implemented in AIF360?
-  \item Why the limit to a single protected attribute at a time?
-  \item ``We adopted the transformation steps from prior work'' -- what steps are those?
-  \item ``We extend the above experiment further in two ways.'' -- The paper focuses heavily on the “what” but rarely discusses the “why”. Why this extension?
-  \item ``A positive correlation means that the DFM and MFM changed in the same direction and thus convey the same information'' -- that’s really not how to correlations work
-  \item Section 4 intermixes methods and results under the label ``Results''. Consider explicitly separating experiment design from results.
+  \item ``Testing ML systems is also expensive since it involves
+    a full training-testing cycle'' the form of testing discussed here
+    is simply observing rates of predictions on test or production
+    data -- that doesn’t seem particularly expensive.
+  \item Fairness and interpretabiliy have been ignored? Really, when
+    there are entire conferences dedicated to these topics and
+    thousands of papers published yearly? How are the citations
+    supporting this claim, e.g., [56]?
+  \item The related work section highlights a narrow and often flawed
+    understanding of the current fairness discourse
+  \item ``An ML model is said to make unfair decisions if it favours
+    a certain group or individual pertaining to one or more protected
+    attributes in the dataset.'' -- what does ``favours'' mean here?
+    This statement is almost certainly wrong in its generality.
+  \item The exclusive focus on ``group fairness'' is justified by
+    popularity and ease of computation of this metric? That’s a very
+    weak argument. The much more important reason seems to be that
+    this entire paper would not be possible with other metrics that
+    rely on any notion of accuracy.
+  \item ``There is a growing consensus amongst academics that not all
+    fairness metrics can be satisfied simultaneously'' -- this is
+    a mathematical fact that has been proven (and is fairly obvious)
+  \item The discussion of fairness tools seems largely pointless
+    without mentioning the corresponding fairness properties/metrics.
+  \item ``A positive correlation means that the DFM and MFM changed in
+    the same direction and thus convey the same information'' --
+    that’s really not how to correlations work
+  \item ``Our results are exploratory'' what does it mean for results
+    (rather than methods) to be exploratory
+  \item What would you consider as ``correctness'' of a model?
+    Accuracy?
+  \item Consider describing the intended contributions in the
+    introduction.
+  \item What is considered as the fairness of a label here? Who
+    decides what label is fair?
+  \item Fairness metrics are very much not restricted to binary
+    classification problems
+  \item Note that the distinction into individual fairness and group
+    fairness with those particular definitions is a rather unusual
+    outlier commonly repeated in software engineering literature on
+    fairness that’s almost entirely absent anywhere else.
+  \item ``There is also a consensus that fairness and performance of
+    ML systems are orthogonal to one another and involve
+    a trade-off.'' -- this in contrast is quite disputed. Some argue
+    that the tradeoff only occurs due to a wrong notion of
+    ``performance''.
   \item ``value'' is not a great axis label in Fig 5
   \item Many Figures, e.g. Fig 6, are way too small to read
-  \item ``Our results indicate that DFM can be used as a early warning system to identify fairness related data drifts in automated ML pipelines.'' -- unclear how this would work, given that labels would be needed for all data
-  \item While training can be expensive for some modern ML tasks, training cost seems to be a very weak argument for the experiments conducted in this paper. This entire argument also falls apart quickly if any debiasing steps are taken in learning or when trying to evaluate the model in production (i.e., moving beyond i.i.d. evaluations).
-  \item ``However, we did not find any Python library for fairness testing which provides a data-centric implementation of these metrics.'' -- why would there be? This is basic exploratory data analysis.
-  \item The Threats to Validity section include mitigation strategies that are not discussed in the experiment design earlier. If you mitigated issues they are no longer threats; discuss mitigations as part of the design and leave the Threats to Validity section for discussing remaining threats.
-  \item The RQs in the paper seem to have emerged during the runtime of the experiment, rather than being defined upfront, indicating a more exploratory nature of the study. It may be more appropriate to classify the research design as exploratory rather than hypothesis-driven.
-\end{IEEEitemize}
+  \item ``However, we did not find any Python library for fairness
+    testing which provides a data-centric implementation of these
+    metrics.'' -- why would there be? This is basic exploratory data
+    analysis.
+
+    \highlight{We find the above comments made by the reviewer to be
+    non-actionable since they fail to provide constructive
+    feedback. The reviewer often picks sentences out of context
+    without reading the surrounding text in the paper. Several
+    comments are felt to be ``running notes'' made by the reviewer
+    which were not revised prior to submitting. Many comments critique
+    our writing style based on the reviewers personal beliefs.}
+
+  % comments about statements not mapping directly to citations
+  \item The entire related work section does not clearly map citations
+    to claims. Citations seem to be mostly added at the end of
+    a paragraph as a cluster.
+  \item ``in the recent shift towards application of ML to safety
+    critical domains, the ground truth must be established through
+    data collection, cleaning and labelling [4, 13, 43].'' -- it is
+    entirely unclear to this reviewer how the cited papers relate to
+    this claim.
+
+    \highlight{Please refer to our response in Section~\ref{sec:509a-presentation}.}
+
+  % actually useful comments
+  \item ``With the data ready, a highly experimental phase begins.''
+    -- many studies show that real data science (outside of student
+    homework assignments) almost never follows this waterfall-like
+    process.
+
+    \highlight{Figure~\ref{fig:method} and
+    Section~\ref{sec:ml-lifecycle} acknowledge this. Any stage in the
+    experimental and production phases may loop back to a prior
+    stage.}
+
+  \item ``We include all group fairness metrics'' -- It is unclear
+    what is the baseline for the word ``all'' here. There are many
+    different ways to measure what’s loosely described as group
+    fairness. Does this just mean all that are readily implemented in
+    AIF360?
+
+    \highlight{TODO: mention that we use all fairness metrics that
+    have a data and model variant implementation in AIF360}
+
+  \item Why the limit to a single protected attribute at a time?
+  \item ``We adopted the transformation steps from prior work'' --
+    what steps are those?
+  \item ``We extend the above experiment further in two ways.'' -- The
+    paper focuses heavily on the ``what'' but rarely discusses the
+    “why”. Why this extension?
+
+    \highlight{The very sentence that the reviewer has quoted,
+    describes the transformation steps that we adopted from prior
+    literature.}
+
+    \highlight{The reviewer confuses the use of the word ``extend''
+    as a scientific contribution of this paper.} 
+
+  \item ``Our results indicate that DFM can be used as a early warning
+    system to identify fairness related data drifts in automated ML
+    pipelines.'' -- unclear how this would work, given that labels
+    would be needed for all data
+
+    \highlight{TODO}
+
+  \item While training can be expensive for some modern ML tasks,
+    training cost seems to be a very weak argument for the experiments
+    conducted in this paper. This entire argument also falls apart
+    quickly if any debiasing steps are taken in learning or when
+    trying to evaluate the model in production (i.e., moving beyond
+    i.i.d. evaluations).
+
+    \highlight{TODO}
+
+  % misc/unsorted/no action required
+  \item Biased data does not imply biased models and biased models do
+    not imply biased products. There are interventions that can be
+    applied at every of these stages. Most debiasing approaches
+    actually affect the learning or inference stage to overcome known
+    biases in the training data. Interventions at the system level are
+    commonly discussed, such as suppressing entire output categories
+    or adjusting thresholds.
+  \item ``all existing solutions evaluate fairness after the training
+    stage'' there are lots of discussions of fairness in datasets,
+    e.g., look at things like Datasheets for Datasets and the hundreds
+    of debiasing and outlier detection papers that work on data
+  \item Section 4 intermixes methods and results under the label
+    ``Results''. Consider explicitly separating experiment design from
+    results.
+  \item The Threats to Validity section include mitigation strategies
+    that are not discussed in the experiment design earlier. If you
+    mitigated issues they are no longer threats; discuss mitigations
+    as part of the design and leave the Threats to Validity section
+    for discussing remaining threats.
+  \item The RQs in the paper seem to have emerged during the runtime
+    of the experiment, rather than being defined upfront, indicating
+    a more exploratory nature of the study. It may be more appropriate
+    to classify the research design as exploratory rather than
+    hypothesis-driven.
+
+\end{itemize}
 
 \subsubsection{Comments on Rigor}
 The research in itself seems largely sound, albeit not well justified.
@@ -1198,6 +1323,7 @@ The research in itself seems largely sound, albeit not well justified.
 \subsubsection{Comments on Relevance}
 Relevance to software engineering (or even the fairness literature) is
 rather unclear.
+
 \subsubsection{Comments on Novelty}
 The paper explores a statistical relationship between two metrics in
 depth that is expected to be there by construction. It may be novel in
@@ -1224,13 +1350,25 @@ be considered introductory examples on the topic.
 \subsubsection{Comments on Verifiability and Transparency}
 No concerns.
 
-\subsubsection{Comments on Presentation}
+\subsubsection{Comments on Presentation}~\label{sec:509a-presentation}
 Aside from many misleading statements on fairness concepts, the paper
 is generally easy to read.
 
 The paper is frustrating though in its use of citations that are often
 not clearly mapped to statements in the paper. Several examples of
 this are mentioned in minor comments above.
+
+\highlight{We believe this comment is motivated by personal beliefs
+held by the reviewer regarding how citations should appear in text. In
+Section~\ref{sec:related}, we summarise prior scientific work relevant
+to this paper. We follow the common writing convention of summarising
+similar papers in a paragraph and include the citations at the end of
+the sentence. The statements we make, are derived from the collective
+knowledge of all papers that are cited. To the best of our knowledge,
+no official guidelines exist that support the reviewer's
+preference. For thoroughness, we checked the ACM and IEEE policies on
+plagiarism, but did not find evidence to support the reviewer's
+claims.}
 
 \subsection{Reviewer 509B}
 
