@@ -1004,13 +1004,13 @@ sheds light on the limitations of the state-of-the-art data fairness
 metrics since they are restricted to the size of the training set.
 
 We use the Spearman correlation implementation provided by
-scipy \cite{virtanen2020scipy} python library. The $pvalue$ provided by
+scipy~\cite{virtanen2020scipy} python library. The $pvalue$ provided by
 the current implementation however is not reliable for population size
 less than 500 experiments\footnote{See notes in the
 \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html}{library
   documentation}}. This is a threat to the experiments conducted in
-Section \ref{sec:results-full-rel} and
-Section \ref{sec:results-corr-frac} since we only have 50 data points
+Section~\ref{sec:results-full-rel} and
+Section~\ref{sec:results-corr-frac} since we only have 50 data points
 for each training sample size.
 
 To mitigate this threat, we additionally conduct linear regression
@@ -1290,7 +1290,7 @@ the paper; - 'where as' should be 'whereas'
 
 \subsection{Reviewer 509C}
 
-\subsubsection{Overall Comments}
+\subsubsection{Overall Comments}~\label{sec:509c-overall}
 
 The paper tackles an important problem of addressing bias
 quantification in the training data. However, the methodology and
@@ -1298,28 +1298,37 @@ study investigate fairness and bias with highly simplified
 assumptions. In Section 3.1, clearly define the fairness metrics used
 on DFM and MFM. This is a core part of the contribution but there is
 no description of these metrics or justification on their
-selection. Favourable and unfavourable outcomes are represented by
+selection.
+
+\highlight{Table~\ref{tab:fairness-metrics} lists all fairness metrics
+used in this study, along with their mathematical
+formulas. Section~\ref{sec:method-parameters} describes the fairness
+metrics in detail, along with the rationale for selecting them.}
+
+Favourable and unfavourable outcomes are represented by
 0 and 1, and so is privileged and unprivileged groups. This seems like
 oversimplification and a justification of why each protected feature
-is not treated separately should be provided. Definition of favourable
-versus unfavourable outcome needs to be provided. The authors simulate
-a change in distribution of the training data by using a subset of the
-training data. It is not clear why this is the best approach to
-simulate a change in distribution. Why not perturb the data in
-specific ways? The change in distribution is not verified. The study
-primarily focuses on understanding the relationship between DFM and
-MFM, why is this useful is not completely clear. Isn't the goal to
-quantify bias both before and after training? So these also need to be
-assessed individually in how well they address bias, and not just
-their relationship.  There's a simple correlation analysis performed
-in the empirical study but the value of the results and analysis of
-reasons is not provided. Reason provided is typically training set
-size or feature size which is the change initiated to begin with. In
-Figure 6, the authors state they primarily observe a positive
-correlation between the DFM and MFM. However, the correlation is very
-weak with low values for the correlation coefficient. This should be
-further discussed. How are features related to privileged or
-unprivileged?
+is not treated separately should be provided.
+
+\highlight{As explained in Section~\ref{sec:method-parameters}, favourable and unfavourable outcomes are represented by 1 and 0 respectively. \textbf{Not} 0 and 1, as the reviewer claims. Similarly, the privileged and unprivileged groups are represented by 1 and 0 respectively. This is a standard practise observed in prior published papers and books on ML fairness (and testing for fairness in ML)~\cite{barocas2019fairness,zhang2021ignorance,biswas2021fair}. We believe the reviewer is confused by how the privileged and unprivileged groups are represented mathematically and in the actual code. The groups are represented according to the specifications of the \emph{AIF360} library in the code~\cite{bellamy2019ai}. Additionally, the implementation of the experiments can be seen in the replication package. It is publicly available on \href{https://figshare.com/s/67206f7c219b12885a6f}{Figshare}.}
+
+Definition of favourable versus unfavourable outcome needs to be provided. The authors simulate a change in distribution of the training data by using a subset of the training data. It is not clear why this is the best approach to simulate a change in distribution. Why not perturb the data in specific ways? The change in distribution is not verified.
+
+\highlight{We do not claim that our approach is the best way to simulate a change in the distribution of the underlying training data. We acknowledge the limitations of this approach in Section~\ref{sec:threats} and leave investigation of alternative techniques such as synthetic data generation, as future work.}
+
+The study primarily focuses on understanding the relationship between DFM and MFM, why is this useful is not completely clear. Isn't the goal to quantify bias both before and after training? So these also need to be assessed individually in how well they address bias, and not just their relationship. 
+
+\highlight{This is explained in Section~\ref{sec:intro}. MFM has been widely adopted in practise and is relatively well researched compared to DFM. Thus, to understand the effectiveness of DFM in catching fairness bugs, we analyse its relationship to MFM through an extensive empirical study.}
+
+There's a simple correlation analysis performed in the empirical study but the value of the results and analysis of reasons is not provided. Reason provided is typically training set size or feature size which is the change initiated to begin with.
+
+\highlight{We use correlation analysis to analyse the relationship between DFM and MFM. To the best of our knowledge, this is the most feasible solution to measure linear relationship between two variables. The fact that it is simple, is a strong positive since simple solutions are easier to interpret. As mentioned in Section~\ref{sec:threats}, we also performed a linear regression analysis to check the relationship between the DFM and MFM. We obtained the same results as the correlation analysis.}
+
+\highlight{Section~\ref{sec:results} contains an in-depth analysis of the results obtained from our study along with our interpretation. Section~\ref{sec:implications} presents the implications of our results.}
+
+In Figure 6, the authors state they primarily observe a positive correlation between the DFM and MFM. However, the correlation is very weak with low values for the correlation coefficient. This should be further discussed. How are features related to privileged or unprivileged?
+
+\highlight{As mentioned in Section~\ref{sec:corr-analysis}, we do not base our implications only on the statistically significant results, rather on general trends observed in our analysis.}
 
 \subsubsection{Comments on Rigor}
 
@@ -1328,10 +1337,8 @@ assumptions that are not useful and there is lack of adequate
 discussion of the results. More details provided in the comments for
 authors.
 
-\highlight{\emph{\textbf{Our Response:}} We don't think we can address
-this comment since it is a personal opinion of the reviewer, rather
-than a constructive feedback. Please refer to our response to the
-comments made by the reviewer above.}
+\highlight{Please refer to our detailed response in
+Section~\ref{sec:509c-overall}.}
 
 \subsubsection{Comments on Relevance}
 The problem being tackled is relevant and timely.
@@ -1340,16 +1347,15 @@ The problem being tackled is relevant and timely.
 Novelty is not clear as there is no discussion of the fairness metrics
 used.
 
-\highlight{\emph{\textbf{Our Response:}} A detailed explanation of the
-fairness metrics used in this study along with the rationale for using
-them is provided in Section~\ref{sec:bias-fairness}.}
+\highlight{Please refer to our detailed response in
+Section~\ref{sec:509c-overall}.}
 
 \subsubsection{Comments on Presentation}
 The presentation lacks details and a substantial contribution.
 
-\highlight{\emph{\textbf{Our Response:}} This is a personal opinion of
-the reviewer with very little explanation as to what is missing in the
-presentation and why this is not a substantial contribution.}
+\highlight{Unfortunately, the reviewer does not elaborate what is
+missing from the presentation and what constitutes a substantial
+contribution. No actions taken.}
 
 \end{document}
 \endinput
