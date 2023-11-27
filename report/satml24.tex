@@ -1,4 +1,4 @@
-\documentclass[conference,review,anonymous]{IEEEtran}
+\documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
 \usepackage{cite}
@@ -58,9 +58,9 @@ email address or ORCID}
   both before and after model training. We evaluate the effectiveness
   of the proposed approach and position it within the ML development
   lifecycle, using an empirical analysis of the relationship between
-  model dependent and independent fairness metrics. The study uses $2$
-  fairness metrics, $4$ ML algorithms, $5$ real-world datasets and
-  $1600$ fairness evaluation cycles. We find a linear relationship
+  model dependent and independent fairness metrics. The study uses 2
+  fairness metrics, 4 ML algorithms, 5 real-world datasets and
+  1600 fairness evaluation cycles. We find a linear relationship
   between data and model fairness metrics when the distribution and
   the size of the training data changes. Our results indicate that
   testing for fairness prior to training can be a ``cheap'' and
@@ -70,7 +70,7 @@ email address or ORCID}
 
 \end{abstract}
 
-\begin{IEEEkeywords} 
+\begin{IEEEkeywords}
 SE4ML, ML Fairness Testing, Empirical Software Engineering, Data-centric AI
 \end{IEEEkeywords}
 
@@ -123,17 +123,17 @@ research.
 
 The research questions along with the contributions of this paper are
 as follows.
-\begin{description}
-  \item[RQ1.] What is the relationship between DFM and MFM as the
-    fairness properties of the underlying training dataset change?
+\begin{enumerate}
+  \item[RQ1.] \textbf{What is the relationship between DFM and MFM as the
+    fairness properties of the underlying training dataset change?}
 
     DFM and MFM convey the same information when the distribution of
     the underlying training dataset changes. This implies that DFM can
     be used as early warning systems to catch data drifts in
     production ML systems that may affect its fairness.
 
-  \item[RQ2.] How does the training sample size affect the
-    relationship between DFM and MFM?
+  \item[RQ2.] \textbf{How does the training sample size affect the
+    relationship between DFM and MFM?}
 
     Our analysis of the training sample size and how it influences the
     relationship between DFM and MFM reveals the presence of a
@@ -141,18 +141,16 @@ as follows.
     Section \ref{sec:discuss-fair-eff-perf-trade} we provide some
     practical guidelines on how to best navigate this trade-off.
 
-  \item[RQ3.] What is the relationship between DFM and MFM across
-    various training and feature sample sizes?
+  \item[RQ3.] \textbf{What is the relationship between DFM and MFM across
+    various training and feature sample sizes?}
 
     DFM and MFM convey the same information when the training sample
     size changes. This implies that DFM can help practitioners catch
     fairness issues upstream and avoid execution costs of a full
     training cycle.
-\end{description}
+\end{enumerate}
 
-All source code and results of the study are publicly accessible under
-the CC-BY 4.0
-license\footnote{https://figshare.com/s/67206f7c219b12885a6f}.
+All source code and results of the study are publicly accessible under the CC-BY 4.0 license\footnote{The replication package of this study is available here: https://figshare.com/s/67206f7c219b12885a6f}.
 
 The remainder of the paper is structured as follows.
 Section \ref{sec:related} summarises related concepts and prior work
@@ -245,71 +243,13 @@ consider fairness as early as the requirements engineering and
 software design
 phase \cite{zhang2020machine,chen2022fairness,mehrabi2021survey,zhang2021ignorance}.
 
-Several literature surveys have been conducted to classify and
-catalogue various ML fairness testing and bias mitigation techniques.
-\cite{wan2021modeling} conducted a large scale survey on
-in-processing bias mitigation strategies and their effectiveness.
-\cite{chen2022fairness} and \cite{mehrabi2021survey}
-conducted a survey of existing literature on fairness testing in ML
-systems. \cite{mehrabi2021survey} present a comprehensive survey
-on the state-of-the-art research on fairness in ML with an emphasise
-on fairness issues arising from both the data and the model.
-\cite{chen2022fairness} survey 113 papers addressing fairness
-testing and provide a formal definition of fairness bugs and fairness
-testing in ML from a software engineering perspective. Authors also reflect on how
-fairness testing differs from traditional software testing and provide
-practical guidelines on how and where to test for fairness within the
-entire Software Development
-Lifecycle \cite{wan2021modeling,chen2022fairness,mehrabi2021survey}.
+Several literature surveys have been conducted to classify and catalogue various ML fairness testing and bias mitigation techniques. \emph{Wan et al. (2021)}~\cite{wan2021modeling} conducted a large scale survey on in-processing bias mitigation strategies and their effectiveness. \emph{Chen et al. (2022)}~\cite{chen2022fairness} and \emph{Mehrabi et al. (2021)}~\cite{mehrabi2021survey} conducted a survey of existing literature on fairness testing in ML systems. \emph{Mehrabi et al. (2021)}~\cite{mehrabi2021survey} present a comprehensive survey on the state-of-the-art research on fairness in ML with an emphasise on fairness issues arising from both the data and the model. \emph{Chen et al. (2022)}\cite{chen2022fairness} survey 113 papers addressing fairness testing and provide a formal definition of fairness bugs and fairness testing in ML from a software engineering perspective. Authors also reflect on how fairness testing differs from traditional software testing and provide practical guidelines on how and where to test for fairness within the entire Software Development Lifecycle \cite{wan2021modeling,chen2022fairness,mehrabi2021survey}.
 
-Prior work has also focused on conducting empirical analysis of bias
-mitigation techniques. \cite{biswas2021fair} take a holistic
-view of the entire ML pipeline and analyse the effect of common data
-pre-processing techniques such as standardisation, feature selection,
-encoding and sampling on the fairness of ML models. The analysis is
-conducted using 37 real-world ML pipelines from Kaggle notebooks which
-operate on five datasets. Typically data for the unprivileged group
-tends to be limited which make pre and post processing bias mitigation
-techniques less effective. \cite{feffer2022empirical} thus
-conduct an empirical analysis of bias mitigation in combination with
-popular ensemble techniques to understand the effectiveness of such
-combinations. \cite{zhang2021ignorance} studied the effect of
-training sample and feature sample size on the fairness of ML
-models. Authors observe that a large feature sample combined with
-a small training set helps reduce
-bias \cite{biswas2021fair,feffer2022empirical,zhang2021ignorance}.
+\emph{Biswas et al. (2021)}~\cite{biswas2021fair} take a holistic view of the entire ML pipeline and analyse the effect of common data pre-processing techniques such as standardisation, feature selection, encoding and sampling on the fairness of ML models. The analysis is conducted using 37 real-world ML pipelines from Kaggle notebooks which operate on five datasets. Typically data for the unprivileged group tends to be limited which make pre and post processing bias mitigation techniques less effective. \emph{Feffer et al. (2022)}~\cite{feffer2022empirical} thus conduct an empirical analysis of bias mitigation in combination with popular ensemble techniques to understand the effectiveness of such combinations. \emph{Zhang et al. (2021)}~\cite{zhang2021ignorance} studied the effect of training sample and feature sample size on the fairness of ML models. Authors observe that a large feature sample combined with a small training set helps reduce bias \cite{biswas2021fair,feffer2022empirical,zhang2021ignorance}.
 
-Prior work discussed so far operate under the assumption that the
-training data and learning algorithm are accessible to the ML
-practitioner---often referred to as \emph{white-box testing}. In
-contrast, \emph{black-box testing} makes no such assumptions and
-treats the entire ML pipeline as a black-box where we can only control
-the input to the system and see the corresponding output. For such
-situations, several test input generation techniques have been
-proposed. \cite{galhotra2017fairness} proposed \emph{Themis},
-a tool which automatically generates a testing suite to measure
-discrimination in software using causal fairness
-testing. \cite{udeshi2018automated} propose \emph{Aequitas}, an
-automated tool that accepts a model and the protected attributes as
-input and explores the input space to detect specific examples that
-may produce discriminatory behaviour in the
-model. \cite{aggarwal2019black} propose a new technique for
-generating test input using symbolic execution which accounts for
-correlation amongst the protected and unprotected
-attributes \cite{aggarwal2019black,udeshi2018automated,galhotra2017fairness}.
+Prior work discussed so far operate under the assumption that the training data and learning algorithm are accessible to the ML practitioner---often referred to as \emph{white-box testing}. In contrast, \emph{black-box testing} makes no such assumptions and treats the entire ML pipeline as a black-box where we can only control the input to the system and see the corresponding output. For such situations, several test input generation techniques have been proposed. \emph{Galhotra et al. (2017)}~\cite{galhotra2017fairness} proposed \emph{Themis}, a tool which automatically generates a testing suite to measure discrimination in software using causal fairness testing. \emph{Udeshi et al. (2018)}~\cite{udeshi2018automated} propose \emph{Aequitas}, an automated tool that accepts a model and the protected attributes as input and explores the input space to detect specific examples that may produce discriminatory behaviour in the model. \emph{Aggarwal et al. (2019)}~\cite{aggarwal2019black} propose a new technique for generating test input using symbolic execution which accounts for correlation amongst the protected and unprotected attributes \cite{aggarwal2019black,udeshi2018automated,galhotra2017fairness}.
 
-This study conducts an empirical analysis of the relationship between
-DFM and MFM, and as such, operates under white-box testing
-assumptions. The experimental design of this study is similar in
-spirit to that proposed by \cite{zhang2021ignorance}. However
-our objective, results and implications are entirely different. While
-\cite{zhang2021ignorance} study the effect of training and
-feature sample size on the fairness of the model, this study aims to
-understand the relationship between DFM and MFM. We analyse how change
-in the distribution, sample size and number of features in the
-training set affects this relationship. Through this analysis, we hope
-to establish the role of DFM within the existing ML development
-lifecycle.
+This study conducts an empirical analysis of the relationship between DFM and MFM, and as such, operates under white-box testing assumptions. The experimental design of this study is similar in spirit to that proposed by \emph{Zhang et al. (2021)}~\cite{zhang2021ignorance}. However our objective, results and implications are entirely different. While \emph{Zhang et al. (2021)}~\cite{zhang2021ignorance} study the effect of training and feature sample size on the fairness of the model, this study aims to understand the relationship between DFM and MFM. We analyse how change in the distribution, sample size and number of features in the training set affects this relationship. Through this analysis, we hope to establish the role of DFM within the existing ML development lifecycle.
 
 \subsection{Machine Learning Lifecycle and Fairness
   Testing}\label{sec:ml-lifecycle}
@@ -501,8 +441,6 @@ for each case is evaluated 50 times using two fairness metrics, thus
 producing a total of 1600 training and fairness evaluation cycles.
 
 \subsection{Correlation Analysis}\label{sec:corr-analysis}
-%% !TODO add a table with clear interpretation of correlation results;
-%% consult notes for details
 
 We use correlation analysis to study the relationship between DFM and
 MFM with-respect-to change in three experimental
@@ -518,10 +456,39 @@ analysis results. Although we report the $pvalue$ for completeness, we
 do not base our implications only on the statistically significant
 results. But rather on general trends observed in our analysis.
 
-A positive correlation means that the DFM and MFM changed in the same
-direction and thus \emph{convey the same information}. A positive
-correlation indicates that both the DFM and MFM show presence of bias
-in the training data and in the model predictions respectively.
+\begin{table}
+\centering
+\caption{Interpretation of correlation analysis used in this study.}
+\begin{tabular}{p{0.1\linewidth} p{0.1\linewidth} p{0.1\linewidth} p{0.4\linewidth}}
+\hline
+\textbf{Corr.} &
+\textbf{Direction} &
+\textbf{Fairness} &
+\textbf{Cause}\\
+\hline
++ &
+Same &
+Same info. &
+DFM and MFM both report high/low values\\
+  0 &
+  NA &
+  NA &
+  No bias in training data or DFM and MFM do not report similarly\\
+  - &
+  Opposite &
+  Not same info. &
+  MFM lower than DFM (opposite is not possible)\\
+\hline
+\end{tabular}
+\label{tab:corr-summary}
+\end{table}
+
+Table~\ref{tab:corr-summary} summaries the results of the correlation
+analysis along with our interpretation. A positive correlation means
+that the DFM and MFM changed in the same direction and thus \emph{convey
+the same information}. A positive correlation indicates that both the
+DFM and MFM show presence of bias in the training data and in the model
+predictions respectively.
 
 A negative correlation between the DFM and MFM means that they changed
 in the opposite direction and \emph{do not convey the same
@@ -538,13 +505,13 @@ corresponding sub-sections of Section \ref{sec:implications}.
 
 \subsection{Distribution of Experimental Data}\label{sec:data-analysis}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \includegraphics[width=\linewidth]{boxplot--dataset--di-spd--exp-full.pdf}
   \caption{Boxplot showing distribution of DFM and MFM for all
     datasets, models and fairness metrics.}
   \label{fig:boxplot--dataset--di-spd--exp-full}
-\end{figure}
+\end{figure*}
 
 Figure \ref{fig:boxplot--dataset--di-spd--exp-full} presents a boxplot
 with the distribution of DFM and MFM for all datasets, models and
@@ -608,7 +575,7 @@ changes?}\label{sec:results-full-rel}
   \label{fig:training-set-frac-threshold}
 \end{figure}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--training-sets-frac.pdf}
   \caption{Heatmap showing correlation between DFM and MFM for all
@@ -620,9 +587,9 @@ changes?}\label{sec:results-full-rel}
     can be used to identify fairness related data drifts in automated
     ML pipelines.}
   \label{fig:heatmap--corr--training-sets-frac}
-\end{figure}
+\end{figure*}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--full-data.pdf}
   \caption{Heatmap showing correlation between DFM and MFM using
@@ -632,7 +599,7 @@ changes?}\label{sec:results-full-rel}
     observe darker colours indicating that the DFM and MFM no longer
     convey the same information.}
   \label{fig:heatmap--corr--full-data}
-\end{figure}
+\end{figure*}
 
 To simulate change in the distribution of the training data, we use a
 smaller subset of the original training data. Figure \ref{fig:shuffle}
@@ -750,7 +717,7 @@ training sample size.}
 across various training and feature sample
 sizes?}\label{sec:results-size-feature-sample}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--frac.pdf}
   \caption{Heatmap showing correlation between DFM and MFM across all
@@ -762,9 +729,9 @@ sizes?}\label{sec:results-size-feature-sample}
     sample size, DFM can aid practitioners catch fairness issues
     upstream and avoid execution costs of a full training cycle.}
   \label{fig:heatmap--corr--frac}
-\end{figure}
+\end{figure*}
 
-\begin{figure}
+\begin{figure*}
   \centering
   \includegraphics[width=\linewidth]{heatmap--corr--num-features.pdf}
   \caption{Heatmap showing correlation between DFM and MFM across
@@ -776,7 +743,7 @@ sizes?}\label{sec:results-size-feature-sample}
     both before and after training.}
 
   \label{fig:heatmap--corr--num-features}
-\end{figure}
+\end{figure*}
 
 \begin{figure}
   \centering
@@ -876,18 +843,7 @@ Under such circumstances, practitioners can either choose to collect
 more data if possible or use bias mitigation techniques to address the
 fairness issue.
 
-% do we have proof of this claim?
-The middle subplot depicts the effect of training sample size on DFM
-and MFM. As the training data is increased, DFM remains consistent
-while MFM reduces. Thus, with sufficient training data, the
-correlation starts to drop and eventually becomes negative. This
-indicates that the models learn to make fairer predictions and are
-able to circumvent the bias in the training data to a certain extent.
-A lower MFM value compared to DFM does not however guarantee the
-absence of bias in the model. \cite{zhang2021ignorance} showed
-that in addition to the quantity of training data, the quality itself
-affects the fairness of ML systems. Introducing more data does not fix
-the bias in the model if the final distribution remains biased.
+The middle subplot depicts the effect of training sample size on DFM and MFM. As the training data is increased, DFM remains consistent while MFM reduces. Thus, with sufficient training data, the correlation starts to drop and eventually becomes negative. This indicates that the models learn to make fairer predictions and are able to circumvent the bias in the training data to a certain extent. A lower MFM value compared to DFM does not however guarantee the absence of bias in the model. \emph{Zhang et al. (2021)}~\cite{zhang2021ignorance} showed that in addition to the quantity of training data, the quality itself affects the fairness of ML systems. Introducing more data does not fix the bias in the model if the final distribution remains biased.
 
 The bottom subplot depicts the effect of training sample size on the
 correctness of the ML models. Depending on the complexity of the ML
@@ -931,14 +887,7 @@ it takes to test an ML system, avoiding a full training cycle while
 evaluating its fairness can be energy efficient and sustainable in the
 long run.
 
-However the same test reduction cannot be made when experimenting with
-the feature sample size of the training
-set. \cite{zhang2021ignorance} showed that a larger feature sample
-size typically improves the fairness of the model. To the best of our
-knowledge, there are no fairness metrics that consider the influence
-of other features on the fairness at the data level. Thus when
-experimenting with the feature sample size, it is recommended that ML
-practitioners evaluate the fairness both before and after training.
+However the same test reduction cannot be made when experimenting with the feature sample size of the training set. \emph{Zhang et al. (2021)}~\cite{zhang2021ignorance} showed that a larger feature sample size typically improves the fairness of the model. To the best of our knowledge, there are no fairness metrics that consider the influence of other features on the fairness at the data level. Thus when experimenting with the feature sample size, it is recommended that ML practitioners evaluate the fairness both before and after training.
 
 %% \subsection{Locating root cause of bias}\label{sec:discuss-root-cause-bias}
 
@@ -985,30 +934,9 @@ current work along with future directions of research.
 %% most likely!
 
 
-This study uses two group fairness metrics---namely \emph{Disparate
-Impact} and \emph{Statistical Parity Difference}. Relevant prior work
-mentioned in Section \ref{sec:prior-work} additionally use
-\emph{Average Absolute Odds Difference} and \emph{Equal Opportunity
-Difference} in their analysis. However, we did not find any Python
-library for fairness testing which provides a data-centric
-implementation of these metrics. In
-Section \ref{sec:results-size-feature-sample} we observe that DFM do
-not account for the features in the data. However,
-\cite{zhang2021ignorance} showed that a larger feature sample
-size has a positive effect on the fairness of ML models. Our analysis
-highlights the need for more data-centric fairness metrics. It also
-sheds light on the limitations of the state-of-the-art data fairness
-metrics since they are restricted to the size of the training set.
+This study uses two group fairness metrics---namely \emph{Disparate Impact} and \emph{Statistical Parity Difference}. Relevant prior work mentioned in Section \ref{sec:prior-work} additionally use \emph{Average Absolute Odds Difference} and \emph{Equal Opportunity Difference} in their analysis. However, we did not find any Python library for fairness testing which provides a data-centric implementation of these metrics. In Section \ref{sec:results-size-feature-sample} we observe that DFM do not account for the features in the data. However, \emph{Zhang et al. (2021)}~\cite{zhang2021ignorance} showed that a larger feature sample size has a positive effect on the fairness of ML models. Our analysis highlights the need for more data-centric fairness metrics. It also sheds light on the limitations of the state-of-the-art data fairness metrics since they are restricted to the size of the training set.
 
-We use the Spearman correlation implementation provided by
-scipy~\cite{virtanen2020scipy} python library. The $pvalue$ provided by
-the current implementation however is not reliable for population size
-less than 500 experiments\footnote{See notes in the
-\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html}{library
-  documentation}}. This is a threat to the experiments conducted in
-Section~\ref{sec:results-full-rel} and
-Section~\ref{sec:results-corr-frac} since we only have 50 data points
-for each training sample size.
+We use the Spearman correlation implementation provided by scipy~\cite{virtanen2020scipy} python library. The $pvalue$ provided by the current implementation however is not reliable for population size less than 500 experiments~\footnote{See notes in the Scipy\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html}{library documentation} for limitations in the current implementation of the Spearman correlation algorithm}. This is a threat to the experiments conducted in Section~\ref{sec:results-full-rel} and Section~\ref{sec:results-corr-frac} since we only have 50 data points for each training sample size.
 
 To mitigate this threat, we additionally conduct linear regression
 analysis for all experiments using ordinary-least squares. We check
@@ -1027,12 +955,7 @@ library \cite{seabold2010statsmodels}.
 %% know if the dataset is "too large" for the correlation to be
 %% useful?---this is a good point (I missed it before)
 
-% !TODO on the matter of simulating distribution change in the training
-% data; we validated with no distribution change as well, when there
-% is no distribution, the correlation cannot be calculated so the
-% analysis fails
-
-%% !TODO no hard data on the deployment side; mention that we wish to
+%% TODO no hard data on the deployment side; mention that we wish to
 %% validate results of this study with real ML projects; also we can
 %% extend the study by validating the drift simulation is actually
 %% doing drift using drift detection metrics; we take the first step
@@ -1051,12 +974,19 @@ threshold individually for each dataset and update it dynamically as
 its distribution changes. Generating synthetic data also remains an
 open task for further investigation.
 
-%% This study is limited to tabular datasets and classical ML models. The
-%% datasets and models used in this study reflect prior scientific
-%% contributions. However, a natural extension to the study would be to
-%% include unstructured datasets such as text and images, and neural
-%% network models such as MLP and DNN.
+For the experiment conducted in Section~\ref{sec:results-full-rel}, we
+did not explicitly validate if our technique generates change in the
+distribution of the data. However, a lack of change in the
+distribution would also result in no change in the fairness properties
+of the data. Without any change in the fairness properties of the
+data, the correlation between DFM and MFM cannot be
+calculated. Therefore, our results implicitly validates the presence
+of distribution change.
 
+% NOTE perhaps we can say that practitioners should start storing DFM
+% and MFM from various training cycles for the ML systems in
+% production. Analysis on the historical data reflects our 50
+% iterations?
 At this moment, the application of the correlation analysis in
 practice remains unclear. Although the results are intriguing and open
 several interesting directions for future research, practitioners are
@@ -1073,9 +1003,6 @@ locations of the ML development lifecycle: prior to training using
 fairness metrics that quantify the bias in the training data and after
 training using fairness metrics that quantify the bias in the model
 predictions.
-
-%% alternatively, "... ML development lifecycle: before and after
-%% model training"
 
 We take the first step towards understanding the effectiveness of
 ``data-centric'' fairness testing and how it integrates with the
@@ -1098,11 +1025,10 @@ metrics in real-world ML systems.
 
 \appendix[Reviews from Last Submission]
 
-This section presents the reviews obtained from the last submission of
-this paper. Comments from each reviewer is presented below. For each
-comment (or group of comments) we provide a short description of the
-actions taken to address the comments. A more detailed explaination
-follows the short description.
+Following are the reviews obtained from the last submission of this
+paper. Comments from each reviewer are presented below. Where
+appropriate we have added our response or how we address the comment
+in the current version of the paper.
 
 \subsection{Reviewer 509A}
 \subsubsection{Overall Comments}
@@ -1138,27 +1064,28 @@ paper does not perform any debiasing steps that would lead us to
 expect any other results. Since the trained models are never 100\%
 accurate and rates are compared on different samples from the same
 distributions, the paper not surprisingly finds a strong but not
-perfect correlation. All experiments in the paper seem to boil down to
-variations of the same theme where we use different parts of the data
-for model training and hence vary model accuracy. None of this has
-anything to do with fairness. None of this has anything to do with
-software engineering. This is all about variance in different sampling
-strategies and ability of different models to learn accurate
-predictions on different subsets of data. I suspect much of this could
-be formally discussed with statistics too.
+perfect correlation.
 
-% NOTE it is not on the same distribution; we simulate change in
-% distribution by sampling
-% NOTE reviewer does not understand how empirical analysis works,
-% thats why we repeat the experiments 50 times!
-% NOTE reviewer seems to think/expect that all papers must be
-% amazing! He has something against being "simple". Simplicility is
-% the very foundation/principles upon which software engineering is
-% built!
-% NOTE if this has nothing to do with SE, then why have prior works on
-% the same topic, with similar methodology been accepted into top SE
-% venues?
-\highlight{}
+\highlight{Our methodology for computing DFM and MFM mimic that of
+a practitioner conducting ML fairness testing. An ML model with 100\%
+accuracy would indicate that the model is overfitting on the training
+data which is counter-intuitive. ML models should generalise to unseen
+data. In Section~\ref{sec:discuss-fair-eff-perf-trade} we discuss how
+our analysis of DFM and MFM can help ML practitioners navigate
+trade-offs between fairness, correctness and efficiency. Although the
+bias in ML models can be repaired to a certain extent by introducing
+more training data, this may not always be a viable
+option. Practitioners may then opt for bias mitigation techniques that
+operate at the data level.}
+
+ All experiments in the paper seem to boil down to variations of the
+ same theme where we use different parts of the data for model
+ training and hence vary model accuracy. None of this has anything to
+ do with fairness. None of this has anything to do with software
+ engineering. This is all about variance in different sampling
+ strategies and ability of different models to learn accurate
+ predictions on different subsets of data. I suspect much of this
+ could be formally discussed with statistics too.
 
 \subsubsection{Minor Comments}
 \begin{itemize}
@@ -1219,13 +1146,13 @@ be formally discussed with statistics too.
     metrics.'' -- why would there be? This is basic exploratory data
     analysis.
 
-    \highlight{We find the above comments made by the reviewer to be
-    non-actionable since they fail to provide constructive
-    feedback. The reviewer often picks sentences out of context
-    without reading the surrounding text in the paper. Several
-    comments are felt to be ``running notes'' made by the reviewer
-    which were not revised prior to submitting. Many comments critique
-    our writing style based on the reviewers personal beliefs.}
+    % \highlight{We find the above comments made by the reviewer to be
+    % non-actionable since they fail to provide constructive
+    % feedback. The reviewer often picks sentences out of context
+    % without reading the surrounding text in the paper. Several
+    % comments are felt to be ``running notes'' made by the reviewer
+    % which were not revised prior to submitting. Many comments critique
+    % our writing style based on the reviewers personal beliefs.}
 
   % comments about statements not mapping directly to citations
   \item The entire related work section does not clearly map citations
@@ -1237,7 +1164,7 @@ be formally discussed with statistics too.
     entirely unclear to this reviewer how the cited papers relate to
     this claim.
 
-    \highlight{Please refer to our response in Section~\ref{sec:509a-presentation}.}
+    % \highlight{Please refer to our response in Section~\ref{sec:509a-presentation}.}
 
   % actually useful comments
   \item ``With the data ready, a highly experimental phase begins.''
@@ -1245,10 +1172,10 @@ be formally discussed with statistics too.
     homework assignments) almost never follows this waterfall-like
     process.
 
-    \highlight{Figure~\ref{fig:method} and
-    Section~\ref{sec:ml-lifecycle} acknowledge this. Any stage in the
-    experimental and production phases may loop back to a prior
-    stage.}
+    % \highlight{Figure~\ref{fig:method} and
+    % Section~\ref{sec:ml-lifecycle} acknowledge this. Any stage in the
+    % experimental and production phases may loop back to a prior
+    % stage.}
 
   \item ``We include all group fairness metrics'' -- It is unclear
     what is the baseline for the word ``all'' here. There are many
@@ -1256,8 +1183,8 @@ be formally discussed with statistics too.
     fairness. Does this just mean all that are readily implemented in
     AIF360?
 
-    \highlight{TODO: mention that we use all fairness metrics that
-    have a data and model variant implementation in AIF360}
+    % \highlight{TODO: mention that we use all fairness metrics that
+    % have a data and model variant implementation in AIF360}
 
   \item Why the limit to a single protected attribute at a time?
   \item ``We adopted the transformation steps from prior work'' --
@@ -1266,19 +1193,25 @@ be formally discussed with statistics too.
     paper focuses heavily on the ``what'' but rarely discusses the
     “why”. Why this extension?
 
-    \highlight{The very sentence that the reviewer has quoted,
-    describes the transformation steps that we adopted from prior
-    literature.}
+    % NOTE single protected attribute because of prior literature and
+    % we have to keep it similar since MFM is our baseline for
+    % comparison
+    % NOTE can also explain how the complexity rises when we consider
+    % more than 1 protected attribute
 
-    \highlight{The reviewer confuses the use of the word ``extend''
-    as a scientific contribution of this paper.} 
+    % \highlight{The very sentence that the reviewer has quoted,
+    % describes the transformation steps that we adopted from prior
+    % literature.}
+
+    % \highlight{The reviewer confuses the use of the word ``extend''
+    % as a scientific contribution of this paper.} 
 
   \item ``Our results indicate that DFM can be used as a early warning
     system to identify fairness related data drifts in automated ML
     pipelines.'' -- unclear how this would work, given that labels
     would be needed for all data
 
-    \highlight{TODO}
+    % \highlight{TODO}
 
   \item While training can be expensive for some modern ML tasks,
     training cost seems to be a very weak argument for the experiments
@@ -1287,7 +1220,14 @@ be formally discussed with statistics too.
     trying to evaluate the model in production (i.e., moving beyond
     i.i.d. evaluations).
 
-    \highlight{TODO}
+    % NOTE cite papers from google about training efficiency (luis
+    % will know)
+    % NOTE what about the impact in the environment: we wrote about
+    % this in the discussion
+    % NOTE regarding the i.i.d: entirety of ML is based on this
+    % assumption; the reviewer has unrealistic expectations
+
+    % \highlight{TODO}
 
   % misc/unsorted/no action required
   \item Biased data does not imply biased models and biased models do
@@ -1358,17 +1298,15 @@ The paper is frustrating though in its use of citations that are often
 not clearly mapped to statements in the paper. Several examples of
 this are mentioned in minor comments above.
 
-\highlight{We believe this comment is motivated by personal beliefs
-held by the reviewer regarding how citations should appear in text. In
-Section~\ref{sec:related}, we summarise prior scientific work relevant
-to this paper. We follow the common writing convention of summarising
-similar papers in a paragraph and include the citations at the end of
-the sentence. The statements we make, are derived from the collective
-knowledge of all papers that are cited. To the best of our knowledge,
-no official guidelines exist that support the reviewer's
-preference. For thoroughness, we checked the ACM and IEEE policies on
-plagiarism, but did not find evidence to support the reviewer's
-claims.}
+\highlight{In Section~\ref{sec:related}, we summarise prior scientific
+work relevant to this paper. We follow the common writing convention
+of summarising similar papers in a paragraph and include the citations
+at the end of the sentence. The statements we make, are derived from
+the collective knowledge of all papers that are cited. To the best of
+our knowledge, no official guidelines exist that support the
+reviewer's preference. For thoroughness, we checked the ACM and IEEE
+policies on plagiarism, but did not find evidence to support the
+reviewer's claims.}
 
 \subsection{Reviewer 509B}
 
@@ -1401,14 +1339,13 @@ concrete enough to inspire further research. The concrete suggestions
 for the ML lifecycle (cf. fig. 1) could have been discussed more (they
 are promised in section 2 but not further elaborated in section 5).
 
-\subsubsection{Comments on Verifiability and Transparency}
-The replication package is provided. It however carries the text
-"Replication package for paper titled Data vs. Model Machine Learning
-Fairness Testing: An Empirical Study submitted to IJCAI 2023 main
-track." This could be a concern: was this a double submission? and as
-the notification of IJCAI was April 19, 2023, is is accepted there?
+% \subsubsection{Comments on Verifiability and Transparency}
+% The replication package is provided. It however carries the text
+% "Replication package for paper titled Data vs. Model Machine Learning
+% Fairness Testing: An Empirical Study submitted to IJCAI 2023 main
+% track." This could be a concern: was this a double submission? and as
+% the notification of IJCAI was April 19, 2023, is is accepted there?
 
-\highlight{TODO}
 
 \subsubsection{Comments on Presentation}
 
@@ -1460,20 +1397,19 @@ is not treated separately should be provided.
 
 \highlight{As explained in Section~\ref{sec:method-parameters},
 favourable and unfavourable outcomes are represented by 1 and
-0 respectively. \textbf{Not} 0 and 1, as the reviewer
-claims. Similarly, the privileged and unprivileged groups are
-represented by 1 and 0 respectively. This is a standard practice
-observed in prior published papers and books on ML fairness (and
-testing for fairness in
-ML)~\cite{barocas2019fairness,zhang2021ignorance,biswas2021fair}. We
-believe the reviewer is confused by how the privileged and
-unprivileged groups are represented mathematically and in the actual
-code. The groups are represented according to the specifications of
-the \emph{AIF360} library in the
-code~\cite{bellamy2019ai}. Additionally, the implementation of the
-experiments can be seen in the replication package. It is publicly
-available on
-\href{https://figshare.com/s/67206f7c219b12885a6f}{Figshare}.}
+0 respectively (\textbf{Not} 0 and 1). Similarly, the privileged and
+  unprivileged groups are represented by 1 and 0 respectively. This is
+  a standard practice observed in prior published papers and books on
+  ML fairness (and testing for fairness in
+  ML)~\cite{barocas2019fairness,zhang2021ignorance,biswas2021fair}. A distinction
+  must however be made between how the privileged and unprivileged
+  groups are represented mathematically and in the actual code. The
+  groups are represented according to the specifications of the
+  \emph{AIF360} library in the
+  code~\cite{bellamy2019ai}. Additionally, the implementation of the
+  experiments can be seen in the replication package. It is publicly
+  available on
+  \href{https://figshare.com/s/67206f7c219b12885a6f}{Figshare}.}
 
 Definition of favourable versus unfavourable outcome needs to be
 provided. The authors simulate a change in distribution of the
@@ -1482,11 +1418,15 @@ why this is the best approach to simulate a change in
 distribution. Why not perturb the data in specific ways? The change in
 distribution is not verified.
 
-\highlight{We do not claim that our approach is the best way to
-simulate a change in the distribution of the underlying training
-data. We acknowledge the limitations of this approach in
+\highlight{We acknowledge the limitations of this approach in
 Section~\ref{sec:threats} and leave investigation of alternative
 techniques such as synthetic data generation, as future work.}
+
+\highlight{Without a change in the distribution of the data, the
+correlation between DFM and MFM will always be 0. Thus, the
+results presented in Section~\ref{sec:results-full-rel} implicitly
+verifies that the distribution of the data changes in the 50
+iterations. Also acknowledged in Section~\ref{sec:threats}.}
 
 The study primarily focuses on understanding the relationship between
 DFM and MFM, why is this useful is not completely clear. Isn't the
@@ -1508,11 +1448,11 @@ size which is the change initiated to begin with.
 \highlight{We use correlation analysis to analyse the relationship
 between DFM and MFM. To the best of our knowledge, this is the most
 feasible solution to measure linear relationship between two
-variables. The fact that it is simple, is a strong positive since
-simple solutions are easier to interpret. As mentioned in
+variables. The simplicity of this approach is a strong positive since
+the results are easier to interpret. As mentioned in
 Section~\ref{sec:threats}, we also performed a linear regression
-analysis to check the relationship between the DFM and MFM. We
-obtained the same results as the correlation analysis.}
+analysis to check the relationship between the DFM and MFM. The
+results obtained were similar to that of the correlation analysis.}
 
 \highlight{Section~\ref{sec:results} contains an in-depth analysis of
 the results obtained from our study along with our
@@ -1546,15 +1486,14 @@ The problem being tackled is relevant and timely.
 Novelty is not clear as there is no discussion of the fairness metrics
 used.
 
-\highlight{Please refer to our detailed response in
-Section~\ref{sec:509c-overall}.}
+\highlight{Table~\ref{tab:fairness-metrics} lists all fairness metrics used in this study, along with their mathematical formulas. Section~\ref{sec:method-parameters} describes the fairness metrics in detail, along with the rationale for selecting them.}
 
 \subsubsection{Comments on Presentation}
 The presentation lacks details and a substantial contribution.
 
-\highlight{Unfortunately, the reviewer does not elaborate what is
-missing from the presentation and what constitutes a substantial
-contribution. No actions taken.}
+% \highlight{Unfortunately, the reviewer does not elaborate what is
+% missing from the presentation and what constitutes a substantial
+% contribution. No actions taken.}
 
 \end{document}
 \endinput
