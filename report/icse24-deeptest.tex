@@ -66,21 +66,22 @@
 \begin{abstract}
 
 Although several fairness definitions and bias mitigation techniques
-exist in the literature, all existing solutions evaluate fairness
-after the training stage. In this paper, we take the first steps
-towards evaluating a more holistic approach by testing for fairness
-both before and after model training. We evaluate the effectiveness
-of the proposed approach and position it within the ML development
-lifecycle, using an empirical analysis of the relationship between
-model dependent and independent fairness metrics. The study uses 2
-fairness metrics, 4 ML algorithms, 5 real-world datasets and
-1600 fairness evaluation cycles. We find a linear relationship
-between data and model fairness metrics when the distribution and
-the size of the training data changes. Our results indicate that
-testing for fairness prior to training can be a ``cheap'' and
-effective means of catching a biased data collection process early;
-detecting data drifts in production systems and minimising execution
-of full training cycles thus reducing development time and costs.
+  exist in the literature, all existing solutions evaluate fairness of
+  Machine Learning (ML) systems after the training stage. In this
+  paper, we take the first steps towards evaluating a more holistic
+  approach by testing for fairness both before and after model
+  training. We evaluate the effectiveness of the proposed approach and
+  position it within the ML development lifecycle, using an empirical
+  analysis of the relationship between model dependent and independent
+  fairness metrics. The study uses 2 fairness metrics, 4 ML
+  algorithms, 5 real-world datasets and 1600 fairness evaluation
+  cycles. We find a linear relationship between data and model
+  fairness metrics when the distribution and the size of the training
+  data changes. Our results indicate that testing for fairness prior
+  to training can be a ``cheap'' and effective means of catching
+  a biased data collection process early; detecting data drifts in
+  production systems and minimising execution of full training cycles
+  thus reducing development time and costs.
 
 \end{abstract}
 
@@ -95,28 +96,14 @@ While several contributions toward testing ML systems have been made
 in recent years, preference has primarily been given to robustness and
 correctness while other non-functional properties such as security,
 privacy, efficiency, interpretability and fairness have been
-ignored \cite{zhang2020machine,zhang2021ignorance,mehrabi2021survey,wan2021modeling}. Testing
-for fairness in ML systems however, is a multi-faceted problem and
-involves both technological and social factors. Although an abundance
-of definitions for fairness and consequently techniques to mitigate
-said bias exists in the scientific literature, all existing solutions
-evaluate fairness after the training stage, using the predictions of
-the ML model.
+ignored \cite{zhang2020machine,zhang2021ignorance,mehrabi2021survey,wan2021modeling}.
+Testing for fairness in ML systems however, is a multi-faceted problem
+and involves both technological and social factors. Although an
+abundance of definitions for fairness and consequently techniques to
+mitigate said bias exists in the scientific literature, all existing
+solutions evaluate fairness after the training stage, using the
+predictions of the ML model.
 
-% {{{2 motivating the need for catching fairness issues early
-% In addition to the underlying codebase of ML software systems, both
-% the training data and the ML algorithms constantly evolve and change
-% throughout the ML development
-% lifecycle \cite{sculley2015hidden,bosch2021engineering,hutchinson2021towards}.
-% ML systems comprise of several stages that are tangled with one
-% another. Testing such systems is challenging since a single change in
-% any of the stages can initiate a ``chain-reaction'' throughout the
-% entire system. Testing ML systems is also expensive since it involves
-% a full training-testing cycle which incurs financial costs as the size
-% of the data and the complexity of the model increases. Thus, catching
-% fairness bugs in the early, upstream stages of the ML lifecycle
-% becomes extremely valuable \cite{shome2022data}.
-% }}}
 In contrast to prior work, we take a more holistic approach by testing
 for fairness at two distinct locations of the ML development
 lifecycle. First, prior to model training using fairness metrics that
@@ -174,23 +161,24 @@ All source code and results of the study are publicly accessible under the CC-BY
 % sec:bias-fairness {{{2
 \subsection{Algorithmic Bias, Bias Mitigation and Group Fairness}\label{sec:bias-fairness}
 
-Manually validating fairness of the labels is costly and subject to
-human biases, leading to the development of fairness metrics. These
-metrics, focusing on supervised binary classification with protected
-attributes like \emph{race} or \emph{sex}, are divided into group
-fairness (ensuring similar predictions across different groups) and
-individual fairness (consistent predictions for individuals differing
-only in protected
+Several fairness metrics have been developed to mitigate the costs and
+human biases when manually validating the fairness of the labels in
+the dataset. Fairness metrics primarily focus on supervised binary
+classification with protected attributes like \emph{race} or
+\emph{sex}. They can be broadly classified into group fairness
+(ensuring similar predictions across different groups) and individual
+fairness (consistent predictions for individuals differing only in
+protected
 attributes)~\cite{mitchell2021algorithmic,barocas2019fairness,hardt2016equality}.
-Addressing bias requires appropriate mitigation techniques,
-categorized into pre-processing (altering training
-data)~\cite{feldman2015certifying,zemel2013learning},
-in-processing (integrating fairness in model
+Addressing bias requires appropriate mitigation techniques, which can
+be categorised into pre-processing (altering training
+data)~\cite{feldman2015certifying,zemel2013learning}, in-processing
+(integrating fairness in model
 training)~\cite{zhang2018mitigating,agarwal2018reductions,kearns2018preventing},
 and post-processing (adjusting model
-predictions)~\cite{pleiss2017fairness,hardt2016equality,kamiran2012decision}.
-Each category aims to ensure fairness in ML models, either by
-adjusting data, the training process, or the outcomes.
+predictions)~\cite{pleiss2017fairness,hardt2016equality,kamiran2012decision}
+techniques. Each category aims to ensure fairness in ML models, either
+by adjusting data, the training process, or the outcomes.
 
 This study uses group fairness metrics due to their popularity in
 existing empirical studies on ML fairness testing and ease of
@@ -272,14 +260,14 @@ applications. The subsequent experimental phase focuses on feature
 engineering and optimizing ML model performance, incorporating not
 only functional properties like correctness but also non-functional
 aspects like fairness and security. In the production phase, the ML
-model, unlike traditional software, continues operating despite
+model---unlike traditional software---continues operating despite
 errors, necessitating continuous monitoring and updates when
-performance falls below a certain threshold~\cite{amershi2019software,breck2019data,sambasivan2021everyone,zhang2020machine}.
+performance falls below a certain
+threshold~\cite{amershi2019software,breck2019data,sambasivan2021everyone,zhang2020machine}.
 
-Uniquely, this study
-explores the implications of assessing ML model fairness before
-training, marking a shift from the traditional post-training fairness
-evaluation.
+This study explores the implications of assessing ML model fairness
+before training, marking a shift from the traditional post-training
+fairness evaluation.
 % }}}
 % 1}}}
 % sec:method {{{1
@@ -801,24 +789,24 @@ ML pipelines.
   \label{fig:tradeoff}
 \end{figure}
 
-% {{{2 TODO refer to fig:tradeoff in text
-The study's results show that the quantity of training data
-significantly impacts the relationship between data fairness metrics
-(DFM) and model fairness metrics (MFM). With smaller training sizes,
-there's a positive correlation between DFM and MFM, indicating bias in
-both training data and model predictions. As training data increases,
-this correlation diminishes, suggesting models learn to make fairer
-predictions despite biases in training data. However, Zhang et al.
-(2021) highlight that data quality is also crucial; merely increasing
-data quantity doesn't necessarily resolve model biases. The study also
-notes a trade-off between model efficiency, performance, and fairness.
-Practitioners might reduce training data for efficiency, potentially
-impacting model performance and necessitating additional fairness
-mitigation efforts. Conversely, larger training datasets can reduce
-bias but require more computational resources. This balance between
-fairness, efficiency, and performance is a key consideration in ML
-system development and operation.
-% }}}
+Results from RQ2 show that the quantity of training data significantly
+impacts the relationship between DFM and MFM (explained visually in
+Figure~\ref{fig:tradeoff}). With smaller training sizes, there's
+a positive correlation between DFM and MFM, indicating bias in both
+training data and model predictions. As training data increases, this
+correlation diminishes, suggesting models learn to make fairer
+predictions despite biases in training data. However, \emph{Zhang et
+al. (2021)}~\cite{zhang2021ignorance} highlight that data quality is
+also crucial; merely increasing data quantity doesn't necessarily
+resolve model biases. The study also notes a trade-off between model
+efficiency, performance, and fairness. Practitioners might reduce
+training data for efficiency, potentially impacting model performance
+and necessitating additional fairness mitigation efforts. Conversely,
+larger training datasets can reduce bias but require more
+computational resources. This balance between fairness, efficiency,
+and performance is a key consideration in ML system development and
+operation.
+
 \subsection{Test Reduction}\label{sec:discuss-test-red}
 
 Results from RQ3 show a positive correlation between DFM and MFM as
@@ -854,21 +842,20 @@ after training when experimenting with feature sample size.
 \section{Threats to Validity and Future Work}\label{sec:threats}
 
 This study evaluates ML model fairness using two group fairness
-metrics: Disparate Impact and Statistical Parity Difference, noting
-the absence of Python library implementations for other metrics like
+metrics: Disparate Impact and Statistical Parity Difference due to the
+absence of Python library implementations for other metrics like
 Average Absolute Odds Difference and Equal Opportunity Difference. The
 analysis reveals a need for more data-centric fairness metrics and
 highlights limitations in current metrics, particularly their focus on
-training set size. To validate findings, the study employs Spearman
-correlation from the scipy library and linear regression analysis
-using ordinary least squares from the statsmodels library. However,
-the study acknowledges limitations, such as the approximation in
-simulating distribution changes with smaller training sample sizes and
-the inconsistency in dataset sizes. It also notes that while the
-correlation analysis is promising, its practical application remains
-unclear, calling for further research. The results also implicitly
-validate distribution change, crucial for evaluating fairness property
-changes in data.
+the size of the training set. To validate the results of the
+correlation analysis, we additionally employ linear regression
+analysis using ordinary least squares from the statsmodels library.
+The approximation in simulating distribution changes with smaller
+training sample sizes and the inconsistency in dataset sizes present
+opportunities for improvement. While the correlation analysis is
+promising, its practical application remains unclear and calls for
+further research.
+
 % }}}
 % sec:conclusion {{{1
 \section{Conclusion}
@@ -876,14 +863,15 @@ changes in data.
 This study introduces a novel approach to ML fairness testing by
 evaluating fairness both before and after training---using metrics to
 quantify bias in training data and model predictions, respectively.
-This "data-centric" approach is a first step in integrating fairness
-testing into the ML development lifecycle. The study empirically
-analyzes the relationship between model-dependent and independent
-fairness metrics, finding a linear relationship when training data
-size and distribution change. The results suggest that pre-training
-fairness testing is a cost-effective strategy for identifying fairness
-issues early in ML pipelines, aiding practitioners in navigating
-fairness testing. The study proposes future research to assess the
+This ``data-centric'' approach is the first step towards integrating
+fairness testing into the ML development lifecycle. The study
+empirically analyzes the relationship between model-dependent and
+independent fairness metrics, finding a linear relationship when
+training data size and distribution change. The results suggest that
+testing for fairness before training an ML model is a cost-effective
+strategy for identifying fairness issues early in ML pipelines, and
+can aid practitioners navigate the complex landscape of fairness
+testing. As an extension of this study, we wish to evaluate the
 effectiveness of data fairness metrics in real-world ML systems.
 % }}}
 \bibliographystyle{ACM-Reference-Format}
