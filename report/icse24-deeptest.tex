@@ -1,4 +1,4 @@
-% vim: foldmethod=marker textwidth=70
+% vim: textwidth=70
 
 \documentclass[sigconf]{acmart}
 
@@ -68,7 +68,6 @@ Although several fairness definitions and bias mitigation techniques
   Engineering, Data-centric AI}
 \maketitle
 
-% sec:intro {{{1
 \section{Introduction}\label{sec:intro}
 
 While several contributions toward testing ML systems have been made
@@ -133,11 +132,9 @@ as follows.
 \end{enumerate}
 
 All source code and results of the study are publicly accessible under the CC-BY 4.0 license\footnote{The replication package of this study is available here: https://figshare.com/s/67206f7c219b12885a6f}.
-% }}}
-% sec:related {{{1
+
 \section{Preliminaries}\label{sec:related}
 
-% sec:bias-fairness {{{2
 \subsection{Algorithmic Bias, Bias Mitigation and Group Fairness}\label{sec:bias-fairness}
 
 Several fairness metrics have been developed to mitigate the costs and
@@ -166,8 +163,7 @@ Our analysis of the relationship between the DFM and MFM (see
 Section \ref{sec:implications}) presents practical guidelines for
 practitioners to pick the appropriate bias mitigation strategy based
 on the particular fairness issue they are facing.
-% }}}
-% sec:prior-work {{{2
+
 \subsection{Prior Work in ML Fairness Testing}\label{sec:prior-work}
 
 \begin{figure*}
@@ -225,8 +221,7 @@ in the distribution, sample size and number of features in the
 training set affects this relationship. Through this analysis, we hope
 to establish the role of DFM within the existing ML development
 lifecycle.
-% }}}
-% sec:ml-lifecycle {{{
+
 \subsection{Machine Learning Lifecycle and Fairness
   Testing}\label{sec:ml-lifecycle}
 
@@ -247,9 +242,7 @@ threshold~\cite{amershi2019software,breck2019data,sambasivan2021everyone,zhang20
 This study explores the implications of assessing ML model fairness
 before training, marking a shift from the traditional post-training
 fairness evaluation.
-% }}}
-% 1}}}
-% sec:method {{{1
+
 \section{Experimental Design}\label{sec:method}
 
 \begin{figure*}
@@ -260,7 +253,6 @@ fairness evaluation.
   \label{fig:method}
 \end{figure*}
 
-% sec:method-parameters {{{2
 \subsection{Datasets, ML Models and Fairness Metrics}\label{sec:method-parameters}
 
 \begin{table}
@@ -330,8 +322,7 @@ ML models of varying complexity namely, \emph{Logistic Regression},
 \emph{Decision Trees}, \emph{Random Forest} and \emph{Ada boost} based
 on their popularity in practice and in prior scientific
 publications \cite{zhang2021ignorance,biswas2021fair,biswas2020machine}.
-% }}}
-% sec:method-fair-eval {{{2
+
 \subsection{Fairness Evaluation}\label{sec:method-fair-eval}
 
 \begin{table}
@@ -383,8 +374,7 @@ Table \ref{tab:parameters} summarises the parameters of the study. We
 train 4 ML models on 8 datasets producing 32 total cases. The fairness
 for each case is evaluated 50 times using two fairness metrics, thus
 producing a total of 1600 training and fairness evaluation cycles.
-% }}}
-% sec:corr-analysis {{{2
+
 \subsection{Correlation Analysis}\label{sec:corr-analysis}
 
 We use correlation analysis to study the relationship between DFM and
@@ -447,8 +437,7 @@ training data is unbiased to begin with.
 The implications of the correlation results varies based on the
 experimental factor. A detailed discussion is presented in the
 corresponding sub-sections of Section \ref{sec:implications}.
-% }}}
-% sec: data-analysis {{{2
+
 \subsection{Distribution of Experimental Data}\label{sec:data-analysis}
 
 \begin{figure}
@@ -481,9 +470,7 @@ in addition to the randomness from the data shuffling in the training
 set, the models are assigned random initial states in every iteration
 thus resulting in different predictions across the iterations and
 consequently varying MFM values.
-% }}}
-% end sec:method }}}
-% sec:results {{{1
+
 \section{Results}\label{sec:results}
 
 \subsection{RQ1. What is the relationship between DFM and MFM as
@@ -739,8 +726,7 @@ contain less number of features.
 \highlight{\textbf{Answer to RQ3:} DFM and MFM convey similar
 information as the training sample size changes but not when the
 feature sample size changes.}
-% }}}
-% sec:implementations {{{1
+
 \section{Implications}\label{sec:implications}
 
 \subsection{Data Drift}\label{sec:discuss-data-drift}
@@ -815,9 +801,6 @@ after training when experimenting with feature sample size.
 % are able to produce fairer predictions using explainable AI
 % techniques.
 
-% }}}
-% end sec:implications }}}
-% sec:threats {{{1
 \section{Threats to Validity and Future Work}\label{sec:threats}
 
 This study evaluates ML model fairness using two group fairness
@@ -835,8 +818,6 @@ opportunities for improvement. While the correlation analysis is
 promising, its practical application remains unclear and calls for
 further research.
 
-% }}}
-% sec:conclusion {{{1
 \section{Conclusion}
 
 This study introduces a novel approach to ML fairness testing by
@@ -852,7 +833,7 @@ strategy for identifying fairness issues early in ML pipelines, and
 can aid practitioners navigate the complex landscape of fairness
 testing. As an extension of this study, we wish to evaluate the
 effectiveness of data fairness metrics in real-world ML systems.
-% }}}
+
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{report}
 
