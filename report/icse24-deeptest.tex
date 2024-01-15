@@ -1,6 +1,6 @@
-% vim: foldmethod=marker textwidth=70 spell
+% vim: foldmethod=marker textwidth=70
 
-\documentclass[sigconf,review]{acmart}
+\documentclass[sigconf]{acmart}
 
 \usepackage{framed}
 \newcommand{\highlight}[1]{\begin{framed}%
@@ -21,47 +21,26 @@
 
 \title{Data vs. Model Machine Learning Fairness Testing: An Empirical Study}
 
-\author{Author One}
+\author{Arumoy Shome}
 \affiliation{%
-  \institution{Institute}
-  \city{City}
-  \country{Country}}
-\email{Email}
+  \institution{Delft University of Technology}
+  \city{Delft}
+  \country{Netherlands}}
+\email{a.shome@tudelft.nl}
 
-\author{Author Two}
+\author{Lu{\'\i}s Cruz}
 \affiliation{%
-  \institution{Institute}
-  \city{City}
-  \country{Country}}
-\email{Email}
+  \institution{Delft University of Technology}
+  \city{Delft}
+  \country{Netherlands}}
+\email{l.cruz@tudelft.nl}
 
-\author{Author Three}
+\author{Arie van Deursen}
 \affiliation{%
-  \institution{Institute}
-  \city{City}
-  \country{Country}}
-\email{Email}
-
-% \author{Arumoy Shome}
-% \affiliation{%
-%   \institution{Delft University of Technology}
-%   \city{Delft}
-%   \country{Netherlands}}
-% \email{a.shome@tudelft.nl}
-
-% \author{Lu{\'\i}s Cruz}
-% \affiliation{%
-%   \institution{Delft University of Technology}
-%   \city{Delft}
-%   \country{Netherlands}}
-% \email{l.cruz@tudelft.nl}
-
-% \author{Arie van Deursen}
-% \affiliation{%
-%  \institution{Delft University of Technology}
-%  \city{Delft}
-%  \country{Netherlands}
-% \email{arie.vandeursen@tudelft.nl}}
+ \institution{Delft University of Technology}
+ \city{Delft}
+\country{Netherlands}}
+\email{arie.vandeursen@tudelft.nl}
 
 \begin{abstract}
 
@@ -652,7 +631,7 @@ correlation between DFM and MFM?}\label{sec:results-corr-frac}
 \end{figure}
 
 In Figure \ref{fig:heatmap--corr--training-sets-frac}, the correlation
-in the smaller datasets are more positive compared to the larger
+in the smaller datasets is more positive compared to the larger
 datasets when trained using a smaller training sample size. When the
 training sample size is increased, the correlation in the datasets
 decrease as observed in Figure \ref{fig:heatmap--corr--full-data}.

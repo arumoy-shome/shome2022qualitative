@@ -1,0 +1,311 @@
+---
+title: ICSE 2024 DeepTest Review
+---
+
+Dear Arumoy,
+
+Thank you very much for submitting your paper to DeepTest 2024. We are
+delighted to inform you that your submission:
+
+Data vs. Model Machine Learning Fairness Testing: An Empirical Study
+
+has been accepted for presentation at the workshop, and inclusion in
+the ICSE 2024 conference proceedings. Congratulations!
+
+We have enclosed the reviews of your paper below. We hope that these
+will be a source of useful feedback and help you make the paper ready
+for the camera-ready version. 
+
+=== NOTE ABOUT OPEN SCIENCE by ICSE 2024===
+
+ICSE 2024 has embraced open science practices towards higher
+transparency of the scientific process and the availability of
+research artefacts. In case you have not done so at submission time
+already, we ask you to inspect the open science policies
+(https://urldefense.com/v3/__https://conf.researchr.org/track/icse-2024/icse-2024-research-track*open-science-policy__;Iw!!PAKc-5URQlI!-_fM-8P4yjQxAoQU_bEPseLI9hgpC2my2fwcAWBFhEGwyA75SjrBmcjkKBuRW6ONKSE85JD8EkehJjwtoA7dUtoYXPo$)
+while preparing the camera-ready. 
+
+=== NOTE ABOUT PROCEEDINGS ===
+
+Your paper must be formatted according to the instructions at
+https://urldefense.com/v3/__https://www.acm.org/publications/proceedings-template__;!!PAKc-5URQlI!-_fM-8P4yjQxAoQU_bEPseLI9hgpC2my2fwcAWBFhEGwyA75SjrBmcjkKBuRW6ONKSE85JD8EkehJjwtoA7dWjZRiO4$
+. Validation of the paper formatting will be part of the submission
+process. 
+
+The given page limits are strict. It is not possible to buy extra pages. 
+
+The list of authors (names, emails, affiliations, order) is not
+allowed to be changed after notification. If a correction is needed
+(e.g., because the author’s name was misspelled), the track/event
+chairs need to approve the change. The authors should also notify the
+track/event chairs if the author list in EasyChair data about the
+paper is not identical to the author list in the initial submission
+pdf (not relevant for tracks with the double-blind process). 
+
+In the next few days, you will be contacted by the publisher (ACM)
+with the instructions and link where to submit the camera-ready
+version of your paper (please do not submit it to EasyChair and wait
+for the instructions). As part of the process, you will also need to
+submit your copyright (before you complete your final paper
+submission). So please read the instructions carefully immediately
+after it arrives. 
+
+At least one of the paper's authors must register for the conference
+by the camera-ready deadline, specifying the unique Paper ID, assigned
+to each paper by the ACM publishing vendor and sent to you when
+inviting you to submit the camera-ready version of your paper. Please
+note that the early registration deadline for the conference is 12
+February 2024.
+
+=== NOTE ABOUT PREPARATION FOR THE WORKSHOP ===
+
+In preparation for the event, all authors of accepted papers are
+invited to share pre-prints as soon as the camera-ready version is
+finalized. The General Chairs and Technical Chairs would like to
+gather archived preprints of accepted papers and link to them in the
+online program so that everyone can access them!
+
+Congratulations again and we look forward to seeing you in Lisbon!
+
+
+Kind regards,
+DeepTest 2024 Program Chairs
+
+SUBMISSION: 1
+TITLE: Data vs. Model Machine Learning Fairness Testing: An Empirical Study
+
+
+----------------------- REVIEW 1 ---------------------
+SUBMISSION: 1
+TITLE: Data vs. Model Machine Learning Fairness Testing: An Empirical Study
+AUTHORS: Arumoy Shome, Luis Cruz and Arie van Deursen
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+
+The paper presents an empirical study comparing different strategies
+for fairness assessment by testing. The results show that the approach
+based on data (by exploiting DFM) can provide, in some cases,
+a fairness assessment effective as to the one involving the trained
+models (by using MFM).
+
+Strengths 
++ Interesting and novel topic
++ Large experimentation
++ Statistical analysis
+
+Weaknesses
+- The findings are not clearly stated
+- A Related Work section is missing
+- The structure of the paper is a bit confusing at some points
+- The figures are too much based on colors and are difficult to read
+
+The contribution is interesting, and the topic addressed is relevant.
+
+A proper Related work section is missing. I suggest inserting it in
+the final version of the paper.
+
+About the contribution, the authors should include a clear list of the
+findings emerging from the experimentation. The answers to the
+Research Questions are just descriptions of statistical results.
+I would also appreciate suggestions for practitioners about when it is
+convenient to apply DFM and MFM. The authors could restructure Section
+5 to insert a clear list of implications and findings emerging from
+RQs.
+
+Some details about sampling are missing. How is the sampling
+performed? Random sampling? With stratification or not?
+
+Other negative aspects of the paper are more related to the
+presentation part. 
+
+-   The authors provide a lot of colored figures to explain the main
+    concepts. For some readers, it can be hard to distinguish the used
+    colors. For instance, Figure 4 is unreadable since I cannot
+    distinguish light blue and light grey. About the heatmaps, the
+    colors are too dark and very difficult to distinguish,
+    particularly when printing the paper. Moreover, the numbers and
+    the labels of almost all the figures are unreadable. I suggest
+    increasing the font, the labels and the numbers are almost
+    unreadable.
+-   I suggest to the authors to avoid forward references in the text.
+    For instance, on page 4, line 405, they point to Section 5 (page
+    7). This practice can be confusing for the reader.
+
+
+
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 1
+TITLE: Data vs. Model Machine Learning Fairness Testing: An Empirical Study
+AUTHORS: Arumoy Shome, Luis Cruz and Arie van Deursen
+
+----------- Overall evaluation -----------
+SCORE: 1 (weak accept)
+----- TEXT:
+
+This paper introduces an approach to ML fairness testing by evaluating
+fairness both before and after model training. This contrasts with
+existing solutions that only assess fairness post-training. The study
+employs two fairness metrics, four ML algorithms, five real-world
+datasets, and executes 1600 fairness evaluation cycles. It explores
+the relationship between data fairness metrics (DFM) and model
+fairness metrics (MFM), finding a linear relationship between them as
+training data distribution and size change. This finding suggests that
+early testing for fairness can efficiently detect biases in data
+collection, predict data drifts in production systems, and reduce
+development time and costs.
+
+
++ Assessing fairness both before and after training
++ Has the potential to be a cost-effective strategy for identifying
+fairness issues early in ML pipelines
++ Artifacts available
+
+- Generalizability Concerns
+- The findings can be clearly articulated
+
+The study focuses on group fairness metrics. While this is
+a significant area, it would be beneficial to expand the scope to
+include individual and intersectional aspects. This could offer a more
+comprehensive understanding of fairness in ML systems, addressing
+nuances that group metrics might overlook.
+
+Some aspects of the methodology, such as the selection criteria for
+datasets and algorithms, remain unclear. Clarifying these choices
+would strengthen the paper's methodological rigour and help readers
+understand the scope and limitations of the study.
+
+Regarding presentation - it would be beneficial to include a clear,
+consolidated list of key findings in the paper. This would help
+readers understand the implications and key insights from this study.
+Furthermore, some figures could be improved with larger fonts for
+enhanced legibility and clarity.
+
+
+
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 1
+TITLE: Data vs. Model Machine Learning Fairness Testing: An Empirical Study
+AUTHORS: Arumoy Shome, Luis Cruz and Arie van Deursen
+
+----------- Overall evaluation -----------
+SCORE: 1 (weak accept)
+----- TEXT:
+
+Summary
+
+This paper presents a novel approach to evaluating fairness in machine
+learning (ML) systems by assessing fairness both before and after
+model training in contrast to existing methods that evaluate fairness
+only after training. The study empirically analyses the relationship
+between data and model-dependent fairness using two fairness metrics,
+four ML algorithms, and five real-world datasets. The results show
+a positive correlation between data and model fairness metrics when
+there are changes in the distribution and size of the training data.
+The correlation diminishes as the size of a training dataset
+increases, suggesting that models can improve the fairness of their
+predictions when given enough data.
+
+
+Main Strengths
+-   The article contributes to studying an important property of ML
+    solutions such as fairness
+-   The study contains some interesting results
+
+Main Weaknesses
+-   The methodology and results are not very clearly described
+
+
+Overall Evaluation
+
+The article contributes to the field by exploring the crucial aspect
+of fairness in ML solutions. Despite the presentation of some
+interesting observations, there is room for improvement in the clarity
+of the methodology and the discussion of the results, which, if
+refined, could improve the overall accessibility of the study.
+Furthermore, I have doubts about the usefulness of the practical
+application of the approach presented (in the way stated in the
+article).
+
+
+Questions/Comments
+
+-   The manuscript could benefit from some light editing and clearer
+    wording and justification.
+-   Overall, the methodology is not very clearly described. For
+    example, it is not clear to me how exactly the authors performed
+    data sampling for RQ1 and how exactly the sampling approaches
+    differ for the training data used in Figure 6 and Figure 7. It is
+    also not clear how the shuffling discussed in Section 3.2 is done
+    and for what purpose. Moreover, it is hard to understand what
+    sample size was used for Figures 5, 6 and 7.
+-   - The discussion of the results could benefit from more detail.
+    For example, conclusions could be supported by references to
+    specific results (e.g. numbers, data sets, percentages).
+-   If "the correlation between DFM and MFM decreases as we increase
+    the training sample size", this may indicate that MFM is not
+    really useful in the real-world scenario to predict the fairness
+    of a trained model. This is also somewhat at odds with the
+    following statement in the conclusion: "The results suggest that
+    testing for fairness prior to training an ML model is
+    a cost-effective strategy for identifying fairness issues early in
+    ML pipelines".
+-   I am not sure that it can be claimed that fairness necessarily
+    changes with the change in distribution. Furthermore, the authors
+    find that: “This indicates that the DFM and the MFM convey the
+    same information as the distribution—and consequently the fairness
+    properties of the underlying training dataset changes.”. If the
+    fact that the fairness of these datasets changes with the change
+    in distribution is an observation from the results, I am not sure
+    that the formulation of RQ1 is correct (the authors did not know
+    beforehand whether the change in fairness would be the given when
+    designing the experiments, it is the distribution that was
+    explicitly manipulated).
+
+
+Minor Comments & Questions:
+
+-   I do not think it is entirely fair to claim that "other
+    non-functional properties such as security, privacy, efficiency,
+    interpretability and fairness have been ignored", given the recent
+    interest and increasing number of articles published focusing on
+    Deep Learning (DL) and ML fairness, as the authors themselves
+    noted in Section 2.2.
+-   L(Line)229: “missing values are dropped” – are the inputs with
+    missing values are dropped or missing values are replaced with
+    mean/random valid value?
+-   L389: “Table 4 summaries the results of the correlation analysis
+    along with our interpretation.” – I believe there are no results
+    in Table 4, only the interpretation. 
+-   L386: “Although we report the pvalue for completeness, we do not
+    base our implications only on the statistically significant
+    results.” I cannot find p-values reported anywhere in the
+    manuscript. 
+-   Figures 6, 7, 9 are quite hard to read.
+-   Are the results in Figure 5 (right) computed across all the datasets?
+-   L807: “..as larger feature samples usually enhance model
+    fairness.” – This is not very obvious to me. Is there any
+    empirical analysis in the existing literature that would produce
+    this finding?
+-   In conclusion the authors say: “The analysis reveals a need for
+    more data-centric fairness metrics and highlights limitations in
+    current metrics”. I have not noticed substantial discussion
+    related to these points in the results (other than L808). It is
+    not clear how such metrics can be designed.
+-   “To validate the results of the correlation analysis, we
+    additionally employ linear regression analysis using ordinary
+    least squares from the statsmodels library.” It would be
+    preferable if this was mentioned in the methodology rather than in
+    the conclusion – the authors do not specify which statistical test
+    was used in their experiments in Section 3.3.
+
+
+Typos
+
+-   L388: “..only on the statistically significant results. But rather
+    on general trends observed in our analysis.” -> “.. but rather..”
+-   L450,564,577: “the fairness properties of the underlying training
+    dataset changes” -> “..change.”
+-   L616: “the correlation in the smaller datasets are more positive”
+    -> “ is more positive”
