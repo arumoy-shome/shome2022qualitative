@@ -1,6 +1,4 @@
----
-title: "Data vs. Model Machine Learning Fairness Testing: An Empirical Study"
----
+# Data vs. Model Machine Learning Fairness Testing: An Empirical Study
 
 These instructions are to setup the replication package for the paper
 title *Data vs. Model Machine Learning Fairness Testing: An Empirical
